@@ -1,0 +1,499 @@
+WEBVTT
+
+00:00.440 --> 00:05.260
+In this video I'll cover replication modes for broadcast.
+
+00:05.490 --> 00:13.190
+Unknown unicast and multicast traffic or as we call it bumm traffic.
+
+00:13.220 --> 00:21.350
+So these replication modes are used to replicate broadcast unknown unicast and multicast traffic to
+
+00:21.350 --> 00:25.390
+different ESX hosts and this is special traffic.
+
+00:25.610 --> 00:33.050
+For example we have broadcast traffic broadcast traffic is sent to all machines on a layer 2 segment
+
+00:33.260 --> 00:37.480
+I had a good example of a broadcast our request.
+
+00:37.660 --> 00:43.550
+Now unknown unicast traffic results from a virtual switch or a physical switch.
+
+00:43.630 --> 00:48.150
+Not knowing the MAC address of the device that is trying to connect to.
+
+00:48.310 --> 00:51.620
+That's how switches learned to MAC addresses.
+
+00:51.790 --> 00:58.240
+And we also have multicast traffic which is traffic that's sent to selective destinations.
+
+00:58.440 --> 01:04.230
+If you're not familiar with these traffic types I'd definitely recommend going back and watching the
+
+01:04.440 --> 01:09.180
+introductory video I do on bump traffic and it's also part of this course.
+
+01:10.750 --> 01:19.300
+So as this multiday destination traffic is generated it needs to be replicated to all of the Vieuxtemps
+
+01:20.230 --> 01:27.520
+of the duplicable hosts that are connected to those logical switches where this multi destination traffic
+
+01:27.520 --> 01:29.240
+is coming from.
+
+01:29.380 --> 01:37.480
+And at times these v taps might potentially be on different layer three networks known as VX LAN segments
+
+01:37.510 --> 01:39.650
+or VTX segments.
+
+01:39.790 --> 01:48.380
+Maybe there's a router between a couple of my hosts and the result is that I have taps that are on different
+
+01:48.380 --> 01:50.630
+networks.
+
+01:50.740 --> 01:53.800
+So let's start by breaking down this diagram a little bit.
+
+01:53.800 --> 01:55.290
+Here we see two virtual machines.
+
+01:55.300 --> 02:03.740
+VM one and VM file and each virtual machine is on an ESX host it's connected to a logical switch.
+
+02:04.680 --> 02:07.170
+And there's a tap on each host as well.
+
+02:07.170 --> 02:15.240
+So if any traffic needs to go from VM 1 to VM 5 for example it's going to flow through this V tap get
+
+02:15.240 --> 02:22.200
+via actually an encapsulated flow over the underlying network get decapitated by the receiving the tap
+
+02:22.770 --> 02:29.260
+before it ever reaches virtual machine five.
+
+02:29.270 --> 02:31.270
+So let's walk through this process.
+
+02:31.280 --> 02:40.220
+Let's say that VM one wants to ping VM five and let's assume that VM ones are table doesn't have an
+
+02:40.220 --> 02:42.150
+entry for VM 5.
+
+02:43.230 --> 02:48.400
+So VM one knows the IP address VM five but not the Mac address.
+
+02:49.210 --> 02:53.190
+So what happens in this case well in this case.
+
+02:53.190 --> 03:00.520
+VM one is going to generate an ARP request and an our request is a layer to broadcast.
+
+03:00.820 --> 03:06.880
+So we're talking about broadcast traffic now and that's one of our three types of traffic that we talked
+
+03:06.880 --> 03:09.810
+about in our bumm traffic right broadcast.
+
+03:09.910 --> 03:11.740
+Unknown unicast and multicast
+
+03:14.380 --> 03:18.420
+So one VM one generates that broadcast.
+
+03:18.430 --> 03:27.690
+It's a layer to broadcast and it needs to be received by everything connected to this logical switch.
+
+03:27.690 --> 03:32.050
+Now there could be 50 Reems on each host that need to get this broadcast.
+
+03:32.070 --> 03:37.090
+There could be 50 hosts that need to get this broadcast.
+
+03:37.140 --> 03:46.150
+Wouldn't it be nice if our virtual machine could just send one copy of that broadcast that would arrive
+
+03:46.150 --> 03:55.840
+at the tap and would be multicast it or broadcast it to the appropriate receiving the taps that are
+
+03:55.840 --> 03:57.890
+part of that logical switch.
+
+04:00.670 --> 04:04.000
+Well that's exactly what our replication modes are going to do.
+
+04:04.330 --> 04:10.810
+So we're going to look at three different ways that this layer to broadcast or unknown unicast or multicast
+
+04:10.810 --> 04:19.300
+traffic can get replicated to multiple receiving taps so that this layer to traffic can traverse even
+
+04:19.300 --> 04:23.100
+a layer 3 physical network.
+
+04:23.170 --> 04:33.090
+Let's start by identifying this concept called a proxy tap the different replication methods that we're
+
+04:33.090 --> 04:40.710
+going to look at will all leverage VA Axton to move this bum traffic from host to host and at times
+
+04:40.830 --> 04:45.580
+something called the proxy tap will be used to accomplish this.
+
+04:45.580 --> 04:51.550
+So for example let's say that virtual machine one generates in our request and that our request hits
+
+04:51.550 --> 04:53.280
+the tap.
+
+04:53.290 --> 05:01.900
+Now the job of the tap is to ensure that that ARP request is received by every single machine connected
+
+05:01.900 --> 05:05.760
+to a logical switch via five thousand one.
+
+05:05.820 --> 05:13.150
+So what the tap will do is it'll encapsulate that ARP request inside of a VX LAN hatter and it will
+
+05:13.150 --> 05:20.620
+transmit it not only to the taps on the local segment but in this case it's also going to send it to
+
+05:20.620 --> 05:28.180
+a special tap in our remote tap segment called the proxy we tap.
+
+05:28.310 --> 05:34.450
+It's easy to get that broadcast moved around within our own local segment.
+
+05:34.590 --> 05:40.930
+But we also need to get it across this router and do something called the proxy tap.
+
+05:40.940 --> 05:43.130
+Now what is the role of this proxy V-Tech
+
+05:46.950 --> 05:56.460
+when the proxy tap receives that our request it will replicate that frame locally with it and own local
+
+05:56.490 --> 05:57.750
+VX LAN segment.
+
+05:57.750 --> 06:06.340
+So across this physical switch the proxy taps job is to replicate that frame locally.
+
+06:06.390 --> 06:11.760
+And what this does is it reduces some of the overhead on the source.
+
+06:11.770 --> 06:18.690
+VTEC right the source VI type is responsible for essentially setting that bumm traffic to all the taps
+
+06:18.690 --> 06:25.740
+in its own local segment but it doesn't need to send a unique copy of that traffic to every V-Tech in
+
+06:25.740 --> 06:27.300
+every remote segment.
+
+06:27.360 --> 06:31.870
+The proxy tap is going to offload some of that work.
+
+06:31.880 --> 06:34.760
+So that's the concept of a proxy VTEC.
+
+06:35.030 --> 06:47.470
+And you'll see exactly how that's used as we start to dig into some of these replication what.
+
+06:47.650 --> 06:56.950
+Another thing I want to talk about is multicast so and OS X handles replication of bum traffic in three
+
+06:56.950 --> 07:02.590
+different modes multicast hybrid or unicast.
+
+07:02.760 --> 07:10.570
+In this first example we'll look at multicast replication mode so multicast is kind of like a pay per
+
+07:10.570 --> 07:11.610
+view TV show.
+
+07:11.770 --> 07:12.250
+Right.
+
+07:12.250 --> 07:21.250
+It's sent out once and everybody who is subscribed to it can watch it multicast makes sense because
+
+07:21.250 --> 07:25.060
+the source only needs to send that data once.
+
+07:25.390 --> 07:34.830
+And how many subscribers can receive a copy if I want to configure multicast replication mode.
+
+07:34.910 --> 07:41.800
+I have to be comfortable with configuring multicast that my physical network I'm going to have to configure
+
+07:41.830 --> 07:46.320
+IGMP and IGMP snooping on the physical network.
+
+07:46.360 --> 07:49.310
+I'll have to create a multicast address as well.
+
+07:50.850 --> 07:59.960
+But the benefit of this replication mode is it creates the lowest overhead and RV types.
+
+07:59.970 --> 08:04.210
+OK so for example let's follow this through and see exactly how it works.
+
+08:04.270 --> 08:12.480
+Let's say that virtual machine one generates an ARB request or that our request will hit the tap and
+
+08:12.480 --> 08:19.850
+the tap will for that broadcast to the multicast address that we have configured.
+
+08:19.910 --> 08:21.800
+It's an address on this physical switch
+
+08:24.580 --> 08:33.580
+and the physical switch itself will then handle replicating a copy of that data to every pore that is
+
+08:33.580 --> 08:37.360
+joined to the multicast.
+
+08:37.360 --> 08:43.270
+So for example in this case there's a port that's connected to this V tap that's joined the multicast
+
+08:43.870 --> 08:49.310
+and there's also a port connected to my router that has joined the multicast as well.
+
+08:49.600 --> 08:57.180
+So it's the physical switches job to ensure that everything that needs to get that traffic is actually
+
+08:57.180 --> 09:01.490
+going to get it.
+
+09:01.570 --> 09:08.770
+Now the router will use something called protocol independent multicast to forward that multicast into
+
+09:08.770 --> 09:19.290
+the remote VX LAN segment where the physical switch can then handle replicating that traffic using IGMP.
+
+09:19.530 --> 09:26.410
+There is no such thing as a proxy tap in this multicast replication mode.
+
+09:26.420 --> 09:30.110
+We don't use a proxy via tap.
+
+09:30.130 --> 09:36.850
+Now real quick while we're on this topic let's talk about why people like to use this multicast replication
+
+09:36.850 --> 09:37.280
+mode.
+
+09:38.720 --> 09:46.010
+The primary benefit is the fact that our source VI tap only needs to send that traffic once right.
+
+09:46.010 --> 09:50.840
+In other modes the source we type may have to send that traffic many times or it might have to send
+
+09:50.840 --> 09:56.270
+a copy to all the local Vieuxtemps it might need to send a copy to a proxy tap.
+
+09:56.390 --> 09:56.630
+Right.
+
+09:56.630 --> 09:59.340
+In other modes it's less efficient.
+
+10:00.180 --> 10:01.550
+And multicast mode.
+
+10:01.700 --> 10:09.240
+There's very little overhead on that source VTEC it only has to send one copy of that bump traffic and
+
+10:09.240 --> 10:15.480
+then its job is done and it's up to the physical network to ensure that all of the appropriate taps
+
+10:15.870 --> 10:17.100
+receive that data.
+
+10:20.160 --> 10:25.860
+Now hybrid mode is a little bit different in hybrid mode.
+
+10:25.860 --> 10:32.880
+We're still going to have to configure IGMP snooping on the physical network.
+
+10:33.120 --> 10:41.040
+We're still going to have to configure multicast in our switches but we're not going to have to configure
+
+10:41.040 --> 10:42.950
+multicast in our router.
+
+10:43.080 --> 10:43.280
+Right.
+
+10:43.290 --> 10:47.780
+That's the big difference between hybrid mode and multicast mode.
+
+10:47.820 --> 10:54.780
+We need layer to multicast but not layer 3 because we're going to use something called the proxy V-Tech.
+
+10:54.800 --> 10:57.140
+So let's break down how this mode works.
+
+10:58.600 --> 11:00.760
+Let's say that virtual machine 1.
+
+11:00.820 --> 11:03.130
+Generate some sort of broadcast traffic.
+
+11:03.130 --> 11:11.660
+Again it's an arm request and the ARP hits this V-Amp the V-Tech will forward that broadcast traffic
+
+11:11.810 --> 11:21.970
+to the physical switch on the multicast address and everything that is joined that multicast will receive
+
+11:21.970 --> 11:23.580
+a copy of that data.
+
+11:25.730 --> 11:33.570
+Now in this situation this is purely Alair to multicast and I haven't configured anything in my router
+
+11:33.900 --> 11:37.180
+to accommodate this multicast traffic.
+
+11:37.560 --> 11:40.480
+So that's where my multicast is going to stop
+
+11:48.400 --> 11:53.630
+and so my source of type actually has a little bit more work to do in this scenario.
+
+11:53.680 --> 12:01.010
+It's going to send a unicast copy of that packet to our proxy VTEC.
+
+12:01.280 --> 12:06.800
+And in this case the proxy we type is called that M tap when you want to make sure you have these names
+
+12:06.800 --> 12:16.110
+straight if you're going to take the VCP exam so the M tap is a special type of proxy tap that's used
+
+12:16.110 --> 12:17.000
+with hybrid boat
+
+12:19.830 --> 12:27.720
+and the job of the tap will be to replicate that broadcast traffic locally within its VTX segment.
+
+12:28.910 --> 12:35.990
+So when the proxy tap receives that unicast it'll send it out to the multicast address of the physical
+
+12:35.990 --> 12:43.580
+switch and the physical switch will then handle replicating that traffic to all of the taps in that
+
+12:43.640 --> 12:44.950
+local segment.
+
+12:49.810 --> 12:54.430
+So a really quick review let's just talk through this process one more time.
+
+12:54.430 --> 13:02.640
+V.M. one generates a broadcast the broadcast hits the V tap the tap is going to do two things.
+
+13:02.640 --> 13:08.850
+Number one it's going to send that broadcast traffic to the multicast address of the physical switch
+
+13:09.690 --> 13:13.660
+so that it can be replicated within its own local segment.
+
+13:13.890 --> 13:21.600
+And it's also going to send a unicast copy of that traffic to the proxy via tap which will be responsible
+
+13:21.600 --> 13:26.080
+for replicating it locally within that remote VX landside and
+
+13:29.280 --> 13:32.320
+all right now let's walk through our final replication mode.
+
+13:32.340 --> 13:39.180
+This mode is called unicast and the big benefit of unicast replication mode is you don't have to configure
+
+13:39.390 --> 13:42.450
+any multicast settings in the physical network at all.
+
+13:45.140 --> 13:48.080
+So in unicast mode here's what's going to happen.
+
+13:49.200 --> 13:56.160
+Again assume VM one issue some sort of broadcast traffic or unknown unicast or multicast traffic.
+
+13:56.370 --> 14:07.720
+The VTech receives that traffic and it's the job of the tap to then unicast a copy of that packet to
+
+14:07.720 --> 14:11.840
+the taps within its local segment.
+
+14:11.850 --> 14:20.290
+It's also going to you and the cast a copy of it to the proxy tap on any remote segments.
+
+14:20.330 --> 14:27.520
+And what I mean by that is here we see we have some VI taps on the 10.0 1.1 network and we have some
+
+14:27.540 --> 14:31.380
+the taps in a remote network.
+
+14:31.490 --> 14:38.060
+So the job of the source via tap will be to send a copy of that traffic to one of the taps on this remote
+
+14:38.060 --> 14:48.230
+network which will then use unicast to send a copy of that traffic to all of the local V taps in that
+
+14:48.230 --> 14:52.320
+VX LAN segment.
+
+14:52.660 --> 15:00.310
+So again really important for the VCP is to keep straight the names of these proxy taps and an unicast
+
+15:00.310 --> 15:02.920
+mode the proxy type is called the tap
+
+15:09.730 --> 15:18.040
+so in review we're going to use replication modes to get bomb traffic moved between VX X segments to
+
+15:18.040 --> 15:25.790
+ensure that this bump traffic is received by all of our taps if we choose to utilize multicast mode.
+
+15:25.840 --> 15:31.990
+We're going to have to configure multicast on the physical network not only on the switches but on the
+
+15:31.990 --> 15:33.500
+routers as well.
+
+15:33.870 --> 15:36.030
+Multicast mode is very efficient though.
+
+15:36.430 --> 15:42.740
+So we has that benefit hybrid mode is kind of like half way in between.
+
+15:42.840 --> 15:43.060
+Right.
+
+15:43.060 --> 15:51.970
+It's going to within the local tap segment it's going to use Layer to multicast but to reach those remote
+
+15:52.060 --> 15:56.210
+VX LAN segments it's going to generate a unicast.
+
+15:56.260 --> 16:02.390
+So it's kind of like halfway between multicast and unicast right using multicast for some traffic use
+
+16:02.550 --> 16:11.310
+is unicast for other traffic unicast mode does not require any multicast configuration in the physical
+
+16:11.310 --> 16:12.500
+network.
+
+16:12.750 --> 16:20.250
+It will send a copy of all bumm traffic to all of the local Vieuxtemps and it'll also send a copy of
+
+16:20.250 --> 16:29.690
+that traffic to what's called a U tap which is a proxy tap existing in every other remote VX LAN segment.

@@ -1,0 +1,235 @@
+WEBVTT
+
+00:00.150 --> 00:06.000
+In this video I'll explain virtual networking concepts and vees faire and we'll start out by looking
+
+00:06.000 --> 00:07.800
+at the very basics.
+
+00:07.830 --> 00:14.010
+How does a virtual machine actually generate network traffic and how do we get that traffic out to our
+
+00:14.010 --> 00:14.800
+network.
+
+00:16.070 --> 00:21.840
+Well in many ways a virtual machine works almost exactly the same as a physical machine does.
+
+00:21.950 --> 00:27.620
+So here on our diagram we see a Windows virtual machine and it has a network interface card just like
+
+00:27.710 --> 00:30.060
+any other network connected machine.
+
+00:31.270 --> 00:35.930
+The guest operating system has no idea that this is a virtual neck.
+
+00:36.340 --> 00:39.270
+In this case Windows just sees a network adapter.
+
+00:39.460 --> 00:43.940
+And from the operating system perspective that's really the end of the story.
+
+00:43.960 --> 00:50.680
+So when Windows needs to send some packets to the network it uses its virtual Nic.
+
+00:50.770 --> 00:57.240
+And what does a network interface card connect to well in most cases that connects to some sort of switch.
+
+00:58.460 --> 01:04.940
+Are virtual machines will connect to a virtual machine port group on a virtual switch and the poor group
+
+01:04.940 --> 01:11.040
+is used to define settings like the land membership or security policies.
+
+01:11.880 --> 01:17.410
+And if other virtual machines are connected to this port group as well they can communicate with each
+
+01:17.410 --> 01:23.190
+other without that traffic ever leaving the ESX host.
+
+01:23.230 --> 01:28.690
+Now some traffic needs to flow out to an external network device or some virtual machine on a different
+
+01:28.690 --> 01:29.710
+network.
+
+01:29.740 --> 01:36.580
+It'll have to be sent to the physical network and it will use something called a VM NEC VM neck is a
+
+01:36.580 --> 01:38.690
+physical uplink right.
+
+01:38.700 --> 01:45.160
+This is one of the physical ports on my ESX host and an X is an uplink for the virtual switch.
+
+01:46.210 --> 01:52.630
+So just a quick review of some of the terminology we see here a V-neck is a virtual network interface
+
+01:52.630 --> 01:54.570
+card on a virtual machine.
+
+01:54.640 --> 01:57.730
+Our Reems connect to a virtual machine port group.
+
+01:58.020 --> 02:04.050
+And if the traffic needs to hit the external physical network a VM neck or physical adapter is used.
+
+02:05.330 --> 02:11.890
+Now those virtual machine port groups that we just looked at are for virtual machine traffic only if
+
+02:11.890 --> 02:14.200
+it's any other type of traffic.
+
+02:14.230 --> 02:21.470
+Everything else is handled by a VM kernel port a VM kernel port is a special type of port that you create
+
+02:21.470 --> 02:26.870
+on your vse for a standard or distributed switches that has its own IP address.
+
+02:26.870 --> 02:34.470
+It's sort of like a little entity unto itself so a virtual machine port groups are like ports on a physical
+
+02:34.470 --> 02:40.650
+switch that a PC would connect to a VM kernel port is special though it's used for traffic like the
+
+02:40.650 --> 02:47.360
+motion IP storage fault tolerance the sand and management.
+
+02:47.400 --> 02:56.400
+So these are the ports that the host and the center use to talk amongst themselves and carry out tasks.
+
+02:56.410 --> 03:03.980
+Now another option for our virtual machine port groups is Vili's and designation.
+
+03:04.010 --> 03:09.050
+So in this case we have two virtual machines and each of them are connecting to a different port group
+
+03:09.890 --> 03:15.620
+and the VM on the top connects to the prod port group and it has Vili's antenna assigned and the VM
+
+03:15.620 --> 03:20.970
+on the bottom connects to the dev port group which has Vesely on 20th side.
+
+03:21.190 --> 03:27.010
+And then we can see the standards which connects to our physical network over something called the trunk
+
+03:27.050 --> 03:36.580
+poor Just think of a trunk port as any physical port or group of ports that can carry multiple lands
+
+03:36.610 --> 03:38.860
+over a single physical connection.
+
+03:40.830 --> 03:48.900
+So because we've identified the villans on the individual port groups we're using a land tagging method
+
+03:48.900 --> 03:55.560
+called Virtual switch tagging so in our diagram here the top virtual machine is connected to the Prod.
+
+03:55.560 --> 03:56.430
+valium.
+
+03:56.670 --> 04:00.360
+The bottom virtual machine is connected to the Davian.
+
+04:00.540 --> 04:07.980
+And as traffic flows out of those victims and hits those particular groups if that traffic is bound
+
+04:08.250 --> 04:17.090
+for the external physical network it's the job of the virtual switch to append a header a real enhancer.
+
+04:17.100 --> 04:23.520
+This is called the Valeant tag so that when that traffic arrives on the actual physical switch it will
+
+04:23.520 --> 04:29.880
+arrive on the appropriate Villalon and we can maintain that villans segmentation throughout the physical
+
+04:29.880 --> 04:30.810
+network.
+
+04:34.750 --> 04:41.320
+Another important thing we need to configure in our vse for standard switches is the maximum transmission
+
+04:41.320 --> 04:41.880
+unit.
+
+04:42.190 --> 04:48.760
+So let's take a look at how an improperly configured empty you can have a negative impact.
+
+04:48.770 --> 04:52.830
+So here we see a virtual machine that's going to send a jumbo frame.
+
+04:52.880 --> 04:55.500
+These are larger frames than normal.
+
+04:55.850 --> 05:02.360
+And the purpose of jumbo frames is to allow the virtual machine to essentially send fewer frames the
+
+05:02.360 --> 05:08.000
+less frames we have to generate the less address thing that needs to be done and the less overhead that's
+
+05:08.000 --> 05:08.850
+incurred.
+
+05:09.200 --> 05:14.000
+So jumbo frames can be really beneficial from a performance standpoint.
+
+05:14.090 --> 05:19.910
+So let's say that our virtual machine sends out this jumbo frame and it arrives at the virtual switch
+
+05:21.030 --> 05:27.180
+and the virtual switch has been configured with the appropriate MCU of 9000 and the virtual switch can
+
+05:27.270 --> 05:34.760
+easily support this large jumbo frame and this frame maybe is bound for something on the physical network
+
+05:34.820 --> 05:39.970
+so it flows out of one of our V.M. next towards the physical switch.
+
+05:40.040 --> 05:46.670
+And in this case the physical switch is configured for an empty view of 15:24.
+
+05:46.740 --> 05:53.350
+So this frame is too big to comply with the configured empty view of the physical switch.
+
+05:53.640 --> 05:59.610
+So the physical switch is going to have to break this frame up into smaller chunks and individually
+
+05:59.610 --> 06:03.090
+address each of those smaller frames.
+
+06:03.150 --> 06:10.140
+And this is called fragmentation and re-assembly and it has a really significant performance impact
+
+06:10.800 --> 06:15.600
+on the physical switch in this case because the C.P. of the physical switches is going to be working
+
+06:15.600 --> 06:21.870
+very hard to break up those jumbo frames and create smaller frames.
+
+06:25.950 --> 06:31.440
+So in review and this lesson we learn that virtual machines can connect to network resources using a
+
+06:31.440 --> 06:39.140
+VSE fair standard which and that are virtual neck or V-neck is essentially going to trick the guest
+
+06:39.140 --> 06:43.920
+operating system into thinking it has a true physical network interface card.
+
+06:44.790 --> 06:49.710
+We also learn that virtual machine port groups are used to connect to our virtual machines and that
+
+06:49.710 --> 06:57.970
+they carry only V.M. traffic our virtual machine poor groups are assigned villans and we can also create
+
+06:57.970 --> 06:59.940
+security policies on them as well.
+
+07:00.860 --> 07:07.010
+All of our other types of traffic like management storage and Wii motion will flow over VM kernel ports
+
+07:07.880 --> 07:14.060
+jumbo frame support needs to be configured identically on our virtual switches and our physical switches.
+
+07:14.180 --> 07:18.370
+Otherwise we end up with our problem of fragmentation and re-assembly.

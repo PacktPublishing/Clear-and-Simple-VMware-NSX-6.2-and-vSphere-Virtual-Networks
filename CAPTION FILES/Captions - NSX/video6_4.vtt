@@ -1,0 +1,262 @@
+WEBVTT
+
+00:05.200 --> 00:13.700
+In this video I'll explain equal cost multi-pass thing using the NSX atch.
+
+00:13.760 --> 00:19.840
+So we'll talk about the equal costs multi-pass things Sopore and what capabilities the NSX can provide.
+
+00:19.970 --> 00:26.810
+Well we'll talk about what happens when a failure of the NSX occurs if we haven't SCMP configuration
+
+00:27.140 --> 00:30.260
+and will also talk about compatibility issues with this feature.
+
+00:32.810 --> 00:42.230
+So as of NSX 6.1 equal cost multipath thing is now supported and traffic can traverse multiple edge
+
+00:42.230 --> 00:44.430
+gateways in a balanced manner.
+
+00:45.480 --> 00:53.010
+This method offers higher bandwidth supporting up to 10 gigabits per second per edge and a maximum of
+
+00:53.160 --> 01:01.050
+eight and a 6 and gateways can be deployed in this model.
+
+01:01.290 --> 01:08.940
+In this type of deployment all of the NSX and instances will form a neighbor relationship with the logical
+
+01:08.940 --> 01:10.880
+routing control virtual machine.
+
+01:11.310 --> 01:18.450
+So here we see the DL our control VM and all the NSX edges are going to form a routing peer relationship
+
+01:18.780 --> 01:26.950
+with the DLR control via And each of the edges will also form a neighbor relationship with the physical
+
+01:26.950 --> 01:29.070
+router as well.
+
+01:29.260 --> 01:36.570
+These dynamic routing protocols will help us recover from failures.
+
+01:36.610 --> 01:44.870
+So let's talk about what happens when an NSX edge fails and we have equal costs multipath and enable.
+
+01:44.880 --> 01:52.740
+So in this scenario we have traffic that's being distributed across multiple unique NSX edges these
+
+01:52.800 --> 01:55.830
+edges don't have any relationship with each other.
+
+01:55.890 --> 02:02.610
+There are no synchronization or sharing of state information between the NSX outages when they're an
+
+02:02.640 --> 02:05.220
+equal cost multi-pack the amount.
+
+02:05.500 --> 02:14.050
+And that means that if that fails all of the traffic and all of the link information associated with
+
+02:14.050 --> 02:18.280
+that edge also fails.
+
+02:18.440 --> 02:26.540
+And let's assume that the DLR and the NSX edges and the physical router are all using OSPF
+
+02:29.940 --> 02:36.260
+Well what this means is that if an NSX edge fails an update to the routing tables going to occur and
+
+02:36.260 --> 02:42.360
+the faster we can get this routing update pushed out the sooner that traffic will start flowing again.
+
+02:43.410 --> 02:50.250
+So this is very different than NSX you state for high availability state stateful high ability gives
+
+02:50.250 --> 02:58.230
+you an active and a standby and there's almost immediate fail over with NSX edge and equal cost multipath
+
+02:58.230 --> 02:59.010
+thing.
+
+02:59.010 --> 03:06.510
+We want to set a very aggressive dead timer with our routing protocol so that if an edge does fail the
+
+03:06.510 --> 03:13.190
+routing protocol will detect that really quickly an alternate routes will be used for that traffic.
+
+03:13.220 --> 03:22.900
+Now OSPF and BGP both support dead at intervals as short as three seconds the NSX edge and equal cost
+
+03:22.900 --> 03:29.040
+multipath mode is incompatible with some stateful features such as the NSX edge firewall.
+
+03:29.920 --> 03:31.840
+So let's take a look at an example.
+
+03:33.200 --> 03:38.540
+Here in this diagram let's say that virtual machine one generates some traffic bound for an external
+
+03:38.540 --> 03:44.660
+network and maybe somebody goes in and opens a web browser and points to a Web site like trayner test
+
+03:44.680 --> 03:45.200
+dot.
+
+03:46.760 --> 03:49.040
+As that traffic flows out.
+
+03:49.070 --> 03:56.390
+It's going to hit the NSX atch and the NSX edge will analyze the firewall to determine if that traffic
+
+03:56.420 --> 04:02.090
+should be allowed out or up and if it matches a permit rule and the firewall then yeah that traffic
+
+04:02.090 --> 04:04.940
+is going to be allowed to flow out to the external network.
+
+04:06.900 --> 04:15.150
+Now some response traffic comes back but this time instead of handing the NSX edge instance that is
+
+04:15.150 --> 04:23.490
+aware of the current state of this connection because we're using SCMP the return traffic might actually
+
+04:23.490 --> 04:32.660
+flow back in through a different at each equal cost multipath thing supports routes through multiple
+
+04:32.660 --> 04:35.930
+edges to and from the same destination.
+
+04:36.600 --> 04:42.810
+So that return traffic might potentially come in through a different edge and that other edge may not
+
+04:42.810 --> 04:47.050
+be aware of the state of that connection and it might block that traffic.
+
+04:48.390 --> 04:59.340
+So that's just something to consider if you're possibly thinking about utilizing the NSX edgin ECMO.
+
+04:59.530 --> 05:06.460
+Now let's take a look at how this behaves within a high availability cluster with three or more hosts
+
+05:07.920 --> 05:14.840
+so notice that we have two virtual machines on two different hosts and there's two different shared
+
+05:14.840 --> 05:21.560
+storage systems also available down here at the bottom of the screen and all of our hosts have access
+
+05:21.560 --> 05:23.160
+to all of our data stores.
+
+05:23.570 --> 05:28.210
+And this is important and it's of course is recommended as well.
+
+05:28.250 --> 05:36.170
+So let's assume that the host that adds to runtime fails something happens that ESX I host and it's
+
+05:36.170 --> 05:45.570
+no longer functioning well the files of that NSX edge are still intact on the data store.
+
+05:45.680 --> 05:51.120
+We can see the files for that Vergine machine are still sitting there and data store too and are accessible
+
+05:51.330 --> 05:53.810
+to our other ESX hosts.
+
+05:53.850 --> 06:00.790
+So this means that vse very high availability can bring up that failed edge on another host.
+
+06:00.830 --> 06:01.010
+Right.
+
+06:01.020 --> 06:03.510
+That edge can come up just like any other virtual machine.
+
+06:05.280 --> 06:09.420
+The edge can now re-establish those neighbor relationships.
+
+06:09.510 --> 06:18.170
+And we can begin equal costs multi-pack think again.
+
+06:18.230 --> 06:23.310
+One final consideration to bear in mind here we see a couple of NSX agist.
+
+06:23.450 --> 06:30.710
+I'd label them active edge or stand by Edge but in reality they could both be independent Agis configured
+
+06:30.710 --> 06:32.440
+for equal cost multipath.
+
+06:33.580 --> 06:40.000
+Regardless I want to make sure that these edges stay on the appropriate hosts.
+
+06:40.060 --> 06:45.420
+There's not really a whole lot of point in doing equal costs multipath thing and having multiple edges
+
+06:45.760 --> 06:50.280
+if those edges get moved by address and end up on the same host.
+
+06:50.290 --> 06:58.330
+So we want to create anti affinity rules to govern that these virtual machines should not end up on
+
+06:58.330 --> 07:01.380
+the same ESX I host.
+
+07:01.470 --> 07:07.050
+So now we can see in this cluster maybe we have fully automated DRM enabled.
+
+07:07.200 --> 07:12.660
+And so what has happened here is both of these victims both of these NSA gadgets have gotten migrated
+
+07:12.660 --> 07:14.230
+to the same host.
+
+07:14.550 --> 07:16.180
+And if that host fails.
+
+07:16.290 --> 07:19.840
+Well now we're out of luck because we've lost both of our NSX outages.
+
+07:19.920 --> 07:25.350
+So of course we want to create some management controls that prevent this.
+
+07:25.590 --> 07:33.450
+And the way to accomplish that is to configure a as anti affinity role to force those edges to remain
+
+07:33.450 --> 07:35.290
+on different ESX I.
+
+07:37.980 --> 07:44.970
+So in review the NSX now supports equal cost multi-pack thing as of NSX 6.1.
+
+07:45.120 --> 07:52.230
+And this allows us to balance out the egressed traffic workload over multiple agist and multiple ESX
+
+07:52.370 --> 07:53.760
+host.
+
+07:53.790 --> 07:57.060
+There is no synchronization there's no stateful fail over.
+
+07:57.060 --> 07:59.690
+There's no active in standby.
+
+07:59.730 --> 08:06.210
+Each one of the edges is independent virtual machines and they don't synchronize with each other.
+
+08:06.440 --> 08:12.000
+And if one of them fails the network will heal itself using dynamic routing protocols.
+
+08:12.040 --> 08:17.860
+So we want to see very aggressive dead timers with equal costs multipath thing so that if a failure
+
+08:17.860 --> 08:20.970
+does occur the fail over happens very quickly.
+
+08:22.770 --> 08:29.160
+And again SCMP is incompatible with stateful features such as the NSX Hadj firewall and network address
+
+08:29.160 --> 08:29.810
+translation.

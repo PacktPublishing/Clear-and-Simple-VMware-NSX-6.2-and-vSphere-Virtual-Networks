@@ -1,0 +1,565 @@
+WEBVTT
+
+00:00.300 --> 00:08.770
+In this video I'll explain NSX edge high availability and sex edge is a virtual appliance that exists
+
+00:08.770 --> 00:10.680
+in the data point.
+
+00:10.820 --> 00:16.910
+And so it's very important that we maintain a high level of up time for the NSX edge virtual appliance
+
+00:18.280 --> 00:23.050
+what we're going to talk about in this video is specific to NSX Hatch.
+
+00:23.260 --> 00:29.380
+We're not going to be talking about VSE for high availability specifically but we will talk about how
+
+00:29.380 --> 00:34.850
+vse for high availability works with NSX edge ha.
+
+00:35.060 --> 00:41.270
+We'll take a look at how to protect the NSX edge with high availability will understand stateful high
+
+00:41.270 --> 00:48.760
+availability and we'll also take a look at what happens when an NSX edge fails.
+
+00:48.840 --> 00:54.240
+So the first thing to make sure that we understand is the NSX edge is in the data plane.
+
+00:54.660 --> 01:01.750
+So for example here on the left hand side of our diagram we see a virtual machine called V.M. 1 right.
+
+01:01.780 --> 01:06.910
+That's the virtual machine that's going to be sending some sort of traffic to an external network.
+
+01:09.260 --> 01:16.040
+So as VM one sends traffic to an external network that traffic is going to flow through a distributed
+
+01:16.040 --> 01:17.160
+logical router.
+
+01:17.360 --> 01:25.690
+That's the default gateway for virtual machine one and the DLR will wow that traffic to some interface
+
+01:26.770 --> 01:33.250
+a logical switch in this example that's a logical switch 5 0 0 0 0 2 and that logical switches connected
+
+01:33.250 --> 01:35.550
+to the other ESX I host.
+
+01:35.560 --> 01:40.400
+And it also has an interface that's connected to the NSX edge.
+
+01:40.450 --> 01:46.960
+So that's how VM once traffic actually makes it out into the physical external network.
+
+01:50.340 --> 01:55.770
+So we've got other components shown here like the NSX control or closter and it's not pictured but we've
+
+01:55.770 --> 01:57.930
+also got NSX manager.
+
+01:58.110 --> 02:02.390
+Those objects are not part of the data plan.
+
+02:02.460 --> 02:09.390
+The NSX edge is the traffic from VM one is going to actively flow through the edge in order to get to
+
+02:09.390 --> 02:10.280
+the Internet.
+
+02:10.620 --> 02:15.960
+So of course it's critically important that we protect this virtual machine because it's our only way
+
+02:15.960 --> 02:16.350
+out.
+
+02:18.700 --> 02:26.680
+So we can protect the NSX and using vse for high availability we can protect it using NSX edge services
+
+02:26.710 --> 02:34.360
+Gateway High availability and we can use a combination of those two solutions to kind of provide the
+
+02:34.360 --> 02:36.350
+maximum level of protection.
+
+02:39.740 --> 02:44.340
+So let's start by just explaining some of the fundamentals of high availability.
+
+02:44.510 --> 02:50.480
+And if you're familiar with these for H.A. this might be pretty familiar to you but just in case you're
+
+02:50.480 --> 02:51.010
+not.
+
+02:51.290 --> 02:56.340
+Let's take a moment to quickly review how these very high availability works.
+
+02:57.460 --> 03:04.700
+So here we see for ESX high hosts that are part of a high availability cluster and running out a host
+
+03:04.820 --> 03:09.490
+ESX size 0 1 is a VM called VM 1.
+
+03:09.500 --> 03:18.950
+Now if that first ESX host fails VM one is going to fail along with it or the virtual machine can't
+
+03:18.950 --> 03:20.970
+run without its host.
+
+03:21.180 --> 03:26.340
+But if you look down towards the bottom of the screen you notice here is V.M. once files those files
+
+03:26.340 --> 03:27.670
+are still intact.
+
+03:27.800 --> 03:34.250
+They're on some shared storage solution that's accessible to all of the ESX host in my closter
+
+03:37.040 --> 03:40.590
+So when that host fails the virtual machine fails along with it.
+
+03:40.670 --> 03:42.300
+But the files are left intact.
+
+03:44.300 --> 03:52.100
+So because those files still exist and they're still available to our other ESX I cohosts we are able
+
+03:52.100 --> 03:55.490
+to boot this virtual machine up on some other host.
+
+03:55.730 --> 03:57.680
+That's what high availability does.
+
+03:57.800 --> 04:02.820
+It doesn't give us zero downtime protection it doesn't give us 100 percent uptime.
+
+04:02.840 --> 04:09.800
+What it does is if a host fails and the VMS on that host will also fail but they will be subsequently
+
+04:09.800 --> 04:16.560
+booted up on other ESX host.
+
+04:16.570 --> 04:20.010
+Now how does this apply to the ANOSIKE sketch.
+
+04:20.290 --> 04:23.270
+Well the NSX edge is a virtual machine.
+
+04:23.390 --> 04:25.870
+It's a virtual appliance.
+
+04:25.930 --> 04:27.620
+So let's think about what happens here.
+
+04:27.640 --> 04:36.630
+Here we see the NSX adj running on ESX eyes 0 4 it's running on any ESX I host and that ESX host fails
+
+04:37.780 --> 04:40.960
+while now our egress point is gone.
+
+04:41.030 --> 04:47.140
+We don't have the NSX anymore and there is no way for my traffic to get to the external network.
+
+04:48.590 --> 04:55.190
+Now eventually that virtual machine will reboot on some other host because its files are still intact
+
+04:55.250 --> 04:57.730
+right there down here on shared storage.
+
+04:59.020 --> 05:06.340
+So it's just a matter of time before that virtual machine boots up on some other ESX host and is functional
+
+05:06.340 --> 05:07.300
+again.
+
+05:07.300 --> 05:10.600
+And now we're back in business.
+
+05:10.750 --> 05:17.530
+Now this takes some time or a reboot are required here and the level of downtime that we're going to
+
+05:17.530 --> 05:25.150
+experience with VSE for ha in most cases it's not really acceptable and we can't have five to 10 minutes
+
+05:25.150 --> 05:28.060
+of downtime if a host fails.
+
+05:28.060 --> 05:31.340
+We need to get that edge back up as quickly as possible.
+
+05:32.470 --> 05:41.720
+So if you can't tolerate that level of downtime you can consider using NSX edge high availability and
+
+05:41.720 --> 05:44.000
+with this configuration.
+
+05:44.000 --> 05:46.690
+There's actually two edge gateways that are created.
+
+05:46.730 --> 05:53.180
+One is an active mode and one is in standby mode and noticed they were on different data stores.
+
+05:53.210 --> 06:00.860
+Right they don't have that risk of a single storage failure taking down both NSX edges.
+
+06:01.670 --> 06:06.380
+These very high availability does not protect us from a storage failure.
+
+06:06.700 --> 06:13.600
+NSX edge ha does protect the edge virtual appliance from a storage failure.
+
+06:13.790 --> 06:19.520
+And this is the recommended configuration to place these two Reems on different data stores.
+
+06:20.200 --> 06:25.630
+And it's also important that those data stores are shared storage right that they're accessible to all
+
+06:25.630 --> 06:28.000
+of our ESX host.
+
+06:28.030 --> 06:29.210
+So how does this work.
+
+06:29.220 --> 06:36.190
+Well we have the active edge and the standby inch and they are going to regularly exchange heartbeats
+
+06:38.140 --> 06:44.610
+and if five heartbeats are missed this triggers what is called The Dead timer.
+
+06:45.630 --> 06:50.050
+So the dead timer expires once five heartbeats are missed.
+
+06:50.070 --> 06:53.470
+And by default heartbeats are sent every three seconds.
+
+06:53.520 --> 06:58.870
+So if the active edge fails the standby edge will stop getting heartbeats from it.
+
+06:59.740 --> 07:08.210
+And within 15 seconds it'll consider that active dead and it'll take over now 15 seconds.
+
+07:08.330 --> 07:10.980
+Even that might not be fast enough for you.
+
+07:10.980 --> 07:11.300
+Right.
+
+07:11.480 --> 07:16.820
+So you can actually adjust that dead timer down to as low as six seconds.
+
+07:17.000 --> 07:23.360
+But the V.M. were recommended best practice is to not go lower than nine seconds.
+
+07:23.360 --> 07:29.360
+Nine seconds is kind of the recommended minimum dead timer for NSX.
+
+07:29.390 --> 07:36.830
+Adj high availability so this is going to give us a much much faster fail over than vse fair.
+
+07:36.840 --> 07:45.170
+High Availability gave us and the good thing about NSX edge high availability is it supports all of
+
+07:45.170 --> 07:48.270
+our state full services.
+
+07:48.320 --> 07:55.220
+So if the standby edge has to take over there is going to be some impact there and the standby edge
+
+07:55.610 --> 07:59.440
+actually needs to bring some services online.
+
+08:00.430 --> 08:02.140
+When a fail over occurs.
+
+08:02.490 --> 08:06.820
+So the active edge is going to keep that standby edge synchronized.
+
+08:06.870 --> 08:11.240
+It's going to synchronize the important information like the forwarding table.
+
+08:11.320 --> 08:19.020
+It will synchronize firewall connection States load balancer States NAND translations important information
+
+08:19.020 --> 08:27.250
+like that all of those logical surfaces are synchronized between the active edge and they stand by inch.
+
+08:27.260 --> 08:35.750
+Now that being said it's not a 100 percent stateful fail over what's really going on here is the configuration
+
+08:35.750 --> 08:39.680
+of the active and standby edge are kept synchronized.
+
+08:39.680 --> 08:46.460
+But things like VPN connections for example that are active at the time of that failure.
+
+08:46.460 --> 08:48.750
+Those will need to be reestablished.
+
+08:50.240 --> 08:58.880
+Now one other configuration that we might want to consider if we're going to deploy NSX high availability
+
+08:59.090 --> 09:02.610
+is we may want to create an anti-fan of the role.
+
+09:02.750 --> 09:09.560
+So for example in this scenario we've got an active NSX said you're running on a host ESX eyes or three
+
+09:10.150 --> 09:14.870
+and we've got to stand by NSX Hadj running on host ESX 04.
+
+09:15.260 --> 09:17.150
+And this is fine right.
+
+09:17.150 --> 09:19.250
+This configuration looks good.
+
+09:19.250 --> 09:29.200
+However if D.R. wrasse is configured on this cluster This may create some issues for us so would dress
+
+09:29.200 --> 09:36.190
+or distributed resource scheduler does is it automatically moves virtual machines from host to host
+
+09:36.720 --> 09:40.180
+it does this in order to keep the hosts load balanced.
+
+09:41.420 --> 09:48.200
+In this scenario this could create a problem because we could potentially end up with the active and
+
+09:48.200 --> 09:52.250
+standby edge running on the same ESX host.
+
+09:52.370 --> 09:58.960
+And if that host were to now fail we would lose the active edge and the standby Ouch.
+
+09:59.270 --> 10:04.070
+So we need to make sure that these two virtual machines are kept separated.
+
+10:04.070 --> 10:06.890
+That's what an anti affinity role will do for us.
+
+10:06.890 --> 10:14.270
+It will guarantee that the active edge and the standby edge always remain on different hosts and that
+
+10:14.300 --> 10:26.000
+dress will never migrate those two virtual machines to the same host.
+
+10:26.000 --> 10:29.330
+Now let's talk a little bit about how routing works.
+
+10:29.360 --> 10:37.610
+Once we've enabled NSX had high availability because now we're going to have to NSX and gateways only
+
+10:37.610 --> 10:41.490
+the active edge actually Peares with routers.
+
+10:41.580 --> 10:41.870
+Right.
+
+10:41.870 --> 10:50.050
+So for example let's assume that the active edge fails are active edge has now failed.
+
+10:50.060 --> 10:55.190
+It's no longer available to pass traffic.
+
+10:55.360 --> 11:04.390
+If the active edge fails the standby now needs to take over and it needs to maintain those adjacencies
+
+11:05.320 --> 11:07.260
+that were stablished by the Active-X.
+
+11:07.360 --> 11:13.480
+So these standby edge needs to maintain an adjacency with the distributed logical router control VM
+
+11:14.510 --> 11:15.980
+and with the physical router
+
+11:19.450 --> 11:26.640
+to allow this to happen we want to set our hello and dad timers to a longer interval.
+
+11:27.130 --> 11:34.870
+We don't want our routing protocol to trigger it's dead timer.
+
+11:34.940 --> 11:43.190
+We don't want that dead timer to expire because then let's say for example we're using OSPF if the OSPF
+
+11:43.190 --> 11:49.040
+dead timer expires while the active is failing over to the stand by.
+
+11:49.040 --> 11:54.440
+We're going to have to reconversion our routing tables and that's going to create an even longer outage.
+
+11:56.490 --> 12:02.370
+So because of this the recommended dead time for OSPF is 120 seconds.
+
+12:02.410 --> 12:06.460
+Let's get into a little bit more detail about how this fell overworks
+
+12:10.470 --> 12:17.830
+So under normal operations the NSX edge has a IP address and a MAC address.
+
+12:17.910 --> 12:24.300
+The activity has has the IP address and there's actually a shared IP address that the standby edge also
+
+12:24.300 --> 12:32.850
+has however the standby edge is a different virtual machine and it has a unique MAC address.
+
+12:32.960 --> 12:35.380
+So if the active edge fails.
+
+12:35.580 --> 12:37.700
+Here's essentially what is going to happen.
+
+12:37.870 --> 12:38.060
+Right.
+
+12:38.060 --> 12:39.340
+The active edge fails.
+
+12:39.350 --> 12:40.070
+It's gone.
+
+12:40.070 --> 12:42.050
+It's out of the picture.
+
+12:42.080 --> 12:50.770
+The standby edge will now issue something called a gratuitous ARP and what the purpose of the gratuitous
+
+12:50.770 --> 12:58.060
+ARP is essentially the standby edge is saying to the physical router Hey physical router my mac address
+
+12:58.060 --> 12:59.200
+is changed.
+
+12:59.230 --> 13:00.960
+The IP is still the same.
+
+13:01.000 --> 13:03.800
+The neighbor relationship is still maintained.
+
+13:03.850 --> 13:06.000
+We're just changing the MAC address.
+
+13:06.490 --> 13:12.490
+It'll also send that gratuitous ARP to the logical routing control VM to inform it that hey the IP remains
+
+13:12.490 --> 13:13.080
+the same.
+
+13:13.150 --> 13:21.850
+But I now have a new MAC address and by doing this it can maintain those neighbor relationships without
+
+13:21.880 --> 13:26.870
+OSPF having to reroute traffic.
+
+13:26.940 --> 13:33.630
+So again it's very important that we properly configure not only the virtual network but the physical
+
+13:33.630 --> 13:41.130
+network as well so that during that brief downtime of let's say 15 seconds or the active just failing
+
+13:41.130 --> 13:49.330
+over to the standby we do not want our OSPF dead timer to get triggered during that fail over process.
+
+13:49.350 --> 13:54.930
+I want to fail over to complete what the standby adds to send out a gratuitous ARP and take over those
+
+13:54.930 --> 13:56.350
+neighbor relationships.
+
+14:02.750 --> 14:10.400
+Now finally let's take a look at how NSX edge high availability works hand in hand with VSE for high
+
+14:10.400 --> 14:17.070
+availability and in this case we've got four ESX host in our environment.
+
+14:17.100 --> 14:20.430
+We've got the active edge running on host ESX 0 3.
+
+14:20.460 --> 14:26.820
+We've got the Stand by Edge on ESX zero for their files are on different data stores as well.
+
+14:29.530 --> 14:33.460
+And all of our hosts have access to both of these data source.
+
+14:33.500 --> 14:38.570
+This is important and is their recommended configuration.
+
+14:38.640 --> 14:43.910
+So let's assume that host ESX size 0 3 fails right.
+
+14:43.920 --> 14:50.320
+That's the host that my active NSX was running on.
+
+14:50.330 --> 14:58.850
+So now my active ANOSIKE surge is down and the host that was on has failed and the active NSX adj is
+
+14:58.850 --> 15:07.380
+gone well at this point NSX edge high availability will be used to fail over to that standby edge and
+
+15:07.380 --> 15:09.700
+the standby edge will now take over.
+
+15:09.710 --> 15:17.310
+It will issue that gratuitous ARP to take over those neighbor relationships that the other ad used to
+
+15:17.820 --> 15:25.650
+be in charge of ADD Now these fair high availability will kick in.
+
+15:25.790 --> 15:26.000
+Right.
+
+15:26.000 --> 15:29.540
+My files are still available down there and data store too.
+
+15:29.660 --> 15:32.750
+So that old Dadge can be booted up on some other host.
+
+15:32.900 --> 15:36.330
+And when it does get booted up it's going to come in as the standby.
+
+15:36.380 --> 15:40.300
+That's not going to preempt the other edge and take over as the active.
+
+15:40.490 --> 15:42.320
+It'll come back as they stand by each
+
+15:45.950 --> 15:52.870
+Sylvie's for high availability and NSX edge high availability really worked very nicely together because
+
+15:52.880 --> 16:00.470
+the Wii's for high availability essentially serves to protect the NSX edge should some failure occur
+
+16:04.480 --> 16:06.310
+so let's take a couple of minutes to review.
+
+16:06.310 --> 16:12.820
+Now in this lesson we learned about the NSX and how it's in the data plan and how it's very important
+
+16:13.120 --> 16:18.200
+that we quickly restore the NSX edges functionality.
+
+16:18.370 --> 16:26.620
+Should a failure occur NSX edge high availability works by creating a standby I-ness Accenture.
+
+16:26.630 --> 16:28.610
+There's going to be an active and a Stand by.
+
+16:28.780 --> 16:35.340
+And if the act fails the stand by we'll take over the stand by detects that failure because it stops
+
+16:35.340 --> 16:41.910
+receiving heartbeats from the act of which this failure can take anywhere from 15 seconds to as low
+
+16:41.910 --> 16:42.890
+as six seconds.
+
+16:42.990 --> 16:48.780
+But again the minimum configuration recommended is a nine second dead timer.
+
+16:50.730 --> 16:58.680
+And we also saw how NSX edge high availability works hand-in-hand with very high availability to protect
+
+16:58.680 --> 17:03.530
+the NSX Sache and restart those edge virtual machines if a host fails.

@@ -1,0 +1,166 @@
+WEBVTT
+
+00:01.170 --> 00:09.270
+In this video I'll explain how sex and VX Liane can affect network scalability.
+
+00:09.290 --> 00:16.330
+So here we see a group of VSX high hosts and just kind of picture these like their racks of hosts.
+
+00:16.460 --> 00:23.180
+So I moldable racks of hosts and let's say I'm using the VST for distributed switch so I don't have
+
+00:23.190 --> 00:24.960
+NSX in this scenario.
+
+00:26.260 --> 00:34.240
+Well as I add more and more racks of hosts I have to add more and more switches and my Alair to network
+
+00:34.660 --> 00:43.720
+has to spam all of these VSX I hosts then in this scenario we don't really have that many hosts.
+
+00:43.720 --> 00:50.890
+So the impact really isn't that severe but what we want to bear in mind when we're talking about distributed
+
+00:50.890 --> 00:51.700
+switches.
+
+00:51.880 --> 00:55.580
+They cannot traverse a layer 3 physical network.
+
+00:55.870 --> 01:04.460
+So I'm going to have to have all of these switches or connected via Lehre to with each other.
+
+01:04.550 --> 01:10.460
+And again in a fairly small environment like this the impact isn't that substantial.
+
+01:11.130 --> 01:14.960
+But what happens when my environment begins to grow.
+
+01:18.040 --> 01:25.480
+So I've just added a bunch of hosts and as I add more and more ESX I hosts what happens is my Llyr to
+
+01:25.480 --> 01:28.160
+network gets bigger and bigger and bigger.
+
+01:28.300 --> 01:34.390
+I have more and more switches and all of these switches are part of the same layer 2 domain are all
+
+01:34.390 --> 01:41.240
+connected to each other via layer 2 which means a couple of different things.
+
+01:41.240 --> 01:51.210
+Number one my switches contain a MAC Address table and the more ESX hosts and virtual machines that
+
+01:51.210 --> 01:59.290
+I have in my network the larger those MAC address tables are going to get and at a certain point there
+
+01:59.290 --> 02:05.590
+may be so many entries in those MAC address tables that they might fill up.
+
+02:05.690 --> 02:10.150
+So there's limited saleability from a MAC Address table perspective.
+
+02:13.380 --> 02:19.020
+Put probably the more glaring concern here is what about spanning tree.
+
+02:19.120 --> 02:24.610
+I've got so many switches and I'm going to have to interconnect the switches somehow.
+
+02:24.850 --> 02:32.880
+And the likelihood of creating a loop in my lair to network grows as I add more and more switches.
+
+02:33.250 --> 02:39.240
+So the letter to spanning tree domain is going to get larger and larger and larger.
+
+02:39.410 --> 02:46.190
+And as a result it's going to be harder and harder for the switches to figure out how to design a loop
+
+02:46.190 --> 02:49.940
+free typology.
+
+02:50.000 --> 02:59.450
+And so all of these factors can limit the scalability of our physical network if we're not using Vieques
+
+02:59.510 --> 03:01.520
+land and sex.
+
+03:01.520 --> 03:05.480
+Now how does this change when we deploy NSX.
+
+03:05.480 --> 03:10.940
+Well now we have the ability to insert a layer 3 device in the physical network.
+
+03:12.740 --> 03:20.450
+So now I've inserted a router in the physical network basically cutting my lair to domain and has half
+
+03:20.450 --> 03:24.430
+the switches are on one side of the router and the other half are on the other side.
+
+03:24.740 --> 03:31.160
+And the impact of this change is going to be that the MAC address table and every single one of those
+
+03:31.160 --> 03:33.840
+switches is going to be immediately cut in half.
+
+03:35.340 --> 03:35.680
+All right.
+
+03:35.710 --> 03:40.960
+The switches on the bottom don't need to know about the MAC addresses on top and the switches on the
+
+03:40.960 --> 03:44.290
+top don't need to know about the MAC address is on the bottom.
+
+03:44.290 --> 03:49.030
+So immediately I have the impact of cutting that MAC Address table in hand.
+
+03:50.400 --> 03:53.490
+And the other major impact is my spinning tree domain.
+
+03:53.640 --> 03:56.570
+It's also immediately cut in half by this round.
+
+03:56.880 --> 04:00.840
+And this is not possible with a Vee's for a distributed switch.
+
+04:00.840 --> 04:01.050
+Right.
+
+04:01.050 --> 04:09.870
+We need VX saline to give us that encapsulation process and to give us those VX LAN tunnels so that
+
+04:09.870 --> 04:19.710
+the traffic can flow through a router even if it's Leor to traffic and so my underlying network is now
+
+04:19.740 --> 04:22.190
+my Lehre three network.
+
+04:22.260 --> 04:29.310
+And remember that's what we refer to this this network on the of the physical switches and the physical
+
+04:29.310 --> 04:30.180
+router share.
+
+04:30.300 --> 04:37.270
+This is my underly physical network that interconnects all of the ESX hosts.
+
+04:37.560 --> 04:45.290
+But the fact that I have a layer 3 underlay does not at all impact the operation of my logical switches.
+
+04:45.570 --> 04:49.700
+I can still have the same logical switch on this ESX I host.
+
+04:49.740 --> 04:58.300
+And on this ESX I host and they can communicate via Lerer to cars as that traffic leaves those hosts.
+
+04:58.350 --> 05:04.880
+Its V xplain encapsulated and delivered to the top of the destination host.
+
+05:06.200 --> 05:12.290
+Soviet sun has a major impact on the scalability of our physical network because we now don't have to
+
+05:12.290 --> 05:15.950
+create these enormous layer to networks anymore.
+
+05:15.950 --> 05:19.670
+We can divide up those Lehre two domains using routers.

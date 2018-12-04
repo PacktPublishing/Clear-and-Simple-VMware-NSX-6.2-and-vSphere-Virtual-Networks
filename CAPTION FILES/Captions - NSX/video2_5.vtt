@@ -1,0 +1,181 @@
+WEBVTT
+
+00:01.120 --> 00:08.230
+In this video we'll look at spanning tree protocol and we'll explain how it helps to prevent switching
+
+00:08.230 --> 00:11.740
+loops in Nuneaton that network.
+
+00:11.770 --> 00:18.070
+So here we see a diagram where we've got one physical or virtual machine and it doesn't matter.
+
+00:18.070 --> 00:19.720
+These could be physical switches.
+
+00:19.720 --> 00:21.880
+These could be virtual switches.
+
+00:21.880 --> 00:24.480
+They both basically operate the same way.
+
+00:24.940 --> 00:30.910
+So we've got some machine here that's connected to either a physical or a virtual switch.
+
+00:31.380 --> 00:36.570
+And let's say that that machine generates some sort of broadcast traffic.
+
+00:36.750 --> 00:46.010
+Like for example and ARP request well and my switch receives that broadcast traffic what it's going
+
+00:46.010 --> 00:54.710
+to do is it's going to flooded out every single pore on that layer to network including this port here
+
+00:54.740 --> 00:58.960
+that connects to another physical or virtual switch.
+
+01:01.260 --> 01:06.510
+So when that broadcast is received by this other switch it'll go through the same process it will flood
+
+01:06.520 --> 01:12.690
+it out all ports even in ports that connect to other network devices and you can probably see where
+
+01:12.690 --> 01:19.890
+I'm going with this now is that what's going to happen is that frame is going to eventually end up getting
+
+01:19.890 --> 01:30.740
+flooded back to that same switch if our switches are connected in topology that creates this loop and
+
+01:30.740 --> 01:38.420
+this will essentially result in an endless loop where the traffic just goes around and around and around
+
+01:38.420 --> 01:42.270
+and around and eventually brings my network to a screeching halt.
+
+01:43.360 --> 01:47.290
+So switching loops are definitely not a good thing right.
+
+01:47.290 --> 01:54.460
+We want to make sure that that we have a loop free typology and Ethernet frames are not configured with
+
+01:54.460 --> 01:56.360
+the time to live either.
+
+01:56.910 --> 02:04.530
+So an IP packet might be configured with the time to live but that time to live is only for hops across.
+
+02:04.530 --> 02:16.100
+ROUDEBUSH So if an Ethernet frame comes in hits one two three four five six seven and so on and so forth
+
+02:16.400 --> 02:21.670
+there's no limit to the number of hops that that traffic can take.
+
+02:21.680 --> 02:25.900
+There's no time to live to find.
+
+02:25.930 --> 02:34.000
+So the way that we can resolve this is by enabling what's called spanning tree protocol and what spanning
+
+02:34.000 --> 02:39.130
+tree does is it guarantees a loop free typology.
+
+02:40.800 --> 02:46.680
+So how does it do this cause we might have a physical loop in our in our network.
+
+02:46.680 --> 02:50.710
+How does spinning tree prevent a switching loop from occurring.
+
+02:51.300 --> 02:58.320
+Well what it basically does is it'll detect these loops in the physical network and it will pick certain
+
+02:58.860 --> 03:00.850
+connections to block.
+
+03:01.110 --> 03:06.540
+It will put certain ports in the blocking state breaking up those loops.
+
+03:06.540 --> 03:12.720
+So now when my broadcast comes from this machine that flows out it hits this physical switch and hits
+
+03:12.720 --> 03:15.930
+this switch and that's where it stops.
+
+03:15.930 --> 03:24.690
+This port is blocked and so therefore the broadcast stops there and the loop is broken.
+
+03:26.220 --> 03:33.150
+So spinning tree does a great job of automatically finding these loops blocking the appropriate ports
+
+03:33.660 --> 03:37.140
+and ensuring that we don't have these broadcast storms.
+
+03:38.960 --> 03:46.250
+But it does so at a cost the network connection that we axed out here this network connection is not
+
+03:46.250 --> 03:48.060
+usable that.
+
+03:48.310 --> 03:55.420
+So we've lost some bandwidth as a result of blocking certain ports and suspending tree definitely comes
+
+03:55.420 --> 03:56.470
+with a cost
+
+03:59.470 --> 04:04.090
+but the benefit in most cases outweighs the bandwidth loss.
+
+04:04.090 --> 04:09.640
+Because if we do have those Lehre two switching loops in our environment it's just a matter of time
+
+04:09.640 --> 04:11.730
+before the network comes to a screeching halt.
+
+04:11.740 --> 04:13.900
+So that's the purpose of spanning tree.
+
+04:13.900 --> 04:20.120
+Now a few things that I just want to mention specific to configuration with VSE fair.
+
+04:20.860 --> 04:24.920
+If you're connecting a physical switch to an ESX host.
+
+04:25.180 --> 04:31.120
+So let's say here's my ESX I host them correcting a physical switch to that ESX I host the well in that
+
+04:31.120 --> 04:40.040
+case we want to enable a special mode of spanning tree port fast.
+
+04:40.040 --> 04:46.700
+Now what port fast does is this for all these ports on my physical switches.
+
+04:46.700 --> 04:50.980
+They have to go through a certain process.
+
+04:51.140 --> 04:57.830
+When I connect up a physical port basically spanning tree needs to check and validate that this port
+
+04:58.010 --> 05:00.340
+is not creating a switching loop.
+
+05:00.520 --> 05:00.950
+Right.
+
+05:01.080 --> 05:05.780
+And if it is going to create a switching loop it'll get blocked.
+
+05:05.990 --> 05:08.200
+And that takes a little time.
+
+05:08.210 --> 05:15.320
+This is what we call spinning tree convergence where the switches agree on the typology and the appropriate
+
+05:15.320 --> 05:17.630
+ports are blocked.
+
+05:17.700 --> 05:22.850
+We don't need that to happen on the ports that we connect to our ESX hosts.
+
+05:23.040 --> 05:29.790
+So we'll configure those ports in a special mode called Port fast that'll skip all of those spanning
+
+05:29.790 --> 05:32.530
+tree States and the port will come up more quickly.

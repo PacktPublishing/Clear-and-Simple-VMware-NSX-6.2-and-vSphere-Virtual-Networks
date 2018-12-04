@@ -1,0 +1,517 @@
+WEBVTT
+
+00:00.270 --> 00:06.870
+In this video I'll explain how the NSX routers handle dynamic routing protocols.
+
+00:06.880 --> 00:10.680
+So first off what is a dynamic routing protocol.
+
+00:11.130 --> 00:16.290
+Well these allow routers to automatically exchange routing information.
+
+00:16.290 --> 00:23.040
+So with static routing we can have numerous routers and we can have lots of different destinations that
+
+00:23.040 --> 00:30.720
+traffic might be flowing and it can become really cumbersome if not impossible to manually maintain
+
+00:31.140 --> 00:34.270
+that list of routing table entries.
+
+00:34.380 --> 00:37.400
+So that's where dynamic routing protocols really come in.
+
+00:37.410 --> 00:37.620
+Right.
+
+00:37.620 --> 00:43.740
+They can automatically learn about routes from other routers they can heal themselves if some sort of
+
+00:43.740 --> 00:45.310
+network failure occurs.
+
+00:45.540 --> 00:51.660
+And there's another viable route dynamic routing protocols can discover that and reroute traffic down
+
+00:51.660 --> 00:52.780
+the appropriate path.
+
+00:54.000 --> 01:00.120
+So NSX supports two dynamic routing protocols OSPF and BGP.
+
+01:00.120 --> 01:04.050
+So let's take a look at an example of static routing in action.
+
+01:04.230 --> 01:11.520
+In this case router 1 is the only router in the picture and it knows all about the networks that it's
+
+01:11.520 --> 01:17.000
+connected to because it's directly connected to them and that's how a router works.
+
+01:17.070 --> 01:23.010
+If a router has an interface that's connected to some network it knows about that network and it adds
+
+01:23.010 --> 01:24.180
+it to its routing table.
+
+01:25.660 --> 01:32.370
+Now I've added another router to the mix router to and that router is connected to a different network
+
+01:32.810 --> 01:36.060
+ten not one to network.
+
+01:36.090 --> 01:43.710
+So as such no I need to somehow make Router one aware that if it wants to reach the 10.0 want to network
+
+01:44.250 --> 01:50.640
+that traffic should flow out of this interface and towards this router.
+
+01:50.830 --> 01:55.470
+So that's one static routing table entry that I need to make in router 1.
+
+01:55.780 --> 02:01.970
+And I also need to make a static routing table entry and router to pointing back the other way.
+
+02:02.040 --> 02:10.110
+And as I add more routers to my environment I have more paths more networks and more possibilities.
+
+02:10.950 --> 02:21.220
+For example on router 3 I have the 10 dot 1.0 3.0 network now Router one can get to this network by
+
+02:21.250 --> 02:25.310
+either going over a direct connection to router or 3.
+
+02:25.410 --> 02:30.660
+We see that point to point connection right there or it's got other other options as well.
+
+02:30.670 --> 02:30.880
+Right.
+
+02:30.880 --> 02:36.430
+So could go this way it could go this way it could go this way.
+
+02:36.670 --> 02:40.570
+It could go all sorts of different routes or there's even more possibilities than I just showed.
+
+02:40.570 --> 02:44.430
+Now how do we select the correct route.
+
+02:44.460 --> 02:49.170
+How do we automatically heal if one of those connections fails.
+
+02:49.170 --> 02:55.880
+How do we reroute traffic over our remaining surviving connection.
+
+02:55.910 --> 03:03.500
+And so you can see as your environment grows static routing very quickly becomes unmanageable and it
+
+03:03.500 --> 03:05.890
+can't scale the way that we need it to.
+
+03:08.860 --> 03:13.840
+So dynamic routing is the way to go to resolve these issues.
+
+03:13.960 --> 03:21.940
+Here we see four routers Router one router to router 3 and router 4 and every router has its own routing
+
+03:21.940 --> 03:26.580
+table essentially a list of networks and how to get to them.
+
+03:27.830 --> 03:32.090
+So here router 2 and router 1 have formed a neighbor relationship.
+
+03:32.330 --> 03:38.540
+And that means that router 2 is going to send Router one a copy of its routing table and now Router
+
+03:38.540 --> 03:39.710
+one will know.
+
+03:39.930 --> 03:47.880
+OK router 2 gives me access to this 10.0 want to network I can reach that network the router too.
+
+03:48.080 --> 03:52.130
+I can also reach the 10 dot one dot for Network.
+
+03:52.160 --> 03:55.890
+Now it might not be the most efficient way to get there.
+
+03:55.990 --> 04:03.860
+I might have a more efficient path elsewhere but if that path fails now I have an alternative route
+
+04:05.240 --> 04:11.180
+and thats the big benefit of dynamic routing and its ability to heal from failure.
+
+04:11.330 --> 04:13.240
+So what does this mean.
+
+04:13.250 --> 04:19.400
+Why do we have this peering relationship and why dont we just let the distributed logical router directly
+
+04:19.760 --> 04:21.950
+former neighbor relationship with the edge.
+
+04:21.950 --> 04:30.970
+Why do we need this control via well because the DLR is a distributed logical router its centrally managed
+
+04:31.260 --> 04:39.100
+but there is a distributed logical outer kernel module running on many ESX hosts so they're not all
+
+04:39.100 --> 04:44.320
+going to form a peer relationship with the edge and learn about these routing table updates.
+
+04:44.440 --> 04:51.880
+We'll have the DLR control VM to essentially manage a dynamic routing table updates and so once the
+
+04:51.880 --> 05:01.270
+DLR control VM establishes this routing peering relationship with the NSX edge now it will start to
+
+05:01.270 --> 05:03.620
+exchange routing table entries.
+
+05:03.820 --> 05:13.600
+And as the logical routing control VM learns about networks it can send those routing table updates
+
+05:13.930 --> 05:17.050
+down to the distributed logical router kernel modules
+
+05:20.320 --> 05:26.850
+so how does the distributed logical rodder control via get those updates to the kernel modules Well
+
+05:26.850 --> 05:30.700
+it's going to utilize the NSX controller cluster.
+
+05:30.720 --> 05:37.410
+Now if you think back to our NSX controller cluster video I talked about the fact that within the ESX
+
+05:37.590 --> 05:45.110
+host there is something that runs called the user world agent and the user world agent is essentially
+
+05:45.110 --> 05:52.520
+a boss that allows the NSX controller to talk to the ESX host.
+
+05:52.580 --> 05:52.890
+Right.
+
+05:52.900 --> 05:55.920
+So in this case lets kind of follow this through.
+
+05:56.090 --> 06:02.000
+Lets say that there is some network that's reachable by this external router.
+
+06:02.100 --> 06:03.160
+Right.
+
+06:03.230 --> 06:09.530
+And so the external routers peering with the edge and the edge learns about this route and the agist
+
+06:09.530 --> 06:18.080
+period with the control via And the logical routing control VM also learns about some route.
+
+06:18.120 --> 06:25.650
+Now we need to get that routing table entry down to the distributed logical router kernel modules so
+
+06:25.650 --> 06:31.930
+that they can have an updated routing table also including this information.
+
+06:32.000 --> 06:38.240
+So the control VM will push those routing table updates to the NSX controller which will leverage the
+
+06:38.240 --> 06:47.850
+user world agent to distribute those routing table updates down to all of the DLR kernel modules OK.
+
+06:48.040 --> 06:55.060
+So let's take a couple of moments to talk about OSPF OSPF is a very common interior gateway routing
+
+06:55.060 --> 07:00.570
+protocol and it uses a concept called areas.
+
+07:00.630 --> 07:07.650
+So with OSPF routers that are in the same area will exchange routing information with each other and
+
+07:07.650 --> 07:11.190
+they'll have a matching link state database.
+
+07:11.190 --> 07:17.130
+So for example let's say that we want the distributed logical router to learn about routing updates
+
+07:17.130 --> 07:18.660
+from the NSX.
+
+07:19.290 --> 07:25.280
+That means that the DLR and the NSX Owch must form a neighbor relationship.
+
+07:25.470 --> 07:33.230
+But before that can happen we need to configure and OSPF area.
+
+07:33.320 --> 07:37.000
+So here's our OSPF area we've called that area 250.
+
+07:37.340 --> 07:42.720
+And we also have to establish interfaces that are members of that area.
+
+07:42.740 --> 07:50.050
+So we'll go into the distributed logical router will pick logical interfaces that are connected to the
+
+07:50.060 --> 07:51.720
+X LAN five thousand three.
+
+07:51.800 --> 07:58.010
+We'll go to the edge will pick the interface on the edge that are connected to that network and we will
+
+07:58.020 --> 08:04.910
+specifically place those interfaces into OSPF area 250
+
+08:08.010 --> 08:11.290
+and now neighbor relationships can be formed.
+
+08:12.310 --> 08:21.610
+The logical routing control via And the NSX can become neighbors at this point.
+
+08:21.640 --> 08:23.450
+So here we see areas zero.
+
+08:23.470 --> 08:25.030
+This is our backbone area.
+
+08:25.210 --> 08:32.590
+That's the NSX Adjt. connection to the external router and that's the area that's used if traffic needs
+
+08:32.590 --> 08:41.480
+to flow outside of this particular OSPF area that we've defined here areas zero is always the area number
+
+08:41.480 --> 08:43.120
+for the backbone area.
+
+08:43.190 --> 08:50.690
+So now that the NSX and the DLR are both an area 250 they can form that neighbor relationship and the
+
+08:50.690 --> 08:56.460
+neighbor relationship again is formed between the logical route and control VM and the NSX.
+
+08:59.600 --> 09:03.780
+Know there are a few things you need to configure in order to make this happen.
+
+09:04.200 --> 09:10.690
+We have to configure what's called the protocol address on the logical routing control via.
+
+09:10.790 --> 09:19.250
+And the purpose of the protocol address is simply it's an address to identify the logical routing control
+
+09:19.250 --> 09:21.250
+via to the NSX.
+
+09:21.830 --> 09:27.750
+Every device that's participating in OSPF needs a router Id like this.
+
+09:27.770 --> 09:30.140
+So that's the purpose of our IP address.
+
+09:30.170 --> 09:36.590
+The deal our control VM is to simply give that virtual machine an identity that it can use to exchange
+
+09:36.590 --> 09:38.650
+routing table updates with each
+
+09:45.340 --> 09:51.190
+the edge will also become a neighbor with the external physical router allowing it to exchange routing
+
+09:51.190 --> 09:52.910
+updates with that router.
+
+09:54.020 --> 10:00.860
+And as routes are learned by the logical rodder control VM they'll get pushed down to the distributed
+
+10:00.860 --> 10:10.990
+logical router kernel modules using the NSX controller cluster and it's user world agent one really
+
+10:10.990 --> 10:13.780
+important thing to understand at this point.
+
+10:13.780 --> 10:22.420
+The only routes that will be exchanged dynamically are those interfaces that we have specified are part
+
+10:22.420 --> 10:23.990
+of an OSPF area.
+
+10:25.250 --> 10:32.690
+So if we have VX sland logical interfaces connecting to a logical switch those networks are not advertised
+
+10:32.690 --> 10:38.610
+by default and will never be learned by the OSPF routers.
+
+10:38.630 --> 10:45.340
+The same goes for any static routes we may have configured in the DLR on the edge gateway if we've set
+
+10:45.340 --> 10:51.690
+up static routes OSPF is not going to automatically learn about those static routes.
+
+10:54.040 --> 11:01.630
+But what we can do is configure route redistribution to import these networks into OSPF and include
+
+11:01.630 --> 11:03.280
+them in a routing table updates.
+
+11:06.910 --> 11:13.930
+So again here we see our OSPF area 250 and the distributed the logical router and the NSX edge have
+
+11:14.020 --> 11:18.080
+interfaces that have been configured as part of that area.
+
+11:18.100 --> 11:25.330
+However the DLR also has interfaces connected to some other network that we're choosing not to advertise
+
+11:25.330 --> 11:26.370
+at this point.
+
+11:26.410 --> 11:34.130
+This is a directly connected network so because this is directly connected network the distributed logical
+
+11:34.130 --> 11:39.980
+router will have a routing table entry specifying how to get to that network.
+
+11:41.890 --> 11:51.270
+It's simply not going to inject to that routing table entry into OSPF unless we specify that it should
+
+11:51.270 --> 11:52.820
+do so.
+
+11:52.830 --> 11:59.310
+So what we can do is we can configure route redistribution and what route redistribution will do as
+
+11:59.310 --> 12:03.240
+it will allow us to specify a target protocol.
+
+12:03.690 --> 12:11.600
+So for example let's assume now that we decide hey we want to redistribute directly connected networks.
+
+12:11.700 --> 12:20.680
+In that case OSPF is going to learn about this network and it's going to inject information about that
+
+12:20.680 --> 12:23.610
+network into all of us.
+
+12:24.610 --> 12:32.980
+So now the edge can become aware of that directly connected network that normally it wouldn't know about.
+
+12:32.980 --> 12:36.330
+And because the edge now knows about that route.
+
+12:37.030 --> 12:43.720
+The ads can actually communicate with the external router and make the external router aware of that
+
+12:43.720 --> 12:45.550
+routing table entry as well.
+
+12:47.280 --> 12:55.710
+So what happens if the logical routing control VM fails well essentially nothing as far as virtual machines
+
+12:55.710 --> 12:56.800
+are concerned.
+
+12:57.210 --> 13:06.080
+All of the real virtual machine traffic is flowing through the DLR kernel modules and the logical switches
+
+13:07.210 --> 13:09.800
+and the NSX Sach.
+
+13:09.850 --> 13:15.060
+But if the logical route of control VM fails there's no traffic that's actively flowing through that.
+
+13:15.230 --> 13:17.990
+Right the logical route or control VM is in the control plane.
+
+13:17.990 --> 13:19.280
+It's not in the data plan.
+
+13:20.240 --> 13:27.020
+So if the logical routing control VM fails what fails along with it is routing table updates we're not
+
+13:27.020 --> 13:33.830
+going to have that OSPF or potentially BGP period relationship anymore.
+
+13:33.830 --> 13:40.840
+So as network changes occur the routing table of the distributed logical router will not be updated.
+
+13:42.680 --> 13:50.120
+And one of the things that we can do is set up the DLR control VM in highly available mode and in that
+
+13:50.120 --> 13:57.110
+case there will be two instances of this logical routing control virtual machine running on two different
+
+13:57.110 --> 13:58.940
+ESX high hosts.
+
+13:58.970 --> 14:05.030
+And that will give us some protection from failure there.
+
+14:05.050 --> 14:11.530
+So a few facts to bear in mind when you're considering setting up routing protocols with that Isaak's
+
+14:12.490 --> 14:20.140
+OSPF version 3 is not supported OSPF version 3 is specifically for IP version 6 and it's not supported
+
+14:20.140 --> 14:25.450
+by the distributed logical router or the etch.
+
+14:25.560 --> 14:31.320
+If there are certain networks that we do not want to redistribute that we do not want to advertise to
+
+14:31.320 --> 14:37.040
+the outside world we can use route filtering to stop certain networks from being advertised.
+
+14:39.260 --> 14:44.600
+Equal costs load balancing is supported and will take a much deeper look at that later on in this course.
+
+14:46.820 --> 14:50.990
+I know we didn't talk about it much but the distributor logical rodder also supports it.
+
+14:51.010 --> 14:55.990
+BGP and the NSX Hach can also be configured with BGP as well.
+
+14:57.290 --> 15:02.360
+You can configure BGP and OSPF on the NSX if you want.
+
+15:02.360 --> 15:08.120
+You can't do both on the distributed logical router so if you wanted to you could set up the edge to
+
+15:08.120 --> 15:17.200
+peer with an external router using BGP and then the edge could peer with the DLR using OSPF if you want
+
+15:17.200 --> 15:25.870
+to do that you have to manually configure all of your BGP neighbors.
+
+15:26.050 --> 15:31.540
+So in review dynamic routing is used to automatically exchange routing information.
+
+15:31.540 --> 15:42.370
+This allows our networks to become self learning self-healing and more scalable NSX supports OSPF and
+
+15:42.370 --> 15:44.440
+BGP routing protocols.
+
+15:44.440 --> 15:51.100
+If there is some change in the network our network is set to be converged when all routers become aware
+
+15:51.100 --> 15:58.830
+of that change and agree on the updated topology of the network and with interior gateway protocols
+
+15:59.100 --> 16:01.780
+we want a really fast convergence time.
+
+16:01.890 --> 16:06.390
+We want that kind of fast self-healing if some change occurs.
+
+16:08.980 --> 16:15.350
+The logical routing control VM is used for dynamic routing updates and it forms a neighbor relationship
+
+16:15.350 --> 16:23.930
+with the NSX such as these routing table updates curr the distributed logical router receives them from
+
+16:23.930 --> 16:29.700
+the NSX controller cluster via the user agent.
+
+16:29.890 --> 16:36.670
+And then finally we learned about route redistribution and how it can be used to inject static or directly
+
+16:36.670 --> 16:39.570
+connected networks into a routing protocol.

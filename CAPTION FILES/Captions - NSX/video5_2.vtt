@@ -1,0 +1,172 @@
+WEBVTT
+
+00:00.270 --> 00:07.620
+In this video I'll explain quality of service settings and how the NSX underlay network can actually
+
+00:07.620 --> 00:13.840
+respect values configured on the inner header's of our packets and frames.
+
+00:13.870 --> 00:20.710
+So let's start out by just explaining a couple of basics like classes of service and DCP tags are used
+
+00:20.710 --> 00:22.560
+to provide quality of service.
+
+00:22.690 --> 00:31.510
+Our class of service tags are enforced at Layer 2 and our DCP tags are enforced at Layer 3 so when we're
+
+00:31.510 --> 00:37.130
+configuring these values we're looking to prioritize certain types of traffic.
+
+00:37.300 --> 00:45.630
+And if the physical network is congested or overwhelmed sometimes packets get dropped.
+
+00:45.640 --> 00:50.680
+Our goal is to make sure that if packets are going to get dropped that they're not are really important
+
+00:50.680 --> 00:51.620
+packets.
+
+00:51.850 --> 01:00.560
+So we might set up quality of service to prioritize certain virtual machines over others in this quality
+
+01:00.560 --> 01:01.010
+of service.
+
+01:01.010 --> 01:08.750
+Tagging can be done at the guest OS level or it can be done by a physical switch but we can also perform
+
+01:08.750 --> 01:12.290
+quality of service tagging using the Vee's fair distributed switch.
+
+01:14.090 --> 01:21.420
+And traffic that is tagged with a lower priority is considered to be discard eligible.
+
+01:21.460 --> 01:29.720
+Right so let's say for example VM one generates some traffic and that traffic arrives at the VSD for
+
+01:29.730 --> 01:39.450
+distributed switch and is tagged according to the quality of service policy that we've created as that
+
+01:39.450 --> 01:43.070
+packet now traverses the physical network.
+
+01:43.430 --> 01:46.540
+These quality of service values will be respected.
+
+01:47.460 --> 01:53.210
+And this packet will take precedence over traffic that has a lower priority level.
+
+01:56.000 --> 02:00.950
+So that's how it works when we've got a virtual machine that's connected to a VSE for a distributed
+
+02:00.950 --> 02:01.910
+switch.
+
+02:04.940 --> 02:15.760
+Now what happens when those class of service and DCP tasks are encapsulated within a V xplain how to.
+
+02:15.780 --> 02:23.650
+So here we see the exact same packet with the same quality of service values and it's hitting a logical
+
+02:23.650 --> 02:24.380
+switch.
+
+02:25.480 --> 02:28.220
+And it's destined for some VM on another.
+
+02:28.240 --> 02:30.800
+Yes XCI host.
+
+02:30.910 --> 02:37.420
+So this is a packet that needs to traverse the underlying network and it has to flow over the physical
+
+02:37.420 --> 02:38.570
+network.
+
+02:38.920 --> 02:48.670
+And that means that this packet is going to be encapsulated with VX manhunters the destination IP and
+
+02:48.670 --> 02:50.080
+the destination MAC.
+
+02:50.320 --> 02:59.080
+Well those are going to be the addresses of this V tap over here the tap on the second host so as we
+
+02:59.110 --> 03:08.640
+provide those new lair of outer header's for this packet the class of service and DCP values are going
+
+03:08.640 --> 03:16.170
+to be trapped on the inner frame and they're not going to be visible to the physical network hardware
+
+03:16.590 --> 03:20.880
+and therefore we're going to lose these quality of service configurations.
+
+03:22.120 --> 03:25.440
+Well fortunately that's now the way that it works.
+
+03:25.440 --> 03:32.860
+All right those quality of service values will actually be copied to the outer headers of the VX land
+
+03:32.860 --> 03:40.200
+frame to ensure that the proper quality of service settings are still respected.
+
+03:40.230 --> 03:43.300
+So now is this packet traverses the physical network.
+
+03:43.370 --> 03:49.370
+It will be prioritized according to the class of service and DCP tags.
+
+03:49.370 --> 03:56.620
+One final note that I'd like to make here is VX excellent offload the excellent offload is a feature
+
+03:56.620 --> 04:02.020
+that you should be aware of for your VCP certification.
+
+04:02.060 --> 04:03.670
+So what is the excellent offload.
+
+04:03.710 --> 04:09.800
+Well if you're familiar with network features like TCAP check some offload or large receive offload
+
+04:10.280 --> 04:18.840
+the excellent offload works very similar to that if you have a physical adapter installed in your ESX
+
+04:19.020 --> 04:22.790
+host that supports the excellent offload.
+
+04:22.900 --> 04:33.430
+What will happen is rather than the the tap being responsible for that extra work load of encapsulating
+
+04:33.430 --> 04:41.610
+a frame with those additional outer headers the physical adapter will actually supply the resources
+
+04:42.180 --> 04:47.740
+to accomplish that encapsulation.
+
+04:47.760 --> 04:54.660
+So it's simply a way to offload some work from essentially the you of the ESX host you're offloading
+
+04:54.660 --> 05:00.460
+work onto the physical adapter itself and making the excellent encapsulation work more efficiently
+
+05:03.050 --> 05:09.370
+so in review we learned about class of service tags and how they're used to provide quality of service
+
+05:09.370 --> 05:15.680
+at Layer 2 and DCP tags that are respected by our layer 3 routers.
+
+05:15.680 --> 05:19.940
+So they're used to provide quality of service that Leora 3.
+
+05:19.980 --> 05:27.360
+We learned that these values are not trapped within the inner Hetter but are actually copied from the
+
+05:27.360 --> 05:36.130
+inner header to the VX line outer as data is encapsulated and sent over the physical underlying network.
+
+05:36.140 --> 05:43.300
+We also learned how the excellent offload can help reduce the usage of your ESX I host by performing
+
+05:43.310 --> 05:47.810
+the excellent encapsulation on the actual physical network adapter hardware.

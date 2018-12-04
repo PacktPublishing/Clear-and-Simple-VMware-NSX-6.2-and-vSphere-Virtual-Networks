@@ -1,0 +1,211 @@
+WEBVTT
+
+00:00.900 --> 00:09.950
+In this video I'll explain one of the VPN features provided by the NSX edge layer to VPN how the purpose
+
+00:10.040 --> 00:21.010
+of Alair to VPN is to provide a secure layer 2 connection between sites over some sort of public network.
+
+00:23.500 --> 00:31.870
+Well talk about Layer 2 VPN IP addressing as well and how we can figure each end of the VPN tunnel and
+
+00:31.870 --> 00:38.310
+we'll talk about the client server architecture utilized by the Lehre to VPN.
+
+00:38.330 --> 00:45.440
+Now way back in the old days we used to use a lot of private point to point circuits like ti ones the
+
+00:45.440 --> 00:53.840
+different types of VPN that we now have available can help to provide a more cost effective way to create
+
+00:53.840 --> 00:56.660
+a private connection over a public network.
+
+00:56.960 --> 00:59.480
+Without those dedicated leased lines.
+
+01:01.590 --> 01:06.690
+So one of the types of VPN supported by the NSX is the layer to VPN.
+
+01:07.050 --> 01:08.890
+There's two other types of VPN.
+
+01:08.910 --> 01:15.640
+The layer 3 IPs like VPN and the SSL VPN plus that we'll look at an other lessons.
+
+01:15.930 --> 01:25.820
+But for now we're going to focus purely on the Lehre to VPN and this is used to extend a layer to network.
+
+01:25.860 --> 01:29.270
+So let's take a look and an example here we have two virtual machines.
+
+01:29.280 --> 01:30.790
+VM one nvm two.
+
+01:31.140 --> 01:33.920
+And these virtual machines are on the same network.
+
+01:34.120 --> 01:43.020
+They're on the 10 1 1 network and we want to keep them on the same network even though they're physically
+
+01:43.020 --> 01:44.250
+separated.
+
+01:44.250 --> 01:48.200
+We want to extend our layer to network across the Internet.
+
+01:48.210 --> 01:58.500
+In this case so what we need to do is number one create an NSX and gateway at the local site and set
+
+01:58.500 --> 02:06.640
+it up as a layer to VPN server and we'll connect and interface to the logical switch that our virtual
+
+02:06.640 --> 02:08.860
+machine is connected to.
+
+02:08.860 --> 02:14.250
+So this is the layer to network that we want to span over the Internet to the remote site.
+
+02:15.690 --> 02:22.120
+So we'll also connect the NSX edge to a port that's going to give it access to the Internet.
+
+02:22.460 --> 02:23.170
+Right.
+
+02:23.250 --> 02:28.290
+We'll connect an interface to a port group on a distributed switch and the distributed switch has a
+
+02:28.290 --> 02:30.420
+physical adapter called a VM Nic.
+
+02:30.540 --> 02:33.270
+That's the little black square that you see there.
+
+02:33.300 --> 02:38.580
+So that's how my NSX edge gets access to the physical network.
+
+02:39.450 --> 02:47.460
+And as traffic is leaving this host it's secured in a VPN tunnel and it's headed for our lair to VPN
+
+02:47.460 --> 02:56.100
+client and the Lehre to VPN client is an NSX agit the remote location and this edge also has two interfaces.
+
+02:56.100 --> 03:02.760
+One of them hooked up to the internet via a distributed port group on Ivey's for a distributed switch
+
+03:03.360 --> 03:06.830
+and another interface connecting to that logical switch.
+
+03:08.940 --> 03:15.550
+And that same Alair to network that we had at the local site.
+
+03:15.790 --> 03:21.700
+And by the way at the remote site we don't actually even need a full NSX deployment.
+
+03:21.700 --> 03:24.200
+We need a full and a sex deployment at the server site.
+
+03:24.490 --> 03:32.410
+But at the remote site we can deploy the edge as a standalone virtual machine and utilize it to provide
+
+03:32.410 --> 03:45.150
+a layer to VPN client and port 443 is used for this traffic by default.
+
+03:45.220 --> 03:47.330
+Now let's talk about another use case.
+
+03:47.500 --> 03:52.600
+Maybe we have some services in our network and some services in the cloud.
+
+03:52.660 --> 03:57.390
+You know this could even be temporary in nature like maybe every year around Christmas.
+
+03:57.610 --> 04:04.900
+My web servers get beat up so I can solve that by either buying more hardware or maybe I could just
+
+04:04.920 --> 04:11.870
+use a third party cloud service provider and get some sleep and memory resources from that.
+
+04:12.330 --> 04:15.000
+And once Christmas is over we going to shut it down.
+
+04:15.020 --> 04:15.260
+Right.
+
+04:15.270 --> 04:17.420
+This is something called Cloud bursting.
+
+04:17.430 --> 04:23.610
+Well we know we're going to have temporary changes in workload and we utilize a public cloud rather
+
+04:23.610 --> 04:27.890
+than purchasing hardware.
+
+04:27.930 --> 04:33.510
+So again in this case will deploy an NSX outage at the local site we'll connect it to the network that
+
+04:33.510 --> 04:39.630
+my virtual machine is connected to we're connected to a distributed port group and that distributed
+
+04:39.650 --> 04:44.780
+switch will have a physical adapter a VM Nic connects us eventually to the Internet.
+
+04:45.780 --> 04:50.130
+And we'll establish a layer to VPN tunnel to that public cloud provider.
+
+04:50.160 --> 04:56.820
+So now we have to network that spans our environment goes over the Internet and can hit virtual machines
+
+04:56.820 --> 04:59.960
+in the exact same layer to network on the public cloud.
+
+05:01.870 --> 05:07.100
+There will also have to be and then the sex ads deployed the public cloud side as well.
+
+05:08.390 --> 05:17.830
+And that will act as our leverage to VPN client now an NSX 6.1 or later a trunk interface is supported
+
+05:17.830 --> 05:26.260
+on the NSX edge and this allows us to create multiple sub interfaces that can each identify one specific
+
+05:26.620 --> 05:29.040
+LAN or VX land each.
+
+05:29.230 --> 05:35.800
+And this will give us the ability just like any other trunk port to carry multiple Lehre to networks
+
+05:35.890 --> 05:37.580
+over a single interface.
+
+05:38.510 --> 05:47.150
+So you'll create one interface as a virtual Nic on the NSX edge and you're created as a trunk port.
+
+05:47.960 --> 05:55.910
+And what you can then do is create multiple sub interfaces each of which is unique to a particular VPN
+
+05:55.940 --> 06:03.200
+or VX LAN and connect those sub interfaces to our VPN or via excellent backed groups.
+
+06:04.660 --> 06:11.070
+We can support up to 200 sub interfaces on a single NSX atch.
+
+06:11.150 --> 06:22.780
+So in review Alair to VPN is utilized to span a layer to network across some geographic distance or
+
+06:22.780 --> 06:25.080
+across some untrusted network.
+
+06:26.880 --> 06:34.130
+We can use an NSX adj to stretch either a VPN or VX that network across these untrusted networks.
+
+06:35.730 --> 06:43.790
+We'll have to have an NSX edge deployed at each site and these NSX edges will have a client server relationship.
+
+06:43.830 --> 06:47.720
+There's no specific MT view latency or bandwidth requirements.
+
+06:47.940 --> 06:52.450
+And at the client site again we can deploy in a sex edge in standalone mode.
+
+06:52.470 --> 06:56.650
+We do not need a full and OSX deployment at the client location.

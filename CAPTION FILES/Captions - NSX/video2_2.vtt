@@ -1,0 +1,322 @@
+WEBVTT
+
+00:00.390 --> 00:06.150
+In this video I'm going to take you through some of the basics of ether that led to networking.
+
+00:06.510 --> 00:13.230
+And we're going to take a little trip back in time here and think about kind of how Ethan It has evolved
+
+00:13.230 --> 00:19.940
+over the years and that will really help us to gain a better understanding of where we are right now.
+
+00:21.510 --> 00:28.350
+So some of you might be old enough to remember this and I'm probably exposing how old I am by covering
+
+00:28.350 --> 00:34.590
+this but when ether first came out it was called Carrier sense.
+
+00:34.620 --> 00:43.480
+Multiple Access collision detect that was kind of the first iteration of this type of layer to network.
+
+00:43.490 --> 00:45.570
+So let's talk about how that worked.
+
+00:47.560 --> 00:49.510
+So will it have with carrier sense.
+
+00:49.510 --> 00:55.840
+Multiple Access question attacked is essentially we would have this long cable.
+
+00:56.080 --> 00:56.520
+Right.
+
+00:56.590 --> 01:01.810
+We have a long cable like a coaxial cable like the kind you hook up your cable TV to.
+
+01:02.020 --> 01:09.460
+And when I wanted to go ahead and deploy a new node on my network I would connect it to that cable.
+
+01:09.500 --> 01:13.310
+So what we'd actually use is something that we used to call a vampire tap.
+
+01:13.320 --> 01:19.640
+Now here's my new machine and another machine and another machine and I'm connecting all of these machines
+
+01:20.240 --> 01:29.620
+to my network and I'm doing so by simply tapping in to this shared wire and the shared physical cable
+
+01:29.890 --> 01:33.180
+that all of these workstations are using.
+
+01:33.190 --> 01:38.930
+So here I have labeled my four stations one two three and four and they're all using vampire taps they're
+
+01:38.950 --> 01:42.220
+tapped into this shared wire.
+
+01:42.220 --> 01:49.510
+And when one of these nodes wanted to communicate on the network here's the process that it would go
+
+01:49.510 --> 01:50.430
+through.
+
+01:50.470 --> 01:57.220
+So let's say node one had some sort of traffic that it needed to transmit while no one would basically
+
+01:57.220 --> 02:05.100
+shout onto the network Hey I've got something I need to sent I've got something I need to send and I'm
+
+02:05.100 --> 02:14.350
+going to go ahead and send it well if no 3 just so happened to be sending information at the same time
+
+02:14.980 --> 02:19.110
+we would have what's called a collision.
+
+02:19.210 --> 02:19.590
+Right.
+
+02:19.610 --> 02:24.860
+Two machines weren't allowed to transmit at the same time like this.
+
+02:26.010 --> 02:31.440
+And this is why we need to carry our son's multiple access collision detect our network would need to
+
+02:31.440 --> 02:39.610
+be able to basically detect the fact that two machines had tried to communicate at the same time.
+
+02:39.720 --> 02:45.400
+And what would happen then is it would set like a random timer for machine 1 and a random timer for
+
+02:45.400 --> 02:51.650
+machine 3 and eventually they'd try to transmit that data again.
+
+02:51.670 --> 02:58.470
+OK so that was kind of the beginning point for ethernet.
+
+02:58.470 --> 03:03.630
+OK so with that kind of configuration collisions were pretty prevalent.
+
+03:03.630 --> 03:03.840
+Right.
+
+03:03.840 --> 03:10.440
+And we ended up with a lot of overhead and a really it's just not an efficient way to transmit traffic
+
+03:10.440 --> 03:11.920
+across the network.
+
+03:11.970 --> 03:14.560
+So we had to come up with something better.
+
+03:14.680 --> 03:22.630
+It also wasn't really efficient to have to tap into this share to wire every single time you needed
+
+03:22.630 --> 03:24.400
+to connect a new machine.
+
+03:24.400 --> 03:33.370
+And so along came hubs and hubs that were kind of like the next generation in local area networks.
+
+03:33.370 --> 03:38.680
+So hubs changed the way that our network looked instead of having this shared wire and down the middle
+
+03:38.680 --> 03:40.460
+of our network with a hub.
+
+03:40.570 --> 03:47.720
+What we now have is this box looks kind of like a switch right for used to seeing switches.
+
+03:47.740 --> 03:52.550
+It looks kind of like a switch where it's got all these ports that my machines can plug into.
+
+03:52.720 --> 03:58.690
+So now when I go and deploy a new host I don't have to tap into a wire.
+
+03:58.690 --> 04:06.440
+I can simply deploy my new host system and go ahead and connect it up to a port on that hub.
+
+04:07.310 --> 04:13.520
+And now my machine will be able to communicate but I still had the same problem with collisions.
+
+04:13.520 --> 04:13.970
+Right.
+
+04:14.000 --> 04:20.750
+If I have two machines connected to a hub and they attempt to communicate at the same time I'm going
+
+04:20.750 --> 04:32.340
+to have a collision so that led to this need for something better yet again and what we came up with
+
+04:32.340 --> 04:40.300
+that's better than that is anything us switch and the key to switching is something called the Mac address
+
+04:40.300 --> 04:40.870
+table.
+
+04:41.770 --> 04:48.820
+So for each of these virtual machines that we see here they're going to have a unique MAC address every
+
+04:48.820 --> 04:57.970
+machine on any Fernet network has a unique MAC address and only one machine can have that Mac to our
+
+04:57.970 --> 04:59.730
+old physical computers.
+
+04:59.740 --> 05:04.790
+It was something that was burned into the physical adapter that was not changeable.
+
+05:04.790 --> 05:05.420
+Right.
+
+05:05.590 --> 05:08.030
+And you can kind of think of our virtual machines the same way.
+
+05:08.350 --> 05:12.000
+They have this mac address assigned and it cannot be changed.
+
+05:13.940 --> 05:19.370
+So for the moment let's just think of this in terms of physical computers.
+
+05:19.480 --> 05:26.510
+I have two physical computers plugged into a switch and the first computer has MAC address one.
+
+05:26.580 --> 05:35.780
+And the second computer has MAC address to and let's say that MAC address one and MAC address to that
+
+05:35.780 --> 05:41.600
+these two machines want to transmit some traffic at the same time.
+
+05:41.900 --> 05:47.500
+And let's say that they both want to communicate with a machine that has a MAC address three.
+
+05:47.540 --> 05:51.380
+So let's add one more machine to our equation here.
+
+05:51.410 --> 05:52.780
+Here's a third machine.
+
+05:53.540 --> 05:56.510
+And it's got yet another unique MAC address.
+
+05:57.050 --> 06:04.640
+So both of these machines want to communicate with this device that has Mac three well as we saw in
+
+06:04.640 --> 06:12.480
+our previous generations with the hob or with that just a long stretch co-ax cable that would have resulted
+
+06:12.480 --> 06:18.810
+in a collision if both Mac went to Mac to try to transmit at the same time we would have had a collision
+
+06:19.780 --> 06:26.050
+one alert to switch does is it utilizes a MAC Address table to avoid those collisions.
+
+06:26.820 --> 06:32.690
+So let's say that that the first machine Mac won whatever machine has Mac won goes to transmit this
+
+06:32.700 --> 06:37.160
+data and the destination address is Mac 3.
+
+06:37.680 --> 06:45.260
+Well that data is going to flow into my youth in us which the Ethernet switch will receive at and it'll
+
+06:45.270 --> 06:49.440
+store that frame in memory or at least that's how switches used to work.
+
+06:49.440 --> 06:51.730
+Now they don't really do that so much anymore.
+
+06:52.800 --> 07:00.870
+But it'll store that frame that layer to frame in memory and it will lock up this destination address
+
+07:00.870 --> 07:06.750
+which is Mac 3 and so came back three is located on this port.
+
+07:06.810 --> 07:12.810
+So we'll go ahead and we'll take that Ethan at traffic and we'll switch it over to that port and it
+
+07:12.810 --> 07:14.230
+will reach its destination.
+
+07:16.080 --> 07:22.410
+And so the machine that has to could potentially be transmitting data at the exact same time.
+
+07:22.620 --> 07:28.950
+And that frame will also get received in memory and the switch will look up the destination MAC address
+
+07:28.950 --> 07:30.570
+and its MAC address table.
+
+07:31.450 --> 07:33.770
+And it'll forward it out the appropriate port.
+
+07:36.200 --> 07:43.460
+So in this scenario our MAC Address table will look sort of like this.
+
+07:43.600 --> 07:47.740
+Here you can see I've numbered all of my ports and my switch port.
+
+07:47.740 --> 07:51.060
+One two three four five six and seven.
+
+07:51.550 --> 07:58.960
+And so as these devices are sending and receiving traffic the switch will start to build its MAC address
+
+07:58.960 --> 07:59.780
+table.
+
+08:00.100 --> 08:09.110
+Let's say for example the machine that has MAC address one transmits some Ethernet frame well when that
+
+08:09.110 --> 08:18.350
+frame arrives at the switch the switch will say I just got a frame from a Mac one on port six.
+
+08:18.420 --> 08:25.320
+So now that this traffic has come in from Mac one and the switch saw that traffic arrive from Mac one
+
+08:25.320 --> 08:33.140
+on port six this switch will recognize and I've got a device with Mac one that's connected to port six.
+
+08:33.150 --> 08:36.300
+Let me go ahead and update my mac address table.
+
+08:36.350 --> 08:40.910
+So at this point the switch will add that entry to its MAC address table.
+
+08:40.970 --> 08:45.830
+And now in the future if it ever gets a frame that's destined for Mac one it will know hey I have to
+
+08:45.830 --> 08:52.670
+for that frame out port six you know and learn Mac two the same way if some frame comes into the switch
+
+08:53.240 --> 08:58.390
+hits port five from source Mac Mac to.
+
+08:58.640 --> 09:03.800
+Well now associate Mac two with port five and Mac three with port three.
+
+09:04.040 --> 09:06.450
+And it'll build up this mac address table.
+
+09:06.590 --> 09:13.700
+So it has the ability to receive a frame store it analyze it against the MAC address table and then
+
+09:13.700 --> 09:16.720
+forward it to the appropriate Ethernet port.
+
+09:18.320 --> 09:21.290
+So that's the job of my lawyer to switch.
+
+09:21.290 --> 09:25.220
+That's the most basic function of the Lair to switch.
+
+09:25.220 --> 09:30.530
+There's a lot of other things that éclairs to switch does as well like our GPS and spanning tree and
+
+09:30.530 --> 09:31.690
+stuff like that.
+
+09:31.880 --> 09:34.340
+And we'll learn about those and upcoming lessons.
+
+09:34.610 --> 09:39.410
+But at the most basic level that's what my Leora to switch does.

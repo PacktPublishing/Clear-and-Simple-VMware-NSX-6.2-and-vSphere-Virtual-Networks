@@ -1,0 +1,157 @@
+WEBVTT
+
+00:01.170 --> 00:08.130
+In this video I'll explain later to broadcast traffic and how it impacts the performance of either a
+
+00:08.130 --> 00:10.410
+physical or virtual switch.
+
+00:10.970 --> 00:18.830
+Now there can be a variety of different reasons that a virtual machine or physical machine generates
+
+00:18.830 --> 00:20.720
+a layer to broadcast.
+
+00:20.720 --> 00:25.800
+The most common reason is an ARP request and I'm going to do a video on that as well.
+
+00:27.410 --> 00:32.690
+But let's just focus on what actually happens when a layer to broadcast is generated.
+
+00:33.800 --> 00:37.280
+Now with ethernet layer 2 or IP.
+
+00:37.310 --> 00:42.030
+LEHRER 3 there are special addresses called broadcast addresses.
+
+00:42.440 --> 00:50.990
+And basically if you send a frame to the broadcast address within that frame is going to be flooded
+
+00:51.230 --> 00:52.820
+to every single port.
+
+00:52.940 --> 00:57.780
+That's part of that layer to network.
+
+00:57.800 --> 01:03.020
+So let's take a look at our diagram here and I've got a bunch of virtual machines those little white
+
+01:03.020 --> 01:04.340
+blocks up at the top.
+
+01:04.340 --> 01:06.680
+Those represent virtual or physical machines.
+
+01:06.680 --> 01:08.510
+Doesn't really matter.
+
+01:08.510 --> 01:15.150
+And one of those virtual machines or physical machines sends a very true broadcast to the physical switch.
+
+01:15.990 --> 01:21.160
+Along with the physical switches going to do is it is going to receive that frame.
+
+01:21.160 --> 01:30.040
+Take a look at the destination MAC and the destination MAC address is a layer to broadcast the dress.
+
+01:30.180 --> 01:37.900
+So it will then for that frame out every single pore on that switch and every single machine will receive
+
+01:37.900 --> 01:39.870
+a copy right.
+
+01:40.100 --> 01:46.550
+This is kind of like I always equate this to let's say or shopping or you're at the grocery store or
+
+01:46.550 --> 01:53.020
+some department store and somebody comes over the P.A. system and says Please pay attention everybody
+
+01:53.800 --> 01:54.820
+the following.
+
+01:54.850 --> 02:00.220
+License plate numbers left their lights on in the parking lot and everybody kind of stops and just waits
+
+02:00.220 --> 02:02.980
+for a moment and listens to hear if it's their car.
+
+02:02.980 --> 02:08.670
+Well it's kind of like what a broadcast is you're sending something out to everybody.
+
+02:09.060 --> 02:12.810
+But really only one person cares about it.
+
+02:12.810 --> 02:13.390
+Right.
+
+02:13.740 --> 02:16.070
+And that's kind of what our requests are like.
+
+02:16.140 --> 02:18.660
+And that's what a lot of broadcast traffic is like.
+
+02:18.660 --> 02:26.280
+So ideally we'd like to avoid this broadcast traffic as much as we possibly can especially our requests.
+
+02:28.750 --> 02:35.410
+Now let's say for example that our switch is actually connected to another switch as well.
+
+02:35.460 --> 02:37.780
+It may be either a physical or virtual switch.
+
+02:37.780 --> 02:41.380
+Again it doesn't really matter is connected to another switch.
+
+02:41.850 --> 02:47.410
+And via some sort of interest much like maybe there's an ethernet connection or a trunk Kapoor that
+
+02:47.410 --> 02:50.010
+connects these two switches together.
+
+02:51.720 --> 02:58.130
+Well in that scenario the broadcast will actually flow from one switch to another.
+
+02:58.140 --> 03:02.620
+This is all part of a layer to network.
+
+03:02.710 --> 03:09.800
+So if my broadcast is originated by a machine connected to the virtual switch on top it will also be
+
+03:09.800 --> 03:11.420
+passed with the switch on bottom.
+
+03:11.630 --> 03:23.860
+And again every device connected to that switch will receive a copy of that letter to broadcast.
+
+03:23.860 --> 03:27.480
+Now let's make one more change to our typology here.
+
+03:27.640 --> 03:31.190
+Let's add a router and one more switch.
+
+03:32.260 --> 03:35.640
+And this which is connected to the network via our router.
+
+03:35.680 --> 03:41.670
+So there's a router in between the two switches on the left and the switch on the right.
+
+03:41.690 --> 03:46.960
+What do you suppose happens to our lair to broadcast in this scenario.
+
+03:48.070 --> 03:51.460
+Well the broadcast will be passed to that router.
+
+03:51.520 --> 03:58.510
+The router will receive that Lero to broadcast because the router is also connected to that Lerato network.
+
+03:58.670 --> 04:00.400
+However that's the end of it.
+
+04:00.700 --> 04:09.040
+The router does not ever pass where to broadcast traffic out to other network segments.
+
+04:09.040 --> 04:16.560
+So that's kind of the limiting factor in our physical or virtual that work to those Lehre to broadcasters
+
+04:16.570 --> 04:18.520
+when they hit a router they stop their.

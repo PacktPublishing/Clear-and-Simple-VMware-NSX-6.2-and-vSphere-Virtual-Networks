@@ -1,0 +1,319 @@
+WEBVTT
+
+00:00.400 --> 00:06.070
+In this video I'll explain the firewall services that are provided by NSX.
+
+00:06.630 --> 00:13.790
+Will take some time to look at the different security features that NSX provides.
+
+00:13.810 --> 00:19.350
+We'll look at the NSX edge firewall and compare it to the NSX distributed firewall.
+
+00:19.660 --> 00:25.200
+We'll look at different types of rules that we can create and the actions that those rules can take.
+
+00:26.460 --> 00:33.000
+And we'll also look at that apology of an NSX network and go through some packet walks and show you
+
+00:33.000 --> 00:42.070
+how these packets are processed by these firewall tools as they work their way through our network.
+
+00:42.100 --> 00:48.980
+And let's start out by first off explaining a few key concepts that you need to know.
+
+00:49.000 --> 00:53.450
+Now number one the NSX edge is a stateful firewall.
+
+00:53.560 --> 00:54.730
+So what does that mean.
+
+00:54.730 --> 00:56.560
+What is a stateful firewall.
+
+00:58.280 --> 01:00.190
+Well let's take a look in an example.
+
+01:00.350 --> 01:02.170
+So here we see three virtual machines.
+
+01:02.180 --> 01:04.480
+VM one two in three.
+
+01:04.730 --> 01:12.490
+And let's say that VM one generates some traffic that is flowing out to the external network and that
+
+01:12.490 --> 01:22.940
+traffic matches a permit rule in the ANOSIKE such.
+
+01:22.990 --> 01:30.280
+So the NSX edge is going to allow that traffic through because it matches this permit We're all and
+
+01:30.280 --> 01:37.960
+the other thing that the NSX will do is it'll update the connections state in the NSX edge to reflect
+
+01:37.990 --> 01:40.360
+that that connection has been opened.
+
+01:40.360 --> 01:43.690
+And now the traffic passes through and hits the destination.
+
+01:44.080 --> 01:52.800
+So the NSX edge is tracking the fact that VM one has opened some connection with some external device.
+
+01:52.870 --> 02:03.100
+And if response traffic comes back from that external device the NSX edge will allow that response traffic
+
+02:03.100 --> 02:03.920
+through.
+
+02:04.000 --> 02:13.700
+Based on that connection state so the edge doesn't require an explicit entry saying this return traffic
+
+02:13.700 --> 02:14.480
+is allowed.
+
+02:14.840 --> 02:21.340
+It dynamically allows that traffic back in because it's a stateful firewall based on the connections
+
+02:21.340 --> 02:21.910
+state.
+
+02:21.970 --> 02:32.190
+It will allow return traffic through the distributed firewall is a firewall that is sent out to the
+
+02:32.190 --> 02:40.290
+kernel modules of all of our ESX I hosts It's a host based firewall and it's what gives us the ability
+
+02:40.290 --> 02:43.900
+to have micro segmentation.
+
+02:43.910 --> 02:49.640
+So for example in this diagram we have two virtual machines V.M. one and VM two.
+
+02:49.850 --> 02:55.390
+And let's say that VM one wants to establish a connection to virtual machine to write.
+
+02:55.400 --> 02:59.550
+Maybe it wants to ping it maybe it wants to open a web page on it whatever.
+
+03:00.290 --> 03:04.550
+So VM one generates a packet and that's bound for VM too.
+
+03:05.020 --> 03:12.560
+And if we're using a physical firewall that packet needs to flow over a physical adapter a VM neck hit
+
+03:12.560 --> 03:18.980
+a physical switch hit the physical firewall get processed by the firewall ruleset come back hit the
+
+03:18.980 --> 03:24.680
+physical switch flow through the VM neck yet again and arrive at virtual machine too.
+
+03:24.710 --> 03:29.490
+These are two vim's that might be on the same exact ESX host as each other.
+
+03:30.620 --> 03:38.180
+And our packet has gone through multiple physical devices in order to hit that firewall policy.
+
+03:38.220 --> 03:45.600
+This is referred to as Herr penning sending traffic over the physical network unnecessarily and then
+
+03:45.600 --> 03:51.320
+its coming right back in to hit that destination via.
+
+03:51.320 --> 03:59.110
+So this is not really the most efficient possible way to deal with enforcement firewalls.
+
+04:01.850 --> 04:09.160
+Now let's look at an example of east west firewalling using the NSX hatch.
+
+04:09.560 --> 04:17.030
+And this is not what the NSX had just built for the NSX edge for a north south traffic.
+
+04:17.170 --> 04:24.480
+That means traffic that's coming into or leaving my NSX domain.
+
+04:24.620 --> 04:28.790
+But I can use that as a firewall between virtual machines if I want.
+
+04:30.380 --> 04:39.030
+So again here we see a packet coming from VM one it's bound for VM to and my NSX edge firewall is running
+
+04:39.030 --> 04:41.480
+on some other ESX I host.
+
+04:41.760 --> 04:47.580
+While that packet needs to flow through a physical adapter over a physical switch back in through another
+
+04:47.580 --> 04:55.740
+physical adapter to hit that NSX Aggi virtual appliance and then the firewall rules set will be enforced
+
+04:55.740 --> 05:01.390
+on that packet and the pagen now has to travel to the actual destination.
+
+05:01.390 --> 05:08.460
+So here goes over a physical VM neck over a physical switch back into the original host over a VM neck.
+
+05:08.620 --> 05:10.920
+And now it hits its destination.
+
+05:11.160 --> 05:19.540
+And this is why the NSX edge is not ideal for EastWest firewalling because we still have the same hair
+
+05:19.540 --> 05:27.080
+pinnings situation that we had with a physical firewall appliance.
+
+05:27.090 --> 05:34.900
+Now how is the distributed firewall different well with a distributed firewall.
+
+05:35.160 --> 05:39.180
+That traffic doesn't have to leave the host at all.
+
+05:39.180 --> 05:45.070
+The distributed firewall runs as a kernel module in our ESX host.
+
+05:45.540 --> 05:54.440
+It's deployed by NSX manager during the host preparation process and runs as a demon called V S F W
+
+05:54.450 --> 05:57.890
+D on each ESX host.
+
+05:57.960 --> 06:07.080
+So because the firewall runs as a kernel module right within the ESX host we can enforce firewall rules
+
+06:07.110 --> 06:12.060
+at the virtual Nic level of our virtual machine.
+
+06:12.090 --> 06:14.430
+That's how the distributed firewall works.
+
+06:14.430 --> 06:21.290
+It actually analyzes those packets as they leave the VM before they even had a logical switch.
+
+06:21.300 --> 06:25.050
+So now I can create my firewall rules anywhere I want.
+
+06:25.200 --> 06:32.810
+I can enforce rules between virtual machines that are even on the same logical switches each other and
+
+06:32.810 --> 06:40.230
+that's what gives me that feature of micro segmentation that's so desirable with NSX.
+
+06:40.400 --> 06:43.870
+I can create a firewall rule anywhere I want.
+
+06:44.240 --> 06:51.560
+It's really as if a firewall has been bolted to the virtual neck of every VM and every VM plugs directly
+
+06:51.560 --> 06:52.650
+into a firewall.
+
+06:53.580 --> 06:58.450
+And from there they plug in the switches so it's extremely powerful.
+
+07:00.360 --> 07:07.410
+Now it's also important to know that these firewall rules are pushed out to the hosts by an ex manager
+
+07:07.410 --> 07:08.740
+directly.
+
+07:08.850 --> 07:19.200
+My NSX controller cluster and user world agent are not involved with the firewall at all.
+
+07:19.370 --> 07:24.080
+So let's walk through an example of how the distributed firewall works.
+
+07:24.170 --> 07:31.300
+Now here in our diagram we see two ESX hosts on the left we've got ESX eyes or one on the right ESX
+
+07:31.380 --> 07:35.650
+0 2 and running on host ESX 0 1.
+
+07:35.660 --> 07:39.700
+I have a VM called VM one running on ESX Isar or two.
+
+07:39.710 --> 07:45.950
+I've got a VM called VM too and these two virtual machines are plugged in to different logical switches
+
+07:48.000 --> 07:56.990
+and so let's say that VM one wants to establish a connection with VM too maybe it generates a ping that's
+
+07:56.990 --> 08:03.610
+bound for VM to and VM 2 is on a different network then V.M. one.
+
+08:04.070 --> 08:10.970
+So my virtual machine is going to send that packet to its default gateway which is the distributed logical
+
+08:10.970 --> 08:11.620
+router.
+
+08:11.780 --> 08:19.670
+But prior to ever hitting the logical switch or the distributed logical router the distributed firewall
+
+08:19.700 --> 08:22.780
+will analyze that packet immediately.
+
+08:24.430 --> 08:32.200
+As soon as that packet is transmitted by V.M. one it's immediately inspected by the distributed firewall.
+
+08:32.430 --> 08:40.380
+And if it matches the firewall rules and is permitted it'll hit the logical switch and flow to the distributed
+
+08:40.380 --> 08:45.120
+logical router which is the default gateway for that virtual machine.
+
+08:46.590 --> 08:55.630
+And all of this is done prior to any sort of VX land cancellation.
+
+08:55.630 --> 08:59.690
+So at this point the distributor a logical router will route it towards the end.
+
+08:59.730 --> 09:01.450
+Five thousand two.
+
+09:01.660 --> 09:05.810
+That's where the destination virtual machine resides.
+
+09:05.830 --> 09:13.920
+So the packet gets routed it gets the xplain encapsulated and it flows over my physical underly network
+
+09:17.390 --> 09:25.030
+and when it reaches host ESX high 0 2 it's dropped on to the appropriate logical switch which is VNA
+
+09:25.070 --> 09:33.070
+5000 to and at that point the Wii tap the capsule eight's it rips away all of those VX land hatters
+
+09:36.010 --> 09:43.940
+and now my packet is on the logical switch and is destined for V.M. to before it can go into VM to though
+
+09:44.240 --> 09:50.420
+before it can be received by V.M. to it is again analyzed by the distributed firewall.
+
+09:50.420 --> 09:57.340
+Looking at the set of rules that are specifically applied to VM to and again this is happening at the
+
+09:57.340 --> 10:00.590
+virtual neck level of VM to.
+
+10:00.760 --> 10:08.800
+And if that traffic is allowed and it reaches my virtual machine so that's the role of the distributed
+
+10:08.800 --> 10:15.980
+firewall and how it works at the virtual next level.
+
+10:16.000 --> 10:22.040
+And that's a very important aspect to keep in mind here because that's really what opens up all these
+
+10:22.040 --> 10:23.420
+possibilities to us.
+
+10:23.420 --> 10:29.330
+You know I could have 10 different venoms unlogical switch Vienne five thousand one all on the same
+
+10:29.330 --> 10:35.360
+host and I can have different specific firewall policies for each of those victims.
+
+10:35.450 --> 10:40.940
+I can enforce policies between those victims even though they're connected to the same switch.
+
+10:40.950 --> 10:48.590
+Right this is the really groundbreaking part of the security aspects of sex called micro segmentation.

@@ -1,0 +1,250 @@
+WEBVTT
+
+00:00.340 --> 00:08.700
+In this video I'll describe the NSX implementation of Natt or network address translation.
+
+00:08.880 --> 00:13.490
+And this is going to be deployed using the NSX at.
+
+00:13.500 --> 00:15.550
+So first off what is that.
+
+00:15.570 --> 00:18.900
+Why do we need a network address translation.
+
+00:18.900 --> 00:24.780
+Well essentially we're going to use that to replace one address with another.
+
+00:24.780 --> 00:32.640
+So for example it allows inbound and outbound communication between external networks and privately
+
+00:32.760 --> 00:34.840
+addressed virtual machines.
+
+00:35.160 --> 00:43.060
+We may have created a private IP addressing scheme on the inside of our network but those virtual machines
+
+00:43.150 --> 00:44.770
+may need internet access.
+
+00:44.800 --> 00:50.530
+They may need to be accessible by machines out there in the physical network.
+
+00:50.650 --> 00:57.100
+So if we're using private networks on the inside we have to perform nat to translate those addresses
+
+00:57.460 --> 01:01.440
+to publicly roundtable IP addresses.
+
+01:01.490 --> 01:05.900
+And here we see the three predefined ranges of addresses.
+
+01:06.290 --> 01:14.030
+So if your network includes addresses like these Those are private IP addresses the 10 0.09 0 range
+
+01:14.380 --> 01:26.360
+the 172 about 16 0 0 slash 12 range of IP addresses and $192 168 0 0 are all predefined standardized
+
+01:26.450 --> 01:32.200
+IP address ranges that are strictly reserved for private addresses.
+
+01:35.870 --> 01:41.790
+And this is a feature that standard it's supported by many vendors and it definitely predates NSX and
+
+01:41.800 --> 01:43.890
+that has been around forever.
+
+01:44.470 --> 01:52.250
+The NSX supports the source and destination that translations and we'll be taking a closer look at each
+
+01:52.250 --> 01:52.990
+of those.
+
+01:53.060 --> 02:01.940
+But essentially a source that is used on outgoing traffic to change a private source IP to a publicly
+
+02:01.940 --> 02:09.830
+roundtable source IP whereas destination that is used on incoming packets to change the destination
+
+02:09.830 --> 02:10.930
+IP.
+
+02:10.940 --> 02:16.880
+So for example there might be traffic coming into our network destined for a privately address machine
+
+02:18.990 --> 02:26.430
+but the sending device has used a public IP as the destination destination Nat will remove that public
+
+02:26.430 --> 02:36.330
+IP address and replace it with our internal private IP and X also support support address translation
+
+02:36.960 --> 02:44.070
+which allows many internal IPs to be translated to a single external address and it will use different
+
+02:44.070 --> 02:49.200
+ports for each internal address.
+
+02:49.200 --> 02:58.200
+So let's take a look at an example of a source NAT translation with NSX in an our diagram here we see
+
+02:58.200 --> 03:04.800
+a few things on the left hand side we see a Virtual Machine label that V.M. want.
+
+03:05.000 --> 03:12.580
+And that virtual machine has been assigned a private IP address of 192 not 168 not 110.
+
+03:13.130 --> 03:18.470
+And the virtual machine is connected to a logical switch called Vienna 0 0 2 which is connected to a
+
+03:18.470 --> 03:21.050
+distributed logical router.
+
+03:21.280 --> 03:28.660
+And then we see our transit logical switch connecting the DLR to the NSX Hajj which gives us our north
+
+03:28.780 --> 03:33.070
+south routing or external access.
+
+03:33.190 --> 03:40.990
+And finally on the external network I have a server with a public IP address and my virtual machine
+
+03:41.050 --> 03:43.380
+wants to ping the server.
+
+03:45.750 --> 03:51.160
+But VM one has an internal IP address and that IP address is not publicly roundtable.
+
+03:52.630 --> 04:00.820
+So that packet leaves virtual machine one bound for its default gateway and it flows through the NSX
+
+04:00.820 --> 04:02.220
+network to the edge
+
+04:07.300 --> 04:16.760
+when the packet arrives at the edge the NSX will perform a source not translation it will remove that
+
+04:16.760 --> 04:26.250
+private source ip of $192 168 not 1.10 and replace it with a publicly readable IP address.
+
+04:26.360 --> 04:30.000
+And then for that traffic to the external network.
+
+04:30.290 --> 04:38.270
+And now that this packet has a publicly ratable source IP when that traffic arrives at that external
+
+04:38.570 --> 04:48.670
+network and hits that server the server can send the response to that public IP address.
+
+04:48.670 --> 04:56.790
+Now let's consider a different scenario where we're going to perform a destination that in this case
+
+04:56.790 --> 05:03.420
+the external server on the far right meets the paying virtual machine one maybe VM one is a web server
+
+05:04.050 --> 05:11.870
+or maybe is enough server or something that needs to be accessed by machines that are out on the internet.
+
+05:13.330 --> 05:18.600
+VM one has an IP address that is not publicly ridable.
+
+05:18.680 --> 05:22.170
+So how do we get this configured how do we set this up.
+
+05:23.000 --> 05:28.990
+Well we'll go to the NSX hatch and we'll actually add a second IP address.
+
+05:29.120 --> 05:31.780
+And by the way you need to do this with source Nat as well.
+
+05:32.690 --> 05:39.390
+So go to the NSX hatch and we'll go to this interface that's connected to the external router and we
+
+05:39.410 --> 05:43.090
+assign it a second IP address that's publicly roundball
+
+05:46.270 --> 05:53.860
+and what will happen at that point is the external server will generate a packet bound for whatever
+
+05:54.070 --> 05:58.150
+public IP address we've established on that NSX edge.
+
+05:58.270 --> 06:06.070
+So let's say for example on the edge we configured to not to that 2.10 That's the secondary IP that
+
+06:06.070 --> 06:09.120
+we created on the interface of the NSX such
+
+06:12.250 --> 06:16.800
+the server will send a packet destined for that IP.
+
+06:17.040 --> 06:18.680
+It'll route through the Internet.
+
+06:18.790 --> 06:26.330
+It will hit that NSX edge on that IP and we will create a NAT translation basically saying if anything
+
+06:26.330 --> 06:35.990
+arrives destined for $2.2 2.10 removed 2.2 out to about 10 and replace it with 192 168.
+
+06:36.050 --> 06:37.520
+Not one that 10.
+
+06:37.650 --> 06:44.460
+And now my destination has been performed.
+
+06:44.490 --> 06:51.540
+So now the ping will flow onto the transmit logical switch hit the distributed logical router get routed
+
+06:52.230 --> 06:54.270
+hit my virtual machine.
+
+06:54.510 --> 06:57.560
+And now the process is complete.
+
+06:57.590 --> 07:01.350
+So that's how the NSX does source and destination Nat.
+
+07:01.940 --> 07:06.440
+And again it's important to keep in mind for every IP address we need to translate we're going to have
+
+07:06.440 --> 07:09.710
+to build that translation into the NSX.
+
+07:09.890 --> 07:15.250
+Now if you decide to do port address translation that's a little bit different.
+
+07:15.350 --> 07:23.780
+Poor address translation is not a one to one mapping that maps many internal devices to a single external
+
+07:23.780 --> 07:24.750
+IP.
+
+07:24.890 --> 07:31.050
+And this means you only need one publicly readable IP address that the big benefit and what it will
+
+07:31.050 --> 07:39.750
+do is it will assign a unique source port to every internal IP the destination port is not modified
+
+07:41.870 --> 07:48.860
+and that's how it will track which IP addresses are being mapped to which port so that it can actually
+
+07:49.610 --> 07:59.270
+take multiple internal IPs and translate them to a single publicly ratable IP address.
+
+07:59.270 --> 07:59.590
+All right.
+
+07:59.600 --> 08:08.620
+So in review the NSX performs now which allows us to establish communications between external networks
+
+08:08.740 --> 08:16.030
+and are privately addressed virtual machines a source that is used to take the source IP address of
+
+08:16.030 --> 08:24.010
+an outgoing packet and translate it to some publicly groundball IP address whereas destination that
+
+08:24.070 --> 08:32.470
+is used on incoming packets and it's used to change a publically roud a bowl destination IP to the private
+
+08:32.560 --> 08:36.170
+IP that's valid on the inside of our network.

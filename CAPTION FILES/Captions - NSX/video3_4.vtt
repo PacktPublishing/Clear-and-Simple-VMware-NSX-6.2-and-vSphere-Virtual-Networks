@@ -1,0 +1,481 @@
+WEBVTT
+
+00:00.760 --> 00:06.690
+In this video we'll take a look at some of the features that are supported by our virtual switches and
+
+00:06.700 --> 00:13.330
+we're going to walk through some features that are supported by the vees fair standards which And we'll
+
+00:13.330 --> 00:18.640
+also walk through some features that are not supported by the Vee's for standards which are only supported
+
+00:19.180 --> 00:20.940
+by the Vee's for distributed switch.
+
+00:21.760 --> 00:24.370
+And I'll point those out as we come to them.
+
+00:24.580 --> 00:26.760
+And this first line is a good example.
+
+00:26.850 --> 00:35.590
+We have two different discovery protocols Cisco discovery protocol or CVP and Linkletter discovery protocol
+
+00:35.650 --> 00:43.680
+or L-L DP and these are useful features that have been around for a long time on network hardware and
+
+00:43.680 --> 00:48.880
+they can be used to discover information about other connected network devices.
+
+00:48.960 --> 00:57.360
+So for example assume that this ESX host pictured here has a VSE standard switch and it's connected
+
+00:57.360 --> 01:00.140
+to a physical Cisco switch.
+
+01:01.340 --> 01:09.710
+We can configure Cisco discovery protocol or see DP on the standard virtual switch to allow it to discover
+
+01:09.710 --> 01:13.210
+some of the characteristics of the physical switch.
+
+01:15.270 --> 01:20.850
+Here's an example of some of the information that we'll be able to view within the Vee's for web client
+
+01:21.090 --> 01:22.620
+when CTP is enabled.
+
+01:23.610 --> 01:30.840
+Here we can see that this VM neck or physical adapter is connected to a Cisco physical switch that has
+
+01:30.840 --> 01:37.010
+the IP address of ten not one not one not one we can see what port that VM Nic is connected to.
+
+01:37.200 --> 01:44.350
+And we can even see the hardware platform and software version of the Cisco switch.
+
+01:44.370 --> 01:49.660
+Now that's what CGP does an LDP is basically the same thing.
+
+01:49.890 --> 01:57.600
+It's called link where discovery protocol now LDP is only supported on the VSE for distributed switch.
+
+01:59.310 --> 02:06.930
+And this is a vendor agnostic kind of standard discovery protocol that supports a number of different
+
+02:06.930 --> 02:09.440
+vendors.
+
+02:09.490 --> 02:15.430
+So here we see we have a Vee's for a distributed switch running on an ESX host with two VM next are
+
+02:15.430 --> 02:22.170
+physical adapters and those VM next are connected to a physical switch that supports Al.
+
+02:22.750 --> 02:28.450
+And so now from within the Vee's for web client we can view details about that physical switch such
+
+02:28.450 --> 02:34.180
+as the IP address the port number that are these very distributed switches plugged into the hardware
+
+02:34.180 --> 02:38.470
+platform and a variety of other information is presented as well.
+
+02:40.380 --> 02:42.140
+Now one final note.
+
+02:42.930 --> 02:50.820
+You want to check with your security policy prior to enabling CD PNL DP because this is going to be
+
+02:50.820 --> 02:56.700
+exposing some of the details of the physical network and it can also expose details about your virtual
+
+02:56.700 --> 02:58.070
+network as well.
+
+02:58.500 --> 03:05.040
+And so there is a possibility that this network information could be compromised and used to attack
+
+03:05.040 --> 03:06.360
+your network.
+
+03:06.360 --> 03:12.120
+So just make sure before you enable these features that its allowed based on your company's network
+
+03:12.120 --> 03:13.080
+Security Policy
+
+03:16.340 --> 03:23.540
+Network IO control can be used to enforce Chers limits and reservations on different types of network
+
+03:23.540 --> 03:30.110
+traffic and network IO control is only supported on the VSE fair distributed switch.
+
+03:31.980 --> 03:39.270
+So network control allows us to ensure that certain types of traffic will always be granted sufficient
+
+03:39.300 --> 03:40.740
+bandwidth.
+
+03:40.740 --> 03:49.500
+So for example in this diagram VM traffic is granted twice as many shares as I scuzzy traffic or Wii
+
+03:49.500 --> 03:52.390
+motion traffic.
+
+03:52.390 --> 03:58.600
+Now what does this mean on a normal day to day basis Lets say that we have plenty of physical bandwidth
+
+03:58.600 --> 04:03.750
+to go around well if thats the case the share structure means nothing.
+
+04:05.030 --> 04:10.250
+Shares are only enforced when there is a scarcity of resources.
+
+04:11.390 --> 04:18.890
+So if there is contention for bandwidth that means that my virtual machine traffic will effectively
+
+04:18.890 --> 04:24.730
+get twice as much bandwidth as Wii motion and I scuzzy.
+
+04:24.970 --> 04:31.900
+We can also configure things like limits or reservations with network I will control as well and we
+
+04:31.900 --> 04:39.490
+can also create network resource pools based on port groups to allow us to define priorities for different
+
+04:39.490 --> 04:41.620
+virtual machine port groups.
+
+04:41.620 --> 04:45.950
+Now the way I like to think of network IO control is sort of like a safety net.
+
+04:46.150 --> 04:52.240
+I'm not a big fan of configuring limits or reservations but I do like configuring shares.
+
+04:52.780 --> 04:57.230
+And the goal is that hopefully those shares will never take effect.
+
+04:57.250 --> 05:03.340
+Hopefully we'll always have plenty of available bandwidth and we won't need to utilize that share structure.
+
+05:03.580 --> 05:10.870
+But should a situation arise where we have a scarcity of bandwidth network i o control will ensure that
+
+05:10.870 --> 05:13.380
+the appropriate traffic is prioritized
+
+05:18.050 --> 05:22.910
+traffic filtering and tagging is supported by the VSD fair distributed switch.
+
+05:24.070 --> 05:31.300
+So for example we could create a filtering policy for incoming traffic from a certain IP address range
+
+05:31.300 --> 05:36.340
+or maybe on a certain TCAP port.
+
+05:36.540 --> 05:43.830
+And as that traffic flows into the vees fair distributed switch and it matches that criteria that we've
+
+05:43.830 --> 05:52.410
+identified we can take different actions on that traffic like for example simply dropping it or we could
+
+05:52.410 --> 06:01.740
+create a marking policy to assign class of service or DCP tags to packets coming from a specified IP
+
+06:01.740 --> 06:04.540
+address.
+
+06:04.540 --> 06:11.650
+So here comes a packet from Vergine machine one and maybe matches a traffic marking policy that we've
+
+06:11.650 --> 06:13.740
+created in the Vee's for distributed switch.
+
+06:14.630 --> 06:22.280
+Based on that it will be a sign quality of service headers and as that packet traverses the physical
+
+06:22.280 --> 06:30.660
+network the physical network will respect the quality of service values and ensure that that traffic
+
+06:30.660 --> 06:32.230
+is handled appropriately.
+
+06:34.030 --> 06:40.370
+And so filtering and tagging basically gives us two functions the filtering function allows us to basically
+
+06:40.370 --> 06:47.390
+establish an access list where certain traffic can be either permitted or denied the tagging capability
+
+06:47.780 --> 06:52.450
+allows us to create quality of service policies and append.
+
+06:52.460 --> 06:58.870
+Q All else matters to traffic as it leaves the virtual switch bound for the physical network.
+
+07:05.350 --> 07:11.340
+Network health check is a feature that's only available on the VSE fair distributed switch.
+
+07:11.380 --> 07:18.190
+The purpose of network health check is to ensure that the virtual switch and the physical switch have
+
+07:18.190 --> 07:20.290
+been configured in a compatible manner.
+
+07:21.230 --> 07:28.420
+So in this example we can see that the VSE for distributed switch has an empty view of 9000.
+
+07:28.430 --> 07:31.650
+The physical switch hasn't MTU of 15:24.
+
+07:31.940 --> 07:39.050
+So these empty values are mismatched and that means that as frames leave the virtual switch and hit
+
+07:39.050 --> 07:40.940
+the physical switch.
+
+07:40.940 --> 07:45.560
+They may need to be fragmented and reassembled by that physical switch.
+
+07:46.640 --> 07:53.570
+And this can create some serious problems because the CPP usage of that physical switch can be extremely
+
+07:53.570 --> 07:59.160
+high if it's doing fragmentation and reassembly.
+
+07:59.250 --> 08:05.700
+We can also see that on the VSE for distributed switch we've configured IP hash Nic teaming which requires
+
+08:05.730 --> 08:09.120
+a port channel configuration and the physical switch.
+
+08:09.120 --> 08:15.980
+However the physical switches and configure that way and we can also see a Vesely and mismatch as well.
+
+08:17.260 --> 08:24.820
+The purpose of network health check is to expose these inconsistencies so that we can easily identify
+
+08:25.270 --> 08:26.140
+and fix them.
+
+08:27.740 --> 08:35.720
+Now one side note about this from a security perspective it's a best practice to leave network health
+
+08:35.720 --> 08:43.500
+check disabled and only enable it when you're trying to validate that something's been configured correctly.
+
+08:44.220 --> 08:48.070
+So the best practice is to leave this disabled unless we're actually using it
+
+08:51.980 --> 08:58.750
+net flow reports traffic information to a centralized collector right.
+
+08:58.780 --> 09:04.130
+Net flows kind of like the kid that tells on all his friends and the net flow collector is like the
+
+09:04.130 --> 09:04.970
+mom.
+
+09:05.530 --> 09:06.930
+So let's walk through this.
+
+09:06.940 --> 09:12.370
+And number one this is only available via a distributed switch.
+
+09:12.370 --> 09:18.780
+So here we see a couple of virtual machines called 10.0 $1.1 11 and 10 not one not one not 12.
+
+09:18.820 --> 09:21.020
+Those are the IP addresses of the victims.
+
+09:21.160 --> 09:27.710
+And then up towards the top of the screen in purple we see a net flow collector on the far right.
+
+09:27.790 --> 09:35.390
+We see some external machine with the IP address of 1 9 2 1 6 8 1 12.
+
+09:35.470 --> 09:41.550
+So let's say that my VM generates some traffic that's bound for that external physical machine.
+
+09:41.650 --> 09:47.620
+And here it goes it flows out through the virtual switch over the physical switch and towards that physical
+
+09:47.620 --> 09:54.000
+host well what's going to happen at that point is the vees for distributed switch is going to generate
+
+09:54.000 --> 09:55.650
+something called the traffic flow.
+
+09:56.010 --> 10:02.370
+That's basically going to identify the source and destination the TCAP poor of that traffic and some
+
+10:02.370 --> 10:08.760
+other fairly limited information about that traffic and all of our traffic is going to result in these
+
+10:08.760 --> 10:15.330
+flows that are constantly being sent to the net flow collector and the net flow collector will include
+
+10:15.330 --> 10:21.680
+some reporting capabilities so that we can see which virtual machines are generating the most traffic.
+
+10:21.690 --> 10:24.550
+What ports is the most traffic going over.
+
+10:24.570 --> 10:28.670
+Is there a certain type of traffic that spikes at a certain time of day.
+
+10:28.800 --> 10:35.010
+Well now we've got all of these traffic records that are stored in a centralized collector and we can
+
+10:35.010 --> 10:37.290
+report on any of this criteria that we want to
+
+10:44.490 --> 10:44.800
+port.
+
+10:44.800 --> 10:50.000
+Mirroring is another feature that's only available in the vees fair distributed switch.
+
+10:50.170 --> 10:57.550
+It can be used to send a copy of all of the traffic on one port to another port.
+
+10:57.560 --> 11:03.110
+So for example here we see on the left two virtual machines tend not one not one but 11 and 10 that
+
+11:03.110 --> 11:11.880
+one not one time 12 we can set up a port mirroring session so that any traffic that comes in bound for
+
+11:11.880 --> 11:21.210
+the port that we want to monitor will be automatically mirrored to some other poor maybe on the second
+
+11:21.210 --> 11:22.820
+V.M. towards the bottom.
+
+11:22.860 --> 11:29.730
+We want to run a sniffer and analyze all of the traffic that's flowing to the top virtual machine where
+
+11:29.910 --> 11:35.020
+we could set up what's called a distributed port mirroring session to accomplish that.
+
+11:35.250 --> 11:41.460
+And that's exactly what we see here in our animation and distributed port mirroring session means any
+
+11:41.460 --> 11:50.590
+traffic for one specific virtual port that we identify will be automatically mirrored to another port.
+
+11:50.590 --> 11:56.080
+Now we could also set up other types of Port mirroring sessions for example.
+
+11:56.080 --> 12:01.660
+Let's talk about some of the other types of marrying sessions and just understand that these might be
+
+12:01.660 --> 12:04.000
+represented on the VCP exam.
+
+12:05.840 --> 12:13.740
+A remote mirroring source will watch one of our distributed virtual ports and instead of mirroring to
+
+12:13.740 --> 12:18.780
+another virtual port it will mirror outward of our uplinks.
+
+12:18.920 --> 12:21.430
+That's a remote mirroring source.
+
+12:21.770 --> 12:29.750
+A remote mirroring destination port mirroring session will monitor an entire V LAN and sent all of that
+
+12:29.750 --> 12:32.610
+traffic to a distributed virtual port.
+
+12:34.430 --> 12:43.850
+Host level rollbacks occur when a change is made that breaks in ESX I hostes connection with the center.
+
+12:44.020 --> 12:51.970
+So every network change that disconnects a host also triggers a rollback and the change that caused
+
+12:51.970 --> 12:56.070
+the issue was undone and the configuration reverts back to the way it was.
+
+12:56.380 --> 13:02.170
+So for example let's assume that an administrator changes the IP address of the management VM kernel
+
+13:02.170 --> 13:02.890
+port.
+
+13:03.310 --> 13:08.920
+And so therefore the ESX host loses connectivity to the center.
+
+13:09.060 --> 13:15.090
+At this point the host is now disconnected but host level rollback will kick in and the change will
+
+13:15.090 --> 13:17.870
+be automatically reverted.
+
+13:17.870 --> 13:26.610
+We also have a feature called distributed switch rollback distributed switch rollbacks occur when it
+
+13:26.610 --> 13:34.850
+changes made to the distributed switch that breaks connectivity changes that can trigger this rollback
+
+13:34.850 --> 13:38.670
+include changing the empty view on a distributed switch.
+
+13:38.840 --> 13:43.850
+Choosing an incompatible Nic teaming method or choosing an incorrect VPN.
+
+13:43.860 --> 13:51.310
+So for example let's assume that we change the V lab on the VSE for a distributed switch to 20.
+
+13:51.390 --> 13:57.750
+But the physical switch is configured for VLAN 10.
+
+13:57.780 --> 14:04.820
+This results in my ESX I hostes being disconnected from the V Center network for management.
+
+14:04.830 --> 14:06.880
+Now if this happens you have a couple of options.
+
+14:06.900 --> 14:11.440
+You can manually fix the problem in the physical switch restoring connectivity.
+
+14:11.790 --> 14:17.650
+Or you can restore the configuration of the Vee's for a distributed switch from backup as well.
+
+14:20.680 --> 14:27.950
+So in reveal we learned about discovery protocols in this lesson including CTP and L-O.
+
+14:28.250 --> 14:33.830
+And we learned that CVP is Cisco's specific and it's actually supported by the vees for standard switch
+
+14:33.920 --> 14:41.910
+or the VSE for a distributed switch LDP is only available on the vees fair distributed switch and this
+
+14:41.910 --> 14:49.370
+is also the case for net flow net flows for a distributed switch feature that uses a centralized collector
+
+14:50.400 --> 14:56.820
+to aggregate traffic details and produce reports.
+
+14:56.930 --> 15:02.960
+We learned about traffic filtering and marking and how it can be used to create access lists or also
+
+15:02.960 --> 15:07.010
+to tag certain types of traffic with quality of service values.
+
+15:08.710 --> 15:15.070
+We learned about network IO control and how it can be used to ensure that our most important traffic
+
+15:15.250 --> 15:18.580
+always gets sufficient bandwidth on the physical network.
+
+15:19.640 --> 15:25.910
+We talked about a few different port mirroring session types and how they can be used to send a copy
+
+15:26.390 --> 15:32.950
+of traffic on a virtual port to some other virtual port so that traffic can be monitored.
+
+15:34.730 --> 15:40.370
+And then finally we learned about the rollback feature how it can automatically revert damaging network
+
+15:40.370 --> 15:43.010
+changes and restore the center connectivity.

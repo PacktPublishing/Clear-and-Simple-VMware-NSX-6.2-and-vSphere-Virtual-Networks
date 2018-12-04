@@ -1,0 +1,481 @@
+WEBVTT
+
+00:01.460 --> 00:10.330
+It this video will take an in-depth look at Cross center NSX architecture will cover the following topics.
+
+00:10.350 --> 00:16.010
+We'll look at how universal objects can be used in cross recentre NSX deployments.
+
+00:16.050 --> 00:23.170
+We'll look at how the NSX manager and NSX controller clusters are affected when we set up Cross center
+
+00:23.200 --> 00:32.310
+NSX and we'll also talk about how egressed traffic reaches external networks Solan cross the center
+
+00:32.400 --> 00:33.780
+NSX deployments.
+
+00:33.810 --> 00:41.880
+They're still going to be one NSX manager hervé center Scherrer and each NSX manager will have a role
+
+00:41.880 --> 00:49.320
+assigned one NSX manager will be designated as the primary NSX manager.
+
+00:49.320 --> 00:58.820
+This is the only instance that actually has NSX controllers deployed and all of our universal objects
+
+00:58.910 --> 01:04.260
+are going to be managed by that primary and Hasek's manager.
+
+01:04.290 --> 01:07.490
+We can also have a secondary NSX manager.
+
+01:07.530 --> 01:15.680
+These are any NSX manager instances that are added after the primary has been established.
+
+01:15.730 --> 01:24.400
+The secondary NSX manager instances can not modify global objects they'll have read only access to global
+
+01:24.400 --> 01:33.490
+objects a transit NSX manager instances one you won't see a whole lot of but assume you have a primary
+
+01:33.540 --> 01:36.760
+NSX manager that you want to change to a standalone.
+
+01:37.190 --> 01:45.590
+During that process it's going to be designated as a transit and X manager and then finally we have
+
+01:45.590 --> 01:47.200
+a stand alone and unsexed manager.
+
+01:47.210 --> 01:57.860
+This is simply any NSX manager or instance that's not part of a cross V center and ASX deployment.
+
+01:57.890 --> 02:04.940
+All right so let's take a look at multiple active production center servers with cross vse and her NSX.
+
+02:04.950 --> 02:12.750
+So on the left hand side we see one V Center instance with our primary NSX manager and on the right
+
+02:12.750 --> 02:19.140
+hand side we see another V center server with our secondary NSX manager.
+
+02:21.000 --> 02:29.030
+And we see a universal controller cluster that is deployed with the primary and insect's manager.
+
+02:30.460 --> 02:38.290
+The secondary NSX manager does not have a controller kuasa and there's a synchronization service that
+
+02:38.290 --> 02:42.710
+runs between the NSX manager instances.
+
+02:42.870 --> 02:50.340
+So all management of universal objects like my universal logical switch or my universal distributed
+
+02:50.340 --> 02:57.200
+logical router all of the management of those universal objects is done.
+
+02:57.240 --> 03:05.130
+The primary NSX manager and the changes that are made there are synchronized to all of the secondary
+
+03:05.280 --> 03:08.440
+instances.
+
+03:08.500 --> 03:17.900
+So let's take a closer look at the primary NSX manager and how synchronizes with the secondary instances
+
+03:19.560 --> 03:26.750
+while the primary NSX manager is going to have what we call the universal controller cluster.
+
+03:27.000 --> 03:34.170
+So one of the key aspects of the NSX manager configuration in this environment is there is this synchronization
+
+03:34.170 --> 03:40.750
+service that runs between the primary NSX manager and the secondary NSX manager.
+
+03:40.980 --> 03:48.900
+In all of our configuration changes are going to be applied in this primary NSX manager but we have
+
+03:48.900 --> 03:56.550
+to think about the possibility that that primary site could fail so the secondary NSX manager needs
+
+03:56.550 --> 04:04.190
+to be kept up to date so the secondary NSX manager will have read only access to all of these universal
+
+04:04.190 --> 04:10.910
+objects and it will be synchronized with the primary and ex-manager but the primary is where those changes
+
+04:10.910 --> 04:12.140
+are actually made.
+
+04:13.430 --> 04:22.690
+The primary NSX manager is also the only NSX manager that has a universal controller cluster and the
+
+04:22.700 --> 04:28.310
+universal controller cluster is pretty similar to what we've seen with the controller cluster so far
+
+04:29.180 --> 04:32.720
+there are still three NSX control and Oulds per quarter.
+
+04:33.260 --> 04:42.690
+But it only exists with the primary NSX manager and since so if you're registering an existing NSX manager
+
+04:42.840 --> 04:51.820
+as a secondary You need to be sure to remove the NSX controllers from the secondary first.
+
+04:52.040 --> 04:57.280
+The logical switches that we create can be either local or universal.
+
+04:57.310 --> 05:05.570
+The Pentagon the transport zone that they're assigned to and this applies to logical switches and DLR
+
+05:05.560 --> 05:08.830
+is created at the secondary NSX sites as well.
+
+05:10.630 --> 05:13.090
+How about the distributed firewall.
+
+05:13.120 --> 05:21.020
+So the primary NSX manager is where all of our universal firewall rules are created and managed.
+
+05:21.400 --> 05:27.960
+And these rules are synchronized across all of the NSX manager instances using the synchronization service
+
+05:29.930 --> 05:32.780
+these universal firewall rules are fairly limited.
+
+05:32.900 --> 05:37.640
+Primarily you're going to manage firewall rules using IP sets.
+
+05:37.640 --> 05:46.810
+You can also create rules based on Max sets or universal firewall security groups the universal firewall
+
+05:46.810 --> 05:54.610
+rules ensure that as virtual machines move from one v center to another that their security posture
+
+05:54.610 --> 05:55.880
+is still enforced.
+
+05:57.940 --> 06:03.490
+So we can Wii motion a VM from the site on the left to the side on the right and the firewall rules
+
+06:03.490 --> 06:04.650
+come right along with it.
+
+06:04.840 --> 06:12.640
+As long as they are universal firewall rules and you'll see those universal rules are displayed in their
+
+06:12.640 --> 06:22.120
+own section of the firewall management interface for at Sachs.
+
+06:22.160 --> 06:29.740
+Now one of the features of the universal logical router is this feature called local egress and this
+
+06:29.740 --> 06:37.400
+is used to ensure that traffic bound for an external network uses the best possible route.
+
+06:37.410 --> 06:44.100
+So in the scenario we see here we have two v centers servers in the same physical location and we have
+
+06:44.100 --> 06:49.840
+an NSX sedge that's running on the Quester the left.
+
+06:49.940 --> 06:57.260
+This is the only egress point and this is a fairly simple scenario because we don't need seperate routes
+
+06:57.260 --> 06:59.540
+for each V Center instance.
+
+06:59.540 --> 07:08.400
+So in this case the local egress feature should be left disabled and will have a universal logical routing
+
+07:08.400 --> 07:16.080
+control VM that will be used to exchange dynamic routing updates between the distributed logical router
+
+07:16.740 --> 07:18.290
+and the NSX.
+
+07:18.600 --> 07:25.890
+And any routes that are learned are pushed to the kernel modules on the hosts by the universal controller
+
+07:25.890 --> 07:28.420
+cluster.
+
+07:28.510 --> 07:36.520
+So the distributed logical router works pretty much exactly the same as we've always seen in a cross
+
+07:36.520 --> 07:44.170
+V Center and OS X deployment where we have local egressed disabled and in the universal control VM establishes
+
+07:44.170 --> 07:51.700
+those routing adjacencies and it pushes all of the routing table updates to the hosts through the universal
+
+07:51.700 --> 07:53.450
+controller cluster.
+
+07:53.470 --> 07:58.660
+And because we only have one egress point all of these hosts are going to match up they're all going
+
+07:58.660 --> 07:59.740
+to have the same routing table
+
+08:03.610 --> 08:07.260
+now what if we have equal cost multipath enabled.
+
+08:07.540 --> 08:14.160
+And I have an NSX edge deployed on two different hosts.
+
+08:14.290 --> 08:21.630
+So in this diagram we have two physical routers that we want to use for egress.
+
+08:21.820 --> 08:25.300
+The two blue circles represent different physical routers.
+
+08:25.300 --> 08:33.040
+They're both the same site so there's still no need to configure local egress right edge one is managed
+
+08:33.040 --> 08:41.840
+by the primary NSX manager edge two is managed by the secondary but there's still only a single universal
+
+08:41.840 --> 08:47.990
+control VM and it establishes adjacencies with both of these NSX.
+
+08:48.930 --> 08:55.770
+And we can then use equal cost multipath thing to evenly distribute traffic for all virtual machines
+
+08:55.770 --> 08:58.350
+across both of the edge gateways.
+
+08:58.350 --> 09:05.610
+Now one of those educate ways fails or one of the physical routers fails for example the routing protocol
+
+09:05.610 --> 09:11.860
+will be used to ensure that that traffic gets redirected over the surviving path.
+
+09:13.790 --> 09:18.090
+So with a single site configuration things really don't change a lot.
+
+09:18.470 --> 09:27.140
+Right Things are pretty similar to the way that they were without cross V Center Allisons.
+
+09:27.170 --> 09:33.060
+So how do we deploy crossfeed center and sect's in a single location.
+
+09:34.140 --> 09:42.730
+Well first off we would create a universal transport zone a universal transport zone that spans all
+
+09:42.730 --> 09:51.580
+of my coster's and we could then create our universal logical switches.
+
+09:51.720 --> 09:57.990
+And so once we have our universal transport zone defined we can create a logical switch we can associate
+
+09:57.990 --> 10:00.030
+it with that universal transport zone.
+
+10:01.460 --> 10:10.860
+And one of our universal logical switches will be a transit switch that is used to connect to the distributed
+
+10:10.860 --> 10:15.480
+logical router to the NSX etch.
+
+10:15.490 --> 10:23.810
+So next comes the universal distributed logical router along with the universal control via.
+
+10:23.940 --> 10:29.210
+There is no need to configure local ers in this case because we're still at a single location.
+
+10:30.230 --> 10:39.080
+The next step would be to configure the universal logical router to connect to the transit network and
+
+10:39.200 --> 10:44.270
+we also want it to connect to our logical switches that our VM connect to as well.
+
+10:45.280 --> 10:51.280
+And then finally we'll deploy the added services Gateway will connect that to the transit logical switches.
+
+10:51.300 --> 10:54.950
+Well and also to the external network.
+
+10:54.960 --> 11:01.350
+So now if our VM are connecting to the universal logical switch they have access to their default gateway
+
+11:01.620 --> 11:07.920
+which is the universal distributor logical router and the universal distributor logical router is connected
+
+11:07.920 --> 11:15.520
+to the transit switch which gives it access to the NSX edge and through the NSX had access to the Internet.
+
+11:17.930 --> 11:21.080
+Now things get a little bit more complicated.
+
+11:22.280 --> 11:30.100
+If we want to deploy cross V center NSX in separate physical locations.
+
+11:30.310 --> 11:35.310
+So in this case we're going to use a feature called local ers.
+
+11:35.320 --> 11:42.250
+This is a feature of the universal distributed logical router and this feature is used to ensure that
+
+11:42.250 --> 11:47.170
+any traffic bound for an external network takes the best possible route.
+
+11:48.180 --> 11:55.350
+So in this scenario we have two different v center servers in two different physical locations and at
+
+11:55.350 --> 12:05.160
+each site we have an NSX edge deployed and for each site that NSX is the optimal egress point for our
+
+12:05.160 --> 12:06.760
+traffic for that location.
+
+12:08.190 --> 12:15.100
+So in this case we need to enable the local egress feature on the universal logical router.
+
+12:16.160 --> 12:20.090
+And we'll have control via SMS in both locations.
+
+12:21.940 --> 12:31.710
+Each site will have a locale ID assigned to it so that site specific routing tables can be used so this
+
+12:31.710 --> 12:37.680
+means that each of our locations is going to have a unique routing table with the best possible routes
+
+12:37.680 --> 12:39.600
+for that particular location.
+
+12:40.380 --> 12:49.600
+And each site also has its own Transat logical switches with uplinks that connect to the NSX sketch.
+
+12:49.610 --> 12:55.610
+So now my universal distributed logical router has two different sets of uplinks one set of uplinks
+
+12:55.670 --> 13:03.700
+for each location and any routes learned involving the NSX agit site.
+
+13:04.260 --> 13:12.440
+Those routes are kept local desiré and the routes learn for site B are kept local to site B each site
+
+13:12.440 --> 13:17.630
+has its own control VM that's in charge of building the dynamic routing table.
+
+13:17.630 --> 13:26.680
+So my secondary control VM will establish an adjacency with edge to my primary logical routing control
+
+13:26.680 --> 13:32.890
+via well-established and adjacency with Edgemont.
+
+13:33.090 --> 13:40.460
+Let's talk our way through upgrading an existing deployment to cross V Center and ASX.
+
+13:40.710 --> 13:49.060
+The number one step is to ensure that your NSX manager instances are both on Version 6 not to notice
+
+13:49.060 --> 13:50.390
+at the bottom here.
+
+13:50.440 --> 13:55.780
+We have overlapping VNA eyes Vionnet five thousand one is deployed.
+
+13:55.930 --> 13:58.250
+Both of these locations.
+
+13:58.470 --> 14:05.400
+So we need to make sure that we migrate those two different V.N. eyes so that we don't have conflicts
+
+14:05.490 --> 14:06.980
+between the two sites.
+
+14:07.140 --> 14:16.250
+When we Nabl cross V Center and that's we can then promote one of our NSX manager instances to the primary
+
+14:16.430 --> 14:24.890
+NSX manager and the controller cluster associated with that primary NSX manager instance will become
+
+14:24.890 --> 14:33.750
+the universal controller cluster the NSX controller cluster that's associated with the secondary NSX
+
+14:33.750 --> 14:42.260
+manager should be deleted and the NSX manager site B must be registered to the primary NSX manager.
+
+14:42.330 --> 14:51.140
+At which point it becomes a secondary NSX manager instance and now all of the logical switches and the
+
+14:51.140 --> 14:56.410
+DL RS must be associated with the universal controller.
+
+14:56.510 --> 15:02.000
+At this point we can start to create these universal objects like universal distributed logical routers
+
+15:02.120 --> 15:05.270
+and universal logical switches.
+
+15:05.270 --> 15:10.820
+Now a few key considerations that we want to talk about prior to actually doing this.
+
+15:10.820 --> 15:19.950
+It's only supported on VSE fair six or later any service composer generated firewall rules are not supported
+
+15:20.040 --> 15:22.370
+on universal objects.
+
+15:22.440 --> 15:27.960
+Our local firewall rules do not come with virtual machines that are moved between the center instances
+
+15:28.890 --> 15:37.150
+and our universe alogical switches do not support Lehre to bridging our local logical switches can only
+
+15:37.150 --> 15:43.690
+be connected to a local distributed logical router and universal logical switches can only be connected
+
+15:43.690 --> 15:46.680
+to a universal logical router.
+
+15:46.730 --> 15:50.370
+So let's talk a little bit about what happens if a failure occurs.
+
+15:50.420 --> 15:58.520
+What happens if my primary NSX manager instance fails or if the universal controller cluster or universal
+
+15:58.520 --> 16:04.860
+control VM fail what we need to remember that these components are in the management plane and in the
+
+16:04.860 --> 16:11.850
+control plane and a failure does not impact production traffic.
+
+16:12.010 --> 16:20.470
+The recommended recovery process is to try to get this primary NSX manager instance back up and running.
+
+16:20.470 --> 16:28.330
+But if that's not possible the secondary NSX manager instance can be promoted to a primary and a sex
+
+16:28.330 --> 16:29.560
+manager.
+
+16:29.560 --> 16:35.110
+And in that case we would also need to deploy a new universal controller cluster.
+
+16:35.110 --> 16:40.290
+So ideally you'd want to recover the existing primary NSX manager.
+
+16:40.300 --> 16:46.150
+But if you have a complete site loss or something like that you can promote the secondary NSX manager
+
+16:46.630 --> 16:52.960
+and it will have the identical configuration because it's been synchronizing with the primary NSX manager
+
+16:53.020 --> 16:54.070
+all along.
+
+16:56.800 --> 17:04.820
+In review we can use Crosby center NSX to create universal objects like universal logical switches universal
+
+17:04.820 --> 17:12.840
+firewall rules and universal distributed logical routers that span multiple V Center inventory's.
+
+17:12.980 --> 17:19.190
+It allows the same Lehre to network to be present at different locations which can really help with
+
+17:19.190 --> 17:20.420
+disaster recovery.

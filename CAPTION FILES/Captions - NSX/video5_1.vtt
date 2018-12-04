@@ -1,0 +1,319 @@
+WEBVTT
+
+00:00.250 --> 00:06.810
+In this video I'll explain the concepts behind the distributed logical router and how it can be used
+
+00:07.500 --> 00:11.190
+as an east west router and an NSX deployment.
+
+00:13.270 --> 00:20.430
+So here we see an example of east west routing performed with a physical router Let's follow this in
+
+00:20.850 --> 00:26.940
+as it moves from virtual machine one to virtual machine to and notice my VM here they're on different
+
+00:26.940 --> 00:29.130
+IP address ranges.
+
+00:29.140 --> 00:36.440
+VM one is on the 1 9 2 1 6 8 dot 1.10 IP address whereas VM is on a completely different network ten
+
+00:36.440 --> 00:38.880
+not one not one not 10.
+
+00:38.930 --> 00:44.450
+And if you want to pass traffic between two different networks that traffic has to flow through a router
+
+00:47.520 --> 00:55.650
+a VM one wants to send some ping or some other traffic to virtual machine to it's going to create an
+
+00:55.650 --> 01:05.200
+IP packet destined for its default gateway and the packet will flow out of VM one hit the default gateway
+
+01:05.270 --> 01:11.800
+that's been assigned within the guest operating system a VM one which in this case is a physical router
+
+01:12.340 --> 01:14.830
+and the router will do a routing table look up.
+
+01:14.830 --> 01:19.380
+It will determine the best way to get to the 10 1 one network.
+
+01:19.820 --> 01:25.330
+It'll routed out a different interface maybe different Vili's an interface and the packet will flow
+
+01:25.330 --> 01:30.680
+back through the physical switch and eventually to virtual machine to.
+
+01:30.730 --> 01:38.370
+And so even though these two VAMC are running in the exact same physical host as each other their traffic
+
+01:38.460 --> 01:46.680
+is flowing out of VM one right through a virtual switch out of a VM Nic a physical adapter through a
+
+01:46.680 --> 01:49.090
+physical switch getting a.
+
+01:50.150 --> 01:56.570
+Falling back into that same physical switch back through the same physical adapter and eventually arriving
+
+01:56.660 --> 01:58.000
+at the destination.
+
+01:59.390 --> 02:05.930
+Not really the most ideal path for that traffic to take.
+
+02:06.000 --> 02:13.800
+So let's say instead of using a physical router we use a virtual machine based router.
+
+02:13.990 --> 02:19.360
+Maybe the NSX edge for example is a virtual machine that can act as a router.
+
+02:20.850 --> 02:25.050
+Well just looking at this diagram you can probably guess where this is going.
+
+02:25.050 --> 02:32.490
+VM one and VM two are on the same ESX host as each other but they can't directly communicate any traffic
+
+02:32.490 --> 02:37.970
+between them has to flow through a router because they're on different IP networks.
+
+02:38.020 --> 02:45.910
+So here goes my packet through my virtual switch over the physical switch into another ESX host where
+
+02:45.910 --> 02:53.620
+my NSX exists and the NSX edge routes it pushes it back over the physical that work towards the receiving
+
+02:53.620 --> 02:54.300
+VM.
+
+02:55.170 --> 02:59.730
+And so now again my traffic has taken a really not ideal path.
+
+02:59.730 --> 03:06.720
+Right it's left VM one gone through a virtual switch over this physical adapter over this physical switch
+
+03:07.470 --> 03:13.070
+through the other physical adapter to the edge which routes it pushes it out.
+
+03:13.110 --> 03:17.430
+Maybe even that same VM neck over that same physical switch.
+
+03:18.970 --> 03:25.490
+And eventually the traffic reaches VM to for two beams that are sitting right next to each other.
+
+03:25.530 --> 03:34.750
+This is a really long way for that traffic to go so what if we can deploy a router right within the
+
+03:34.750 --> 03:35.950
+hypervisor.
+
+03:36.070 --> 03:41.270
+What if we could run a router right inside of that ESX host.
+
+03:41.590 --> 03:45.820
+And that's how we're going to route with the distributed logical router.
+
+03:47.420 --> 03:53.750
+And there's going to be a kernel module instance a router that runs on each and every one of these ESX
+
+03:53.830 --> 03:54.870
+hosts.
+
+03:55.280 --> 04:00.170
+It's called the distributed logical router because it's centrally configured.
+
+04:00.740 --> 04:11.180
+And then a copy of it is distributed to all of my ESX hosts the DLR or distributed logical router supports
+
+04:11.210 --> 04:16.220
+OSPF in BGP routing protocols and it supports IP version 6 as well.
+
+04:19.890 --> 04:29.140
+So let's talk about some of the aspects of the distributed logical router or DLR the DLR behaves like
+
+04:29.140 --> 04:30.420
+a normal router.
+
+04:30.580 --> 04:32.780
+It's going to have interfaces.
+
+04:32.890 --> 04:39.070
+So some of those interfaces are going to be called VX land lifts or logical interfaces.
+
+04:39.130 --> 04:45.940
+Any interface that connects to a logical switch is called the VX landline and the interface that connects
+
+04:45.940 --> 04:50.160
+to a distributed switch is called a landline.
+
+04:50.470 --> 04:56.470
+And if you've ever worked with the Cisco router These are similar to sub interfaces or via LAN interfaces
+
+04:56.590 --> 05:00.520
+on a physical router a very similar concept.
+
+05:01.280 --> 05:06.220
+Where each logical interface connects to a different VX LAN or different Villon.
+
+05:06.530 --> 05:13.130
+And now we can route traffic from one layer to segment to another.
+
+05:13.130 --> 05:18.980
+So for example let's say that all of these virtual machines are running on the same ESX I host.
+
+05:18.980 --> 05:19.480
+Right.
+
+05:19.520 --> 05:26.910
+If VM one wants to ping VM to Will those virtual machines are on different networks right.
+
+05:26.940 --> 05:36.990
+I can see V.M. one is $192 168 1.10 and it's connected to a logical switch but rather than that traffic
+
+05:36.990 --> 05:44.540
+flowing out to some physical network or virtual machine VM one will send that traffic to its default
+
+05:44.570 --> 05:53.960
+gateway which is a logical interface on the DLR and the DLR will then route that traffic towards the
+
+05:53.960 --> 05:55.150
+appropriate network.
+
+05:56.770 --> 06:04.300
+So now we can do all of these routing functions when I call first hop a routing right within the ESX
+
+06:04.300 --> 06:07.540
+I host.
+
+06:07.570 --> 06:14.150
+So let's take a closer look at how this EastWest routing is performed and how the distributed and logical
+
+06:14.150 --> 06:15.500
+route router works.
+
+06:15.540 --> 06:21.190
+Here we see two ESX hosts ESX Hiser one and ESX icier auto.
+
+06:21.410 --> 06:27.440
+And I've got two virtual machines in my diagram V.M. one which is connected to the red logical switch
+
+06:27.440 --> 06:28.130
+on the top.
+
+06:28.130 --> 06:31.910
+V.N. I 5 0 0 0 and 2 and then down towards the bottom right.
+
+06:31.910 --> 06:37.600
+I have a virtual machine called V.M. too and that's on logical switch V.N. I 5000 one.
+
+06:37.820 --> 06:44.670
+So these are two virtual machines on two different networks right and then I also see my Wii taps at
+
+06:44.670 --> 06:53.840
+the bottom of each ESX host and my physical underlay network that connects those ESX hosts.
+
+06:53.860 --> 07:02.600
+And now let's say that VM one generates a ping destined for virtual machine to well because virtual
+
+07:02.600 --> 07:10.640
+machine 2 is on some other network the guest operating system VM one let's say it's Windows.
+
+07:10.640 --> 07:15.780
+Windows is going to recognize this packets bound for some other network.
+
+07:15.800 --> 07:18.280
+It's not on the same network that I am.
+
+07:18.360 --> 07:22.560
+So a VM one will do is it'll send that packet to its default gateway
+
+07:25.400 --> 07:31.790
+which is a VX LAN logical interface on the distributed logical router.
+
+07:32.000 --> 07:38.810
+So the DLR then uses its routing table to determine which interface it should route that packet out
+
+07:38.810 --> 07:45.420
+of and is slug's the correct interface and routes that packet towards this logical switch.
+
+07:45.570 --> 07:52.340
+Vienna five thousand one which is on the same network as the destination IP.
+
+07:52.500 --> 07:56.900
+And at this point the job of the distributed logical router is actually done right.
+
+07:57.060 --> 07:59.250
+There's no more routing that needs to happen here.
+
+08:00.200 --> 08:07.840
+Now the packet came from VM one on one logical switch and the DLR received it and routed it to the appropriate
+
+08:07.900 --> 08:09.780
+logical switch.
+
+08:09.880 --> 08:11.620
+So the DLR is finished.
+
+08:14.610 --> 08:20.560
+All right at this point the frame has been dropped on to Vienna 5 0 0 0 0 and 1 and that's the logical
+
+08:20.560 --> 08:20.900
+switch.
+
+08:20.920 --> 08:22.630
+VM 2 is connected to.
+
+08:22.990 --> 08:31.610
+However we still need to move this frame from host ESX 0 1 to host ESX 0 2.
+
+08:32.150 --> 08:37.710
+And so what's going to happen now is the Mac table's going to be used to determine what the tap in that
+
+08:37.730 --> 08:45.990
+frame should be forwarded to and the type that it should go to is the type to an IP address 172 not
+
+08:46.040 --> 08:48.330
+16 not 10 not 11.
+
+08:48.380 --> 08:54.410
+So now at this point the source via tap will wrap that frame up in a new outer header.
+
+08:54.700 --> 09:02.210
+It'll assign those source and destination IPs in the I had her and all of those VX LAN had header information
+
+09:02.210 --> 09:09.590
+that we need and the frame will traverse the physical network arrive at the destination via tap where
+
+09:09.620 --> 09:12.160
+all of those headers will be stripped off.
+
+09:13.150 --> 09:16.690
+And the packet will be delivered to V.M. to.
+
+09:16.760 --> 09:23.930
+So in review we learned about the distributed logical router in this lesson we learned about how it
+
+09:23.960 --> 09:29.630
+eliminates hair pinning and hair pinning is when that traffic was flowing out to some physical router
+
+09:30.020 --> 09:33.760
+or some virtual machine router unnecessarily.
+
+09:33.950 --> 09:41.090
+It eliminates those unnecessary wire hops that our traffic was taking and it routes it right within
+
+09:41.090 --> 09:45.640
+the hypervisor as a kernel module.
+
+09:45.680 --> 09:52.520
+We learned that the DLR has interfaces called lefse or logical interfaces and that those interfaces
+
+09:52.520 --> 09:56.450
+act as the default gateway for our virtual machines.
+
+09:56.450 --> 10:01.850
+If our virtual machines are connected to a logical switch their default gateway will be a VX LAN Leffe
+
+10:02.840 --> 10:07.460
+if they're connected to a distributed port group those interfaces are called V landlubbers.

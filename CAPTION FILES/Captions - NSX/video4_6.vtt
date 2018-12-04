@@ -1,0 +1,385 @@
+WEBVTT
+
+00:00.540 --> 00:09.970
+This video I'll explain the role of the NSX controller cluster so the NSX controller cluster is a control
+
+00:09.970 --> 00:17.140
+plane component that provides intelligence and features to our logical switches and one of the big benefits
+
+00:17.590 --> 00:25.300
+of the NSX controller cluster is that it eliminates the need for multicast configuration in the physical
+
+00:25.300 --> 00:26.570
+network.
+
+00:27.490 --> 00:33.700
+So traditionally if you want to set up VA excellent encapsulation you need to configure multicast in
+
+00:33.700 --> 00:39.540
+your physical switches and routers and via xplain isn't just the VM or technology.
+
+00:39.540 --> 00:45.840
+It's been deployed by many other vendors but they generally require that configuration in the physical
+
+00:45.840 --> 00:47.340
+network.
+
+00:47.340 --> 00:53.100
+So one of the benefits of the NSX controller cluster is that you can get away without configuring multicast
+
+00:53.160 --> 00:55.210
+and that physical network gear.
+
+00:55.680 --> 01:02.310
+Now you may still want to configure multicast depending on kind of what your priorities are and what
+
+01:02.310 --> 01:04.840
+the knowledge level of your staff is.
+
+01:07.570 --> 01:14.560
+The NSX controller can also help reduce broadcasts by suppressing our requests and we'll take a look
+
+01:14.560 --> 01:21.320
+at a few our requests and how the NSX controller handles those.
+
+01:21.320 --> 01:29.150
+So first off what are the tables that the NSX controller maintains the NSX controller maintains a Mac
+
+01:29.510 --> 01:31.360
+ARP and Wii type table.
+
+01:32.660 --> 01:39.920
+So here we see a screen shot of the Mac table that's maintained by the NSX controller and we can see
+
+01:39.920 --> 01:47.410
+here that we have a listing of MAC addresses and the Wii tab that is associated with those MAC addresses.
+
+01:47.450 --> 01:53.790
+So in this first example that we see highlighted in red We've got the MAC address of a virtual machine.
+
+01:55.860 --> 02:02.670
+And now the NSX controller will know which Wii tap that virtual machine is reachable through.
+
+02:02.760 --> 02:04.770
+Based on this table.
+
+02:04.770 --> 02:15.430
+So maybe $192 168 250 that 53 is a Wii type on one host and the 52 IP address that some Wii tap on another
+
+02:15.430 --> 02:16.820
+host.
+
+02:16.930 --> 02:26.540
+This is how the NSX controller tracks which Reems are reachable through which we tap.
+
+02:26.550 --> 02:34.450
+Here's a look at the ARP table the NSX controller has the ability to suppress ARP requests.
+
+02:35.760 --> 02:42.370
+And what it does is it maintains an IP to MAC address mapping for virtual machines.
+
+02:44.080 --> 02:52.210
+Now because the NSX controller is able to respond to our requests this allows us to eliminate broadcast
+
+02:52.210 --> 02:59.410
+traffic due to virtual machines trying to discover the MAC address of their destination and we'll take
+
+02:59.410 --> 03:02.890
+a closer look at this ARP suppression feature in a little bit.
+
+03:03.130 --> 03:08.000
+But I did want to show you a look at this ARP table and then finally the V-Tech table.
+
+03:08.860 --> 03:15.470
+So here we see all of our top IP addresses and we can see which network segment they're a part of which
+
+03:15.470 --> 03:22.010
+V-Tech segment and we can also see the MAC addresses for our taps as well.
+
+03:22.010 --> 03:24.840
+So a few things I just want to point out here.
+
+03:24.890 --> 03:33.260
+Notice that for all three of these tables we see the VNA I designated as 5 0 0 0 0 0 and 1 right.
+
+03:33.530 --> 03:38.500
+A separate set of tables is maintained for each alogical switch.
+
+03:38.810 --> 03:43.220
+So these particular tables here are all for V.N. 5 0 0 0 0 and 1
+
+03:46.270 --> 03:53.060
+notice that we have multiple IP addresses in our tap table and they're all on the same network range.
+
+03:54.040 --> 03:56.800
+This is called the tap segment.
+
+03:56.890 --> 04:06.110
+So these are a couple of hosts probably that have the taps one v type each and there's not a router
+
+04:06.110 --> 04:09.430
+between these hosts right there on the same layer 2 physical network.
+
+04:11.110 --> 04:20.140
+So if we tap a we'll call it $192 168 that 250 that 53 wants to send a frame to V-Tech B.
+
+04:20.160 --> 04:28.800
+Let's say the dot 52 V tap this is where it can discover the source and destination MAC address so that
+
+04:28.800 --> 04:32.720
+those frames can be sent over that underlying physical network.
+
+04:34.540 --> 04:37.480
+So how do these Mac address tables get populated.
+
+04:38.600 --> 04:44.940
+Well here we see two ESX I it's represented by our little green blocks here.
+
+04:45.080 --> 04:48.890
+And let's say we want a boot up some virtual machines on those hosts.
+
+04:49.800 --> 04:57.180
+So I boot up a VM called the V.M. one and here I see it's mac addresses Mac one and I can see the IP
+
+04:57.180 --> 04:58.670
+address of that virtual machine.
+
+05:00.870 --> 05:08.760
+What's going to happen at that point is when that virtual machine boots up something called the user
+
+05:08.760 --> 05:13.940
+world agent is going to communicate with the NSX controller closter.
+
+05:14.190 --> 05:20.580
+There's something that runs on your hosts call the user world agent and it's essentially a communications
+
+05:20.580 --> 05:25.600
+bus between the ESX I host and the NSX controller cluster.
+
+05:25.650 --> 05:34.000
+So as VAMC abou that user road agent is going to continuously inform the NSX controller closter Hey
+
+05:34.000 --> 05:41.540
+I have a VM that's booted it's connected to Vienna five thousand one and hears its MAC address.
+
+05:41.660 --> 05:48.470
+And so now the first entry in our MAC Address table here has been populated by this VM on ESX I host
+
+05:48.510 --> 05:55.410
+one and then we might have a VM that boots up on some other ESX I host or call it V.M. too.
+
+05:55.730 --> 06:02.900
+And again that ESX host has its own instance of the user world agent running that will inform the NSX
+
+06:02.900 --> 06:07.690
+controller cluster that another VM has been connected to this logical switch.
+
+06:07.880 --> 06:10.850
+And here's the MAC address for this virtual machine.
+
+06:11.070 --> 06:17.850
+And it's also going to tell it the Wii tap that that virtual machine is reachable through which in this
+
+06:17.850 --> 06:21.740
+case is we tap to.
+
+06:21.750 --> 06:26.170
+So now the NSX controller Kloster knows a few key things right.
+
+06:26.220 --> 06:32.680
+It knows that if there are some traffic destined for Mac to that that traffic should be sent to the
+
+06:32.740 --> 06:41.880
+tap to add it also knows that tap too and VM too are participating in this particular logical switch.
+
+06:41.900 --> 06:46.500
+Vienna five thousand one.
+
+06:46.670 --> 06:53.000
+So that's the Mac table and how the Mac table is actually populated by the user world agent running
+
+06:53.000 --> 07:00.030
+in that yes X I host.
+
+07:00.080 --> 07:07.300
+Now at this point let's say that VM one wants to ping virtual machine too.
+
+07:07.400 --> 07:10.020
+So let's walk through the progression of what's going to happen.
+
+07:11.080 --> 07:15.900
+VM one wants to ping V.M. too and it knows the destination IP.
+
+07:15.970 --> 07:21.440
+And in this case we're going to assume that it already knows the destination MAC right Mac.
+
+07:21.820 --> 07:28.500
+So we're not going to have to issue in our request but at this point the question really becomes well
+
+07:29.140 --> 07:34.630
+VM one is running on one host and VM two is running on some other ESX I host.
+
+07:34.670 --> 07:39.170
+So how does VM one know how to get its traffic here.
+
+07:39.230 --> 07:48.000
+How does the ESX I host know that in order to get T-Mac to the traffic needs to be shipped over to the
+
+07:48.020 --> 07:56.840
+tap to well the answer is we have an entry in our map table and the NSX controller closter in here we
+
+07:56.840 --> 07:59.090
+see the entry highlighted.
+
+07:59.140 --> 08:04.760
+So the NSX controller Kloster knows how to get that packet from point A to Point B.
+
+08:07.460 --> 08:10.720
+Now I do want to make a quick side note here.
+
+08:10.940 --> 08:16.310
+The NSX controller cluster is a control plane component.
+
+08:16.640 --> 08:16.820
+Right.
+
+08:16.820 --> 08:25.260
+So if the NSX controller closter suddenly fails this traffic isn't just going to stop working.
+
+08:25.430 --> 08:30.840
+What will happen at that point is we'll have a whole bunch of what we call unknown unicast traffic that
+
+08:30.960 --> 08:37.620
+will be broadcasted throughout the physical network and we definitely don't want that.
+
+08:37.830 --> 08:43.050
+Now one final side note that I'll say before we move on from this slide well let's say we take virtual
+
+08:43.050 --> 08:50.830
+machine 1 and Wii motion it to a different host well when that happens a Mac report is automatically
+
+08:50.830 --> 09:02.290
+generated notifying the NSX controller cluster that VM has now moved behind some different V-Tech.
+
+09:02.330 --> 09:03.710
+How about the temp table.
+
+09:03.710 --> 09:05.210
+How is that populated.
+
+09:05.570 --> 09:13.520
+So the Wii tap table tracks all of our Wii taps by VNA and here on the left we see one ESX host with
+
+09:13.520 --> 09:20.920
+Wii type 1 and the IP addresses 10 not one not 1.10 and on the right hand side we see a Wii tap called
+
+09:20.960 --> 09:29.270
+Wii tap 2 that's on host 2 with an IP address of 172 16 not 10 11 and my view taps are on different
+
+09:29.270 --> 09:36.690
+networks and that's because in the middle I have a router right so we have two different networks.
+
+09:36.690 --> 09:40.460
+And these are called V type segments two different Wii type segments we type.
+
+09:40.460 --> 09:47.130
+One is in one segment we tap two is in another.
+
+09:47.160 --> 09:54.240
+So here we go we have virtual machine one that boots up and connects to this logical switch on the first
+
+09:54.240 --> 09:55.770
+ESX host.
+
+09:55.770 --> 10:01.520
+And this is the first VM on this host that has connected to this logical switch.
+
+10:02.710 --> 10:10.930
+So the first time that any virtual machine connects to a logical switch on that particular host the
+
+10:10.990 --> 10:21.880
+ESX host updates its local Viets have table mapping the VNA I to this particular tap and a v tap report
+
+10:21.940 --> 10:26.970
+is then generated and sent to the NSX controller closter.
+
+10:26.980 --> 10:37.030
+So here we see our Wii tap table entry we top10 that 1.1 10 is mapped to Mac address PC Mac one on V.N.
+
+10:37.130 --> 10:38.030
+five thousand one
+
+10:41.170 --> 10:46.690
+and so kind of more of the same thing here another host the first virtual machine boots up on this other
+
+10:46.690 --> 10:50.440
+host connects to Vienna five thousand one on the other host.
+
+10:50.620 --> 10:56.660
+And another Wii tap table entry is generated for that particular ESX host.
+
+10:56.780 --> 11:07.480
+And now we know on that host we tap $172 $610 11 is mapped to its MAC address and its VNA and the Wii
+
+11:07.480 --> 11:15.310
+tap controller basically builds up a complete list of all of these Wii tap table entries and what it
+
+11:15.580 --> 11:25.400
+does is it pushes out a copy of that V tap table to all of these ESX host using the user agent and remember
+
+11:25.400 --> 11:32.810
+that user world agent is just a communication box that allows the hosts to communicate with the NSX
+
+11:32.810 --> 11:35.370
+controller closter.
+
+11:35.410 --> 11:44.200
+So now we have these Wii type tables that are actually stored on each of the ESX I host and they are
+
+11:44.250 --> 11:50.300
+constantly maintained and updated.
+
+11:50.330 --> 11:53.470
+Finally our third table what are our table.
+
+11:53.540 --> 11:58.500
+So the ARP table is used to suppress broadcast traffic.
+
+11:58.550 --> 12:03.280
+So for example here we see V.M. one VM one is booted up.
+
+12:03.280 --> 12:05.000
+Its connected to a logical switch.
+
+12:05.000 --> 12:12.000
+Vienna 5 0 0 0 0 and 1 and for the first time it's sending some traffic.
+
+12:12.210 --> 12:17.370
+And what's going to happen at this point is the Wii tap is going to see the IP address of the virtual
+
+12:17.370 --> 12:26.680
+machine and the MAC address and it's going to be able to create this IP to MAC address Association and
+
+12:26.680 --> 12:33.660
+it'll inform the NSX controller cluster of this IP to MAC address Association.
+
+12:33.670 --> 12:45.410
+So here we see the first entry into our table 192 not 168 that 10 not 10 for MAC address one.
+
+12:45.570 --> 12:48.790
+Now another virtual machine boots up on the second host.
+
+12:48.900 --> 12:51.430
+And for the first time it sends some traffic.
+
+12:51.780 --> 12:57.320
+And what's going to happen at that point is the tap is going to build that IP to MAC address mapping.
+
+12:57.690 --> 13:00.840
+And it's going to forward it to the NSX controller cluster.
+
+13:00.960 --> 13:09.330
+And now the controller cluster is building up a complete ARP table so it's building up a list of IP
+
+13:09.450 --> 13:14.730
+to MAC address mappings for every virtual machine connected to this logical switch.

@@ -1,0 +1,472 @@
+WEBVTT
+
+00:00.370 --> 00:08.490
+In this video I'll explain the concepts of VX lane and taps and how our NSX logical switches use these
+
+00:08.580 --> 00:18.270
+objects to allow Lehre to traffic to traverse a layer 3 network.
+
+00:18.270 --> 00:28.470
+So first off what is a tap tap is a VM kernel poor that specifically required for VX LAN.
+
+00:28.700 --> 00:35.480
+Now with VSE fair we have two types of virtual switches and we have our vse for a standard switch and
+
+00:35.480 --> 00:42.590
+the VSE very standard which is a switch that's configured on individual ESX hosts and has a fairly limited
+
+00:42.590 --> 00:43.470
+feature set.
+
+00:44.880 --> 00:51.930
+Then we have the vees fair distributed swinge which has much more features and has a centralized management
+
+00:51.930 --> 00:54.100
+plane in the center.
+
+00:54.120 --> 00:59.910
+So when we create a VSE for distributed switch we have a central point of configuration and we can easily
+
+00:59.910 --> 01:04.310
+make changes to many hosts at once.
+
+01:04.360 --> 01:10.170
+Now with NSX we have a third type of virtual switch called the logical switch.
+
+01:11.090 --> 01:18.830
+And the logical switch is configured using something called a VX LAN network identifier or VNA
+
+01:22.430 --> 01:31.590
+so prior to creating a logical switch we need to establish a pool of these Vienna ice valid villainize
+
+01:31.680 --> 01:36.670
+begin at 5000 so that they can't be easily confused with feelings.
+
+01:36.990 --> 01:47.740
+And each Vienna serves as a unique logical identifier very similar to a villain for a logical switch.
+
+01:47.770 --> 01:57.800
+So as you create logical switches via eyes from our pool are automatically assigned.
+
+01:57.970 --> 02:03.180
+And that's kind of a little bit of the background of what happens with these logical switches.
+
+02:03.220 --> 02:10.330
+Now when you establish a logical switch there's going to be a VM kernel port call the VI tap that gets
+
+02:10.450 --> 02:12.220
+automatically created.
+
+02:13.540 --> 02:17.860
+And we'll talk about how that happens a little bit later in this video.
+
+02:17.860 --> 02:21.000
+You might have one V-Tech for a logical switch.
+
+02:21.220 --> 02:27.730
+You might have three or four Wii taps right there automatically generated and I'll show you how those
+
+02:27.730 --> 02:28.420
+are created.
+
+02:28.420 --> 02:36.250
+And just a little while but for now just understand that the Wii type is a VM kernel port and the job
+
+02:36.250 --> 02:46.360
+of the Wii tap is to perform VX LAN encapsulation and de-caf solution it adds headers to traffic that's
+
+02:46.360 --> 02:54.590
+about to traverse the physical network like a VX LAN had for an IP header and a Mac Hetter.
+
+02:54.620 --> 03:02.750
+So the goal of these vaccines is simply to ship traffic from one ESX host to another across some physical
+
+03:02.750 --> 03:03.500
+network.
+
+03:05.900 --> 03:13.070
+In this diagram we have two virtual machines that are connected to the same logical switch VM one and
+
+03:13.070 --> 03:14.270
+VM two.
+
+03:14.450 --> 03:21.230
+And you'll notice that VM one nvm two are on the same IP address range of 192 out 168.
+
+03:21.360 --> 03:27.700
+Not one not 10 and 192 out 168 not one not 11.
+
+03:27.720 --> 03:33.360
+So this is two virtual machines that are connected to the same logical switch.
+
+03:33.360 --> 03:38.450
+And if they want to communicate with each other that's going to be layer to traffic right.
+
+03:38.560 --> 03:46.500
+VM one wants to ping VM to for example the source IP is going to be the IP of VM one destination IP
+
+03:46.950 --> 03:48.760
+the IP of VM to right.
+
+03:48.790 --> 03:53.040
+There's no need to utilize a default gateway or anything like that.
+
+03:53.040 --> 03:57.560
+This is just a straight up layer to traffic.
+
+03:57.800 --> 04:03.440
+And we can also see the source Mac is the MAC address of VM one the destination MAC is the MAC address
+
+04:03.440 --> 04:04.280
+of VM to
+
+04:06.940 --> 04:17.500
+however these two virtual machines are on different ESX I host and when we have a logical switch and
+
+04:17.500 --> 04:24.180
+victims that are on different hosts that traffic is going to have to traverse a physical network that
+
+04:24.190 --> 04:27.840
+we call the underlaid network.
+
+04:27.970 --> 04:34.180
+And in order for that to happen that traffic is going to have to flow through the tap that's going to
+
+04:34.180 --> 04:37.300
+have to get VX actually encapsulated.
+
+04:37.300 --> 04:44.860
+And essentially what's going to happen is the V-Tech of the first host is going to ship that traffic
+
+04:45.550 --> 04:50.810
+over to the tap of the second host.
+
+04:50.820 --> 04:53.140
+So let's take a look at how this works.
+
+04:53.340 --> 05:00.030
+Right now my source and destination IP and source and destination MAC are the addresses of my virtual
+
+05:00.030 --> 05:01.830
+machines.
+
+05:02.000 --> 05:07.170
+When this frame arrives at the tap tap is going to add a new set of headers.
+
+05:07.190 --> 05:14.040
+It's going to add a new source and destination IP and a new source and destination MAC the source IP
+
+05:14.340 --> 05:21.880
+is the sending V tap the destination IP is the Receiving the tap in that traffic will traverse the physical
+
+05:21.880 --> 05:28.790
+network arrive at the destination via tap on the other ESX I host.
+
+05:28.950 --> 05:38.130
+And now it's the job of the destination the tap to strip away these v excellent headers to remove this
+
+05:38.130 --> 05:47.570
+additional source and destination IP and source the destination MAC that specify the IPs of the taps.
+
+05:47.640 --> 05:55.780
+And as it strips away those headers it will eventually arrive at the V.N. I feel of the VX thing.
+
+05:58.450 --> 06:03.690
+And if we go back in our presentation just a little bit.
+
+06:03.850 --> 06:13.810
+Let's take one more look at these headers in red we see the original frame with the original payload
+
+06:13.820 --> 06:20.380
+the data source and destination IP of the VM the source and destination max of the virtual machine.
+
+06:21.600 --> 06:29.100
+The Wii tap is adding those headers that you see in blue VX LAN network identifier as source and destination
+
+06:29.130 --> 06:36.680
+IP of the taps and the source and destination MAC of the VTX.
+
+06:36.710 --> 06:42.560
+So when that traffic arrives at the destination VTEC all those headers that we just saw in red need
+
+06:42.560 --> 06:49.940
+to get stripped away so we can get back to the original frame with the source and destination IPs and
+
+06:49.940 --> 06:52.610
+max of the virtual machines.
+
+06:52.610 --> 06:59.360
+And as the tap is decapitating that frame as it's removing those VX line headers one of the headers
+
+07:00.140 --> 07:03.900
+is going to be the Vienna five thousand one.
+
+07:04.170 --> 07:10.310
+And that's how the Wii tap knows which logical switch to drop that frame onto.
+
+07:12.090 --> 07:18.420
+So when it drops that frame on to Vienna 5 0 0 0 0 1 it's going to drop it there with the original headers
+
+07:18.420 --> 07:19.360
+intact.
+
+07:19.500 --> 07:22.250
+And now the frame can arrive at my virtual machine.
+
+07:26.440 --> 07:28.950
+Now I know this is a little confusing at first.
+
+07:28.960 --> 07:31.070
+Let's take a look at another example.
+
+07:33.020 --> 07:36.560
+In this case our physical network is going to be a little bit different.
+
+07:38.220 --> 07:44.730
+Now we're going to insert a router into the middle of this mix.
+
+07:44.810 --> 07:51.440
+So let's take a look at Virtu machine one now wants to communicate with virtual machine to and notice
+
+07:51.440 --> 07:53.420
+their addresses haven't changed.
+
+07:54.330 --> 08:00.990
+They're both still connected to the same logical switch and when they communicate as far as my virtual
+
+08:00.990 --> 08:08.610
+machines are concerned it's a layer to communication between two venoms that are on the same switch.
+
+08:09.460 --> 08:11.520
+So here's what my headers are going to look like.
+
+08:12.200 --> 08:19.340
+VM one will generate a ping or some other traffic to V.M. to and the source IP and destination IP are
+
+08:19.340 --> 08:27.460
+the virtual machines and so are the source and destination MAC.
+
+08:27.500 --> 08:31.520
+Now that frame is going to flow through the logical switch and hit that the tap
+
+08:35.130 --> 08:39.600
+quickly before we examine how those headers are going to change the tap level.
+
+08:39.600 --> 08:45.460
+Just noticed in this case my Wii taps are on different IP address ranges.
+
+08:46.390 --> 08:51.220
+The tap on host one is 10 one don't want turn the tap on.
+
+08:51.220 --> 09:04.090
+Host two is 172 16 at 10:10 and I've got a physical router in between these ESX hosts.
+
+09:04.170 --> 09:11.610
+So this is where VX land provides us some major benefits because now I can have a Lear to network that
+
+09:11.610 --> 09:21.220
+extends across a physical layer 3 network.
+
+09:21.250 --> 09:27.610
+So here we see the frame arrives at the tap and the tap is going to encapsulate it.
+
+09:27.730 --> 09:35.440
+The original frame is going to be left intact but the tap is going to put new headers on the outside
+
+09:35.440 --> 09:36.030
+of it.
+
+09:36.040 --> 09:43.610
+It's called our outer headers and the source IP is going to be the type of host one the destination
+
+09:43.640 --> 09:48.530
+IP is the type of host to the source.
+
+09:48.530 --> 09:58.170
+Mac is the MAC address of the tap one the destination MAC is the MAC address of my router.
+
+09:58.250 --> 10:02.930
+So as this frame arrives at the router let's kind of walk through with the router is actually going
+
+10:02.930 --> 10:03.800
+to do.
+
+10:03.950 --> 10:10.340
+The router will start to analyze these headers and it will say is a little noticed that the destination
+
+10:10.340 --> 10:18.830
+MAC is our Mac one that's the MAC address of an interface on the router and it'll look at the source
+
+10:18.830 --> 10:21.360
+Mac and that will be in the back of the tap.
+
+10:21.710 --> 10:28.610
+And so the router will think hey here's a layer to frame that is destined for me that belongs in this
+
+10:28.610 --> 10:29.870
+router.
+
+10:29.870 --> 10:35.360
+So little strip away that source Mac and that destination MAC and that's where those layer two headers
+
+10:35.750 --> 10:42.330
+stop and the next thing it'll do is it'll analyze the destination IP.
+
+10:42.430 --> 10:49.620
+And in this case my destination IP is 172 not 16 not 10 not 10 which is why we type over here.
+
+10:50.910 --> 10:59.410
+So the router will realize hey that's not my destination IP this packet is destined for something on
+
+10:59.550 --> 11:08.080
+the 172 the 16 10 0 network and the router will then do what a router does the router will say hey I've
+
+11:08.080 --> 11:11.020
+got an interface on that network over here.
+
+11:11.210 --> 11:11.690
+Right.
+
+11:11.960 --> 11:19.380
+And so what it'll do is it'll then send that packet out that interface right and that's the job of routers
+
+11:19.380 --> 11:25.910
+to take any packet that's on one network and route it to another network that it's destined for
+
+11:28.790 --> 11:35.440
+so our router does its job or receives that frame and it looks at the lead to headers looks at the three
+
+11:35.450 --> 11:38.360
+headers routes it out to the appropriate network.
+
+11:40.510 --> 11:43.540
+And here's what our headers look like after the fact.
+
+11:45.020 --> 11:51.110
+Now few things have changed in this case the source IP is still the IP address of our sending the tap
+
+11:51.200 --> 11:57.010
+the destination IP also has not changed it's the IP address of the receiving VTM.
+
+11:57.230 --> 12:04.600
+And then we have our source Mac which is this interface on the router and the destination MAC which
+
+12:04.600 --> 12:07.860
+is now the MAC address of VTEC.
+
+12:07.990 --> 12:15.310
+And so now what will happen is the V-Tech will receive this frame and the V-Tech will go through a similar
+
+12:15.310 --> 12:17.290
+process that the router did.
+
+12:19.290 --> 12:26.710
+The tap will analyze the source and destination MAC and it'll say OK this is destined for PC Mac.
+
+12:26.920 --> 12:28.380
+That's me.
+
+12:28.450 --> 12:36.140
+Let me go ahead and strip away these layer two hatters and that it'll analyze the destination IP and
+
+12:36.140 --> 12:38.900
+the tabel will say that's my IP address.
+
+12:38.930 --> 12:47.590
+Let me go ahead and strip away the IP headers and the next header that it's going to see the next header
+
+12:47.620 --> 12:58.870
+the V-Tech will see is a Vienna I had or identifying which logical switch this frame is destined for.
+
+12:59.050 --> 13:04.930
+And that's how the Wii tap knows to forward that frame to logical switch.
+
+13:05.130 --> 13:06.850
+Vienna 55000 what.
+
+13:11.730 --> 13:16.220
+So the Wii tap has now stripped away all of those outer headers.
+
+13:16.680 --> 13:20.400
+My frame is delivered to the logical switch.
+
+13:21.470 --> 13:24.430
+And now the original headers are used.
+
+13:24.470 --> 13:27.070
+We have our original source and destination IP.
+
+13:27.080 --> 13:29.540
+Our original source and destination MAC.
+
+13:29.570 --> 13:36.200
+So now the frame will arrive at virtual machine to VM to will say this is my destination MAC let me
+
+13:36.200 --> 13:41.670
+strip that away and it will look at the layer three Hatter it will see that this is this virtual machine.
+
+13:41.690 --> 13:42.910
+Destination IP.
+
+13:43.130 --> 13:48.610
+And at that point it can examine the payload.
+
+13:48.610 --> 13:54.220
+Now hopefully this is really clarified the role of the Wii actually in the taps.
+
+13:54.310 --> 14:00.190
+But if there's still confusion I recommend going back and re watching this video again from the beginning
+
+14:00.520 --> 14:04.900
+and hopefully that'll help clarify any questions you might have.
+
+14:05.780 --> 14:12.140
+Now we're going to proceed on here we're going to talk a little bit about the impact of quality of service
+
+14:12.410 --> 14:13.680
+in this environment.
+
+14:15.890 --> 14:22.850
+So here we see a again my same virtual machines on the same networks and we have our Wii taps which
+
+14:22.850 --> 14:30.190
+are on different networks and a physical router in the underlying network and virtual machine one is
+
+14:30.190 --> 14:33.940
+going to generate some traffic bound for virtual machine too.
+
+14:34.210 --> 14:46.440
+And this traffic has been tagged with S.O.S hador and a DCP have we've appended quality of service values.
+
+14:47.500 --> 14:55.890
+This traffic to ensure that as it traverses the physical network that it'll be prioritized appropriately
+
+14:59.970 --> 15:08.220
+what happens is when the VX Slan encapsulation takes place the tap is actually going to recognize those
+
+15:08.220 --> 15:13.470
+quality of service values and also append them to that outer Hetter.
+
+15:13.680 --> 15:20.070
+Because remember all of the addressing and all the quality of service information that this VM has is
+
+15:20.310 --> 15:22.350
+applying to that frame.
+
+15:22.350 --> 15:28.490
+That's all going to be obscured behind an outer header and the tap creates.
+
+15:28.710 --> 15:36.720
+So the type will pull those S.O.S and DCP tags place them on the outer header.
+
+15:36.720 --> 15:43.890
+And that way our quality of service configurations can be maintained as is packet traverses the physical
+
+15:43.890 --> 15:44.440
+network.
+
+15:46.960 --> 15:53.770
+Now when our next video we're going to take a look at how these Vitebsk get created and how many Wii
+
+15:53.770 --> 15:57.690
+taps are actually going to exist on each logical switch.

@@ -1,0 +1,295 @@
+WEBVTT
+
+00:00.250 --> 00:08.130
+In this video I'll explain NSX service composer and we'll talk about how it can be used to provide automation
+
+00:08.580 --> 00:12.450
+and third party integration for the NSX firewall.
+
+00:15.260 --> 00:22.520
+So Service composer is going to allow a pretty high level of automation in our NSX firewall using something
+
+00:22.520 --> 00:25.090
+called Dynamic tagging.
+
+00:25.120 --> 00:32.680
+It can also allow us to integrate with third party services like anti-virus or intrusion prevention
+
+00:32.680 --> 00:37.300
+systems and it does so using two types of objects.
+
+00:37.300 --> 00:43.870
+Security Groups and security policies it can provide guest introspection services.
+
+00:43.970 --> 00:50.770
+And this is really useful for data loss prevention tools or anti-virus tools.
+
+00:50.790 --> 00:58.990
+It can also provide network introspection which is useful for deploying some sort of third party intrusion
+
+00:59.020 --> 01:01.110
+prevention system.
+
+01:01.330 --> 01:08.560
+And it also has dynamic and static inclusion rules to govern what actually gets dropped into our security
+
+01:08.560 --> 01:09.200
+groups.
+
+01:10.140 --> 01:18.150
+Service composer provides a high level of automation and we are going to create something called security
+
+01:18.150 --> 01:25.860
+groups that basically associate objects that we want to protect such as virtual machines.
+
+01:25.930 --> 01:29.470
+The app's resource pools host clusters.
+
+01:29.470 --> 01:36.310
+They can even be made up of simply IP sets and an active directory security groups as well.
+
+01:37.190 --> 01:43.670
+We can even create security groups based on virtual machine information like the operating system type
+
+01:43.970 --> 01:45.670
+or the virtual machine name.
+
+01:45.800 --> 01:55.300
+And there's many other security group dynamic membership configurations that we can create.
+
+01:55.300 --> 02:01.960
+So essentially what we're trying to do here is create a group of objects that we want to apply some
+
+02:01.960 --> 02:05.680
+rules to and that's what our security policies are.
+
+02:05.920 --> 02:12.640
+Our security policies are going to be the rules and services that we want to apply to these objects.
+
+02:14.150 --> 02:16.960
+They could even be simple firewall rules.
+
+02:17.060 --> 02:19.550
+A security policy can be as simple as that.
+
+02:19.730 --> 02:26.990
+Or maybe I want to forward traffic to an intrusion prevention system or maybe I want to have an anti-virus
+
+02:26.990 --> 02:31.540
+solution that scans those virtual machines using d'Este introspection
+
+02:35.430 --> 02:38.550
+so step one is going to be creating our security groups.
+
+02:40.680 --> 02:44.250
+And we have a couple different ways that we can do this.
+
+02:44.370 --> 02:53.010
+We can use dynamic inclusion and dynamic inclusion will automatically add objects to a security group
+
+02:53.100 --> 03:00.360
+based on a wide variety of criteria like the operating system and the computer name the virtual machine
+
+03:00.360 --> 03:07.480
+name security tags that have been applied by an anti-virus solution for example.
+
+03:07.520 --> 03:13.550
+We can also define static inclusion and a static exclusion criteria.
+
+03:13.790 --> 03:21.380
+So if there are certain objects that I want to make sure are not included in some security group I can
+
+03:21.380 --> 03:29.730
+statically either include or exclude those objects and I can do it on any of these object types that
+
+03:29.730 --> 03:31.340
+you see listed here.
+
+03:31.470 --> 03:39.240
+I can say certain virtual machines should be included in the security group certain hosts or clusters
+
+03:39.510 --> 03:46.800
+should be included in the security group or I can even identify individual virtual next or IP addresses
+
+03:46.890 --> 03:49.180
+or Active Directory security groups.
+
+03:49.180 --> 03:51.400
+We've got a lot of flexibility here.
+
+03:52.680 --> 03:58.140
+And I can statically exclude objects based on all that same criteria
+
+04:01.680 --> 04:02.070
+Okay.
+
+04:02.150 --> 04:08.900
+So before we move any deeper here let's quickly just review the security groups.
+
+04:08.960 --> 04:15.830
+These are what we want to protect and we can create a security group that includes a bunch of virtual
+
+04:15.830 --> 04:22.670
+machines and then I can apply some security policy to that security group.
+
+04:22.700 --> 04:29.570
+So for example I might create a security group for all of my database virtual machines and I might have
+
+04:29.570 --> 04:36.330
+a specific set of firewall rules geared towards my database via UPS in a security policy.
+
+04:37.130 --> 04:45.460
+Now I only need to create one rule to enforce that policy to that group of virtual machines.
+
+04:45.550 --> 04:49.520
+And that's what these security groups and policies are all about.
+
+04:50.790 --> 04:53.550
+And they're also all about automation.
+
+04:53.550 --> 05:01.140
+Now notice here all of this dynamic inclusion criteria let's focus on the virtual machine name for a
+
+05:01.140 --> 05:11.200
+moment if I simply name all of my database VMS something that includes the letters D-B I can then create
+
+05:11.500 --> 05:21.750
+a security group that will detect any VM with the letters D.B in the name and what it will then do is
+
+05:21.750 --> 05:26.420
+I can assign a security policy to that security group.
+
+05:26.430 --> 05:34.990
+So the moment I create any virtual machine named D-B anything the appropriate firewall rules will be
+
+05:35.080 --> 05:40.710
+immediately applied based on its dynamic inclusion in a security group.
+
+05:42.620 --> 05:48.620
+You can set up a dynamic and static membership in the same security group if you want static.
+
+05:48.650 --> 05:51.440
+Exclusion takes precedence over anything.
+
+05:51.740 --> 05:58.220
+So if I create a rule to statically exclude certain objects that takes precedence over any of these
+
+05:58.220 --> 06:00.330
+other criteria that I might identify
+
+06:04.690 --> 06:09.450
+So how does all this help me as an administrator.
+
+06:09.670 --> 06:18.250
+Well let's compare a traditional firewall rule to those created with service composer.
+
+06:18.270 --> 06:20.400
+So here I see a few firewall rules.
+
+06:20.400 --> 06:27.690
+I have one rule that says app one an apt to are blocked from communicating with destinations the DB
+
+06:27.690 --> 06:29.370
+one and DB2.
+
+06:29.910 --> 06:36.450
+And then I've got another rule that says anything on V.N. 5000 to is allowed to communicate with anything
+
+06:36.600 --> 06:39.260
+on VNA five thousand one.
+
+06:39.270 --> 06:46.740
+So essentially I've created a firewall policy that is preventing Apple on an app to from talking to
+
+06:46.740 --> 06:55.070
+D-B one and D-B to but then after that I've got a rule that's allowing anything on that Vienne 5000
+
+06:55.230 --> 06:59.150
+to talk to V and five thousand one.
+
+06:59.240 --> 07:06.040
+So remember when we're looking at our firewall rules the first to match is ex-student So app one an
+
+07:06.040 --> 07:13.210
+app to cannot talk to divi one and DB2 even though the very next rule says Vee and five 5000 two can
+
+07:13.210 --> 07:18.570
+talk to Vienna five thousand one.
+
+07:18.770 --> 07:25.500
+However what about D-B 3 well app on an app to can talk to that.
+
+07:25.540 --> 07:26.490
+No problem.
+
+07:28.660 --> 07:30.590
+Because they don't match the first rule.
+
+07:30.710 --> 07:33.470
+But the second rule is a match.
+
+07:33.540 --> 07:40.440
+And now what if I add yet another app virtual machine called app 3 Well let's assume that DB You want
+
+07:40.450 --> 07:43.400
+NDB to our really sensitive data.
+
+07:43.920 --> 07:53.070
+I've just created a new VM and that new VM doesn't have any rules specifically applied to it so therefore
+
+07:53.550 --> 08:00.710
+it's on V.N. 5000 to the destination is in Vienna five thousand one app three is going to be able to
+
+08:00.710 --> 08:03.390
+communicate with D-B wan and D-B to
+
+08:09.390 --> 08:16.490
+what if instead of doing it that way where I might accidentally open up some holes in my security.
+
+08:16.740 --> 08:25.380
+I just created a security group called app group and any CMS with the letters APCP in their name are
+
+08:25.380 --> 08:33.810
+going to be dynamically included in the app group security group and any via SMS with the letters D.B
+
+08:33.810 --> 08:39.380
+and the name will be dynamically included in my DD group.
+
+08:39.560 --> 08:45.470
+And now I have one firewall rule at the beginning of my firewall rule ruleset that says app group can't
+
+08:45.470 --> 08:47.560
+talk to DB group.
+
+08:47.580 --> 08:55.470
+Now the moment I create any new db server it's going to be automatically protected.
+
+08:55.520 --> 09:00.180
+Not only that but my firewall rule set is extremely short.
+
+09:00.230 --> 09:04.670
+I don't have to have one rule for each DB virtual machine.
+
+09:04.770 --> 09:07.930
+They're all contained in this db group security group.
+
+09:08.130 --> 09:13.730
+So it has the added bonus of keeping my firewall rules set very short.
+
+09:14.100 --> 09:22.350
+Now one other side note I want to mention if there is a conflict between security policies the policy
+
+09:22.380 --> 09:25.980
+with the highest the weight takes priority.
+
+09:26.460 --> 09:31.950
+So by default when you create a new security policy it's automatically given the highest weight you
+
+09:31.950 --> 09:38.580
+can manually change those values but by default if there is a conflict between two security policies
+
+09:38.910 --> 09:45.630
+the newest security policy will win that conflict unless you go in there and manually configure the
+
+09:45.640 --> 09:45.850
+way.

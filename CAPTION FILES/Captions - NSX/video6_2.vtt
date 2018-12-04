@@ -1,0 +1,340 @@
+WEBVTT
+
+00:00.650 --> 00:06.630
+In this video I'll introduce you to some of the fundamental concepts of the NSX edge and we're going
+
+00:06.630 --> 00:12.960
+to be spending a lot of time in this course working our way through the NSX edge NSX edge is kind of
+
+00:12.960 --> 00:18.900
+like the Swiss Army knife of NSX and that it does so many different things.
+
+00:19.020 --> 00:22.550
+So we're going to be spending a lot of time focusing on the edge.
+
+00:23.040 --> 00:30.510
+And one of the primary functions of the NSX edge is going to be around or it's going to act as our north
+
+00:30.600 --> 00:33.000
+south router.
+
+00:33.070 --> 00:35.330
+So what do I mean by North-South.
+
+00:35.770 --> 00:42.190
+Well essentially the NSX are just going to be our egress point or if traffic needs to get to some sort
+
+00:42.190 --> 00:52.100
+of external network outside of our NSX domain it's going to flow over and add sex edge and we can use
+
+00:52.280 --> 00:59.070
+OSPF BGP or static routes to build the routing table for the NSX.
+
+00:59.300 --> 01:04.880
+And we'll take a look at all those different protocols and kind of what the benefits and disadvantages
+
+01:05.030 --> 01:06.150
+of each are.
+
+01:08.830 --> 01:12.780
+The NSX edge can also act as our perimeter firewall.
+
+01:14.830 --> 01:22.180
+So because of the placement of the NSX edge it makes a great perimeter firewall to block malicious traffic
+
+01:22.930 --> 01:25.480
+as it's coming into the NSX domain.
+
+01:25.480 --> 01:29.490
+Now this doesn't mean that it's the perimeter firewall for your data center.
+
+01:29.710 --> 01:35.220
+Right you're still going to need a physical firewall at the edge of your data center.
+
+01:36.190 --> 01:41.600
+But this is an additional added firewall at the border of the NSX domain.
+
+01:44.850 --> 01:53.820
+The NSX edge can also act as a load balancer it can be utilized to spread traffic out across a group
+
+01:53.820 --> 01:56.850
+of virtual machines that serve a similar purpose.
+
+01:58.840 --> 02:06.430
+We can also enable different kinds of VPN on the NSX including a layer 3 eyepiece like VPN Allaire to
+
+02:06.430 --> 02:13.010
+VPN or even a remote access solution called the SSL VPN.
+
+02:13.230 --> 02:17.860
+And then finally the NSX supports DHP and DNS relay as well.
+
+02:20.200 --> 02:27.140
+So we want to think of the NSX edge as the border between NSX and the external physical network.
+
+02:28.020 --> 02:29.200
+Think of it like this.
+
+02:29.250 --> 02:38.640
+Let's say you have an internal network that interconnects all of your ESX host thats called our underlying
+
+02:38.640 --> 02:46.370
+network and we see that at the bottom of the screen here the underlay provides connectivity within the
+
+02:46.370 --> 02:47.650
+NSX domain.
+
+02:49.440 --> 02:55.260
+It provides connectivity across all of these ESX hosts that are part of my NSX domain.
+
+02:57.330 --> 03:04.650
+Now if I need to go outside this east west routing domain thats where the NSX edge comes in.
+
+03:05.770 --> 03:10.460
+Maybe theres physical servers in my environment or I need to connect to the Internet.
+
+03:10.570 --> 03:12.270
+Thats where the edge comes in.
+
+03:14.910 --> 03:22.320
+So let's walk through this diagram and differentiate between east west and north south routing within
+
+03:22.320 --> 03:23.790
+NSX.
+
+03:24.000 --> 03:26.080
+And this diagram has a lot going on.
+
+03:26.220 --> 03:29.150
+So lets take a moment to just review it quickly.
+
+03:29.220 --> 03:39.470
+We see two ESX I hosts ESX 0 1 and 0 2 and I've got a couple of logical switches created we have logical
+
+03:39.470 --> 03:47.980
+switch the 95000 to and I've got one virtual machine connected to that logical switch.
+
+03:47.990 --> 03:55.190
+I've also got a logical switch called the transit logical switch and you can see that the logical switch
+
+03:55.190 --> 04:02.920
+is connected to my distributed logical router and it's also connected to the NSX edge.
+
+04:03.070 --> 04:09.880
+Right so this is kind of a special purpose logical switch that's going to give us connectivity to the
+
+04:09.880 --> 04:10.810
+NSX atch
+
+04:14.290 --> 04:20.640
+and we can see here that the agist connected to an external router probably a physical router and we
+
+04:20.640 --> 04:27.930
+can see at the bottom we have the taps on each of our ESX hosts that provide the VX LAN encapsulation
+
+04:28.320 --> 04:32.960
+and decaff solution functions.
+
+04:32.990 --> 04:41.400
+So now let's assume that VM one generates some sort of traffic some kind of traffic that's destined
+
+04:41.400 --> 04:44.040
+for something outside of our routing domain.
+
+04:44.250 --> 04:49.030
+So maybe somebody logged into VM one and typed and trayner tests.
+
+04:49.440 --> 04:57.610
+So now this traffic is bound for some external network.
+
+04:57.650 --> 05:05.600
+So here comes this packet and it's going to flow onto the logical switch and hit the default gateway
+
+05:05.780 --> 05:07.940
+for that virtual machine.
+
+05:08.130 --> 05:13.890
+And the default gateway for the VM is the distributed logical router.
+
+05:13.920 --> 05:17.150
+Now the DLR has a routing table.
+
+05:17.370 --> 05:25.470
+The dealer knows that if it wants to reach the 10.0 1.1 network it needs to go out a VX LAN lyfe that's
+
+05:25.470 --> 05:32.290
+connected to that network and the DLR probably also has a routing table entry that says for everything
+
+05:32.320 --> 05:44.410
+else for all external traffic routed out this interface connected to this transit network.
+
+05:44.410 --> 05:48.480
+So at this point the job of the distributed logical router is done.
+
+05:49.490 --> 05:52.000
+But there's still more routing that needs to happen.
+
+05:52.180 --> 06:00.930
+Our east west routing is complete so the NSX average has an interface on this transit network just like
+
+06:00.930 --> 06:04.280
+the DLR does.
+
+06:04.390 --> 06:12.810
+And this is the destination MAC that the distributed logical router has forwarded this packet to when
+
+06:13.120 --> 06:19.750
+the DLR received that packet and analyzed the destination and determined that the destination was out
+
+06:19.810 --> 06:25.780
+here in the external network it forward it towards the MAC address of the NSX.
+
+06:27.800 --> 06:30.960
+Out onto the x Lanne five thousand three
+
+06:33.770 --> 06:39.610
+right well now this frame still needs to get from host ESX 0 1 2 6 0 2.
+
+06:39.950 --> 06:45.980
+So at this point the frame will be encapsulated within a VAXen hatter and will flow over my underlying
+
+06:45.980 --> 06:50.030
+network and they get from Host 1 to host to
+
+06:55.610 --> 07:03.150
+heresie traversing the underlying network arriving on VNA five thousand three at the destination host.
+
+07:03.650 --> 07:07.400
+And that's the logical switch that the NSX edge is connected to.
+
+07:07.400 --> 07:14.690
+So now finally our packet can arrive at the NSX edge and get routed out to the external network in the
+
+07:14.690 --> 07:16.800
+end like such has its own routing table.
+
+07:18.110 --> 07:23.750
+And it knows to get to any external networks it has a certain interface that's an uplink interface out
+
+07:23.750 --> 07:24.890
+to the physical world.
+
+07:25.890 --> 07:31.410
+So little about that packet towards the external network where the Internet is and it can get the train
+
+07:31.410 --> 07:35.970
+or test dot com that we.
+
+07:35.980 --> 07:41.370
+So now we've seen North South vs. east west routing right.
+
+07:41.380 --> 07:47.940
+They're routing tables of the DLR and of the NSX edge are very different.
+
+07:48.110 --> 07:55.160
+If we want to route to some external network anything out of our NSX domain that's called North-South
+
+07:56.380 --> 07:58.760
+and that's where the NSX comes in.
+
+07:59.260 --> 08:05.530
+But if we're simply routing among virtual machines connected to different logical switches or even virtual
+
+08:05.530 --> 08:12.710
+machines connected to a distributed port group that the DLR is connected to that's east west routing
+
+08:12.860 --> 08:22.240
+and that's most efficiently handled by the distributed logical router.
+
+08:22.320 --> 08:26.330
+So the NSX can come in four different form factors.
+
+08:26.430 --> 08:28.500
+It's a virtual appliance.
+
+08:28.500 --> 08:32.070
+And when you're deploying the NSX that you can choose what size you want to make it.
+
+08:32.240 --> 08:39.660
+Now you can deploy a compact NSX edge which has one virtual CPO and 512 megabytes of memory.
+
+08:39.660 --> 08:42.470
+Now that's simply what the virtual machine is allocated.
+
+08:42.480 --> 08:47.580
+It doesn't mean that it's going to necessarily use all those resources but that's what it's going to
+
+08:47.580 --> 08:49.010
+be configured for.
+
+08:49.230 --> 08:55.230
+And we've got the large form factor which has an extra virtual CPO and 1 gig of memory.
+
+08:55.350 --> 09:02.370
+The quad Larch which has four virtual Seip use and a gig of memory and the extra large which has a virtual
+
+09:02.370 --> 09:11.030
+spews use and 8 gigs of memory and once you deploy the NSX adj you can change the size later on if you
+
+09:11.030 --> 09:12.800
+want to.
+
+09:13.000 --> 09:18.000
+But that process involves basically you're replacing the edge gateway.
+
+09:18.040 --> 09:21.120
+You don't need to rebuild the configuration or anything like that.
+
+09:21.370 --> 09:27.710
+But there is an outage involved if you want to change the form factor of the NSX Sache.
+
+09:27.730 --> 09:33.360
+It essentially migrates the configuration to a new virtual appliance.
+
+09:33.400 --> 09:37.360
+So just be aware that whatever you choose you're not necessarily stuck with.
+
+09:37.660 --> 09:41.230
+But if you want to get to a different form factor it's going to be service impacting
+
+09:43.970 --> 09:49.790
+and you'll choose the appropriate NSX at form factor based on the number of features that you're utilizing
+
+09:50.180 --> 09:52.970
+and the number of connections that you expect.
+
+09:52.970 --> 09:58.640
+And as we kind of go through the next few lessons we'll talk about a lot of these features and I'll
+
+09:58.640 --> 10:04.550
+point out some of the features that are more resource intensive that may justify a larger form factor
+
+10:04.550 --> 10:07.380
+for the NSX Hach.
+
+10:07.570 --> 10:12.700
+So as time goes on those decisions will probably be made a little bit more clear to you as to what form
+
+10:12.700 --> 10:15.100
+factor makes sense for your environment.
+
+10:17.990 --> 10:24.390
+Interview the NSX edge is our Swiss Army knife or it's the Swiss Army knife of NSX providing a router
+
+10:24.960 --> 10:35.700
+firewall load balancer IP secte VPN solution Lehre to VPN solution SSL VPN solution and a DHC P and
+
+10:35.700 --> 10:37.300
+DNS relay.
+
+10:37.350 --> 10:43.020
+We're going to do lessons on just about all of these features as we work our way through this course.
+
+10:44.340 --> 10:51.200
+We also saw how the NSX edge acts as the boundary between the NSX and external network.
+
+10:51.210 --> 10:57.860
+This means that the NSX is going to be performing our North-South routing routing between the NSX edge
+
+10:57.870 --> 11:00.100
+domain and the external network.

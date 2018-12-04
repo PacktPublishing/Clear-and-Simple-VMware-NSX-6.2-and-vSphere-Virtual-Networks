@@ -1,0 +1,328 @@
+WEBVTT
+
+00:00.840 --> 00:06.470
+Then this video I'll explain how the NSX edge can be used as a load balancing.
+
+00:07.070 --> 00:08.920
+Now what is load balancing.
+
+00:08.960 --> 00:10.890
+What do we hope to accomplish.
+
+00:11.210 --> 00:18.320
+Well we want to spread out traffic across multiple similar servers.
+
+00:18.350 --> 00:22.300
+In this case those servers are going to be virtual machines.
+
+00:22.330 --> 00:27.230
+So what we'll do is we'll present a single IP address to the service consumers.
+
+00:27.700 --> 00:37.840
+If I have multiple virtual machines handling these requests the consumer will only see one IP rate but
+
+00:37.840 --> 00:45.370
+as their traffic arrives at the NSX edge on that one single IP it will be distributed to a pool of virtual
+
+00:45.370 --> 00:54.030
+machines that serve a similar purpose this in effect spreads out all of that workload across those servers
+
+00:54.700 --> 00:56.540
+and also provides redundancy.
+
+00:56.790 --> 01:01.300
+If one of those virtual machines fails it will be removed from that pool.
+
+01:02.100 --> 01:06.380
+And therefore we won't be sending requests to a VM that's not operating.
+
+01:09.420 --> 01:15.610
+We can configure the NSX edge in a couple of different load balancing modes either transparent or proxy.
+
+01:15.810 --> 01:19.190
+And we'll learn more about that as we work our way through this video.
+
+01:20.230 --> 01:22.180
+So let's start with a diagram.
+
+01:22.180 --> 01:27.820
+Now if you've ever used a load balancer before this isn't a really new concept to you.
+
+01:29.330 --> 01:35.870
+So here we see three virtual machines running on our ESX I host that serve the same purpose or call
+
+01:35.860 --> 01:39.160
+the web one web to web three.
+
+01:39.170 --> 01:42.090
+So in this case the victims are essentially the same.
+
+01:42.140 --> 01:50.550
+They're all serving the same purpose and on the client side there is a single IP address called a virtual
+
+01:50.550 --> 01:51.940
+IP.
+
+01:51.960 --> 02:01.720
+So from the outside to our consumers of the service it looks like a single IP address as the traffic
+
+02:01.720 --> 02:09.220
+flows through the load balancer the destination address is going to be changed to one of those web servers
+
+02:09.220 --> 02:12.710
+using a destination Nat.
+
+02:12.740 --> 02:18.680
+So as this traffic comes in through the adage it's evenly distributed across the three virtual machines
+
+02:27.410 --> 02:35.220
+we can have up to 32 servers per pool and up to 64 pools per NSX.
+
+02:35.570 --> 02:41.540
+And just bear in mind with this load balancing example we're using destination now that's how those
+
+02:41.540 --> 02:47.180
+requests are getting distributed across those three virtual machines.
+
+02:48.450 --> 02:57.680
+Now what happens if one of these the AMS fails while the NSX edge load balancer has built in health
+
+02:57.680 --> 02:58.690
+checks.
+
+02:58.760 --> 03:02.610
+So if a VM fails it's going to be removed from the pool.
+
+03:02.730 --> 03:10.250
+And this gives us reliability along with load balancing So in this case let's assume that V.M. web 3
+
+03:10.250 --> 03:21.990
+fails the low bounce or is performing a periodic HTP health check and it detects the failure of that
+
+03:21.990 --> 03:28.130
+particular virtual machine and therefore traffic will no longer be sent to that pool member.
+
+03:28.440 --> 03:35.070
+So as these requests come in that web 3 VM will be removed from the pool and all of the requests will
+
+03:35.070 --> 03:38.040
+be sent to the surviving virtual machines.
+
+03:39.690 --> 03:48.030
+So load balancing not only gives us load balancing but it also gives us additional reliability.
+
+03:48.030 --> 03:53.450
+Now there's a few different modes that the NSX edge load bouncer can operate in.
+
+03:56.380 --> 03:58.910
+It can do load balancing at Layer 7.
+
+03:58.960 --> 04:02.100
+This is application aware load balancing.
+
+04:02.380 --> 04:07.670
+So if you're redirecting traffic by application this mode could be useful.
+
+04:08.020 --> 04:13.540
+So for example maybe I've got one virtual machine that's doing p and another virtual machine that's
+
+04:13.540 --> 04:22.270
+doing Java and a third VM that's serving up graphics layer 7 load balancing can at the application level
+
+04:22.510 --> 04:25.930
+use multiple VMS to fulfill those functions.
+
+04:27.210 --> 04:30.750
+Now therefore for load balancing is not as complex.
+
+04:30.750 --> 04:34.830
+Essentially all the work is just directed less busy virtual machine
+
+04:37.730 --> 04:39.530
+so therefore is a lot simpler.
+
+04:39.530 --> 04:44.990
+And if you're just setting up a basic load balancer layer for is the mode that you'll most commonly
+
+04:44.990 --> 04:55.250
+select We can also set up our load balancer in either one arm or transparent moët.
+
+04:55.280 --> 05:03.050
+So when you create the server pool that you're going to load balance across there is a checkbox that
+
+05:03.050 --> 05:05.120
+allows you to select transparent.
+
+05:06.500 --> 05:12.700
+And this allows you to choose which mode you want the low bounce or to operate in.
+
+05:12.700 --> 05:18.220
+Let's start by looking at transparent mode and then we'll take a look at what our most.
+
+05:18.310 --> 05:22.190
+OK so here we see the same diagram that we were looking at before.
+
+05:22.380 --> 05:26.020
+We have three CMS web 1 Web 2 and web 3.
+
+05:26.080 --> 05:32.940
+The bottom of our screen connected to a logical switch the logical switches connected to a VX LAN left
+
+05:33.040 --> 05:41.110
+on the DLR which connects also to a trans at logical switch and provides connectivity to the NSX.
+
+05:42.010 --> 05:48.010
+And the NSX edge has one interface connect to transmit logical switch and one interface connected to
+
+05:48.010 --> 05:49.910
+the external network.
+
+05:50.290 --> 05:52.680
+Let's take a look at how this works.
+
+05:52.720 --> 06:00.940
+We've got a packet coming in from some client on the external network the source IP is 1.1 one to 10
+
+06:01.180 --> 06:07.120
+that's the IP address of the client the destination IP is my IP address that I've configured on the
+
+06:07.120 --> 06:13.430
+edge as the virtual IP for this load balance or poor.
+
+06:13.480 --> 06:19.460
+And when this traffic hits the edge Here's what the NSX is going to do in transparent mode.
+
+06:21.390 --> 06:25.980
+It will perform a destination Nat Nat traffic.
+
+06:26.430 --> 06:32.710
+It's not performing a source that the original source IP still remains intact.
+
+06:33.060 --> 06:38.220
+So it performs a destination Nat and picks the IP address of one of these web servers.
+
+06:38.250 --> 06:41.220
+In this case is going to be web 1 right.
+
+06:41.250 --> 06:49.530
+And it will use different web servers to continually load balance the traffic so because the source
+
+06:49.590 --> 07:01.170
+IP remained intact when that traffic arrived the rephrase when that traffic arrives at web one web one
+
+07:01.170 --> 07:08.700
+is going to see the true source ip of that client and that can be useful for things like logging or
+
+07:09.330 --> 07:10.970
+traffic patterns.
+
+07:13.830 --> 07:16.690
+One arm mode works a little bit differently.
+
+07:18.640 --> 07:21.060
+So let's take a look at our diagram.
+
+07:21.100 --> 07:25.460
+This is a fairly simple option for load balancing is called The one arm load bouncer.
+
+07:25.600 --> 07:34.340
+It's also called proxy mode and with this option the traffic is going to arrive at a virtual IP of the
+
+07:34.340 --> 07:42.680
+NSX hatch and it's proxied and then it flows back out that same interface that it came in on towards
+
+07:42.680 --> 07:45.240
+the web service.
+
+07:45.250 --> 07:49.170
+So we saw transparent mode in the previous slide.
+
+07:49.210 --> 07:54.400
+This is what our mode and this process is not transparent.
+
+07:54.400 --> 08:02.400
+It's just like a proxy server and the IP addresses are going to be modified as a result.
+
+08:02.400 --> 08:09.200
+Now in this case the NSX edge is configured with a single interface.
+
+08:09.360 --> 08:12.500
+And here comes some traffic from some clients.
+
+08:12.620 --> 08:12.960
+Right.
+
+08:12.960 --> 08:18.760
+In this case the client is connected to a virtual switch in the same undersexed domain.
+
+08:19.020 --> 08:22.360
+And the source IP is 10 not one dot 1.5.
+
+08:22.470 --> 08:29.600
+That's the source IP of the client and it wants to send some traffic to the lower bounds or poor.
+
+08:29.940 --> 08:39.020
+So the destination IP is the virtual IP the NSX atch 1 9 2 1 6 8 dot 1.5.
+
+08:39.040 --> 08:44.500
+So here comes this packet it hits the DLR gets round it and it hits the NSX edge.
+
+08:45.220 --> 08:53.140
+Now the NSX edge is going to not only perform a destination nat to send it to one of my web servers
+
+08:53.560 --> 09:02.990
+but it's also going to perform a source Nat and replace the original source IP with the IP address of
+
+09:02.990 --> 09:12.040
+the NSX at and then that traffic is forwarded to the appropriate pool member.
+
+09:12.040 --> 09:18.850
+So in this case the NSX outage only has a single interface but it's essentially acting as a proxy.
+
+09:19.060 --> 09:25.990
+So the destination web server doesn't see the true source IP of the client.
+
+09:26.020 --> 09:30.970
+Basically all of the traffic that it's going to see is going to have the same source IP the IP address
+
+09:30.970 --> 09:34.280
+of the NSX at.
+
+09:34.330 --> 09:38.460
+And this can obscure what's happening as we look at those server logs.
+
+09:38.530 --> 09:42.910
+It can make it more complicated to kind of try and figure out what's going on.
+
+09:42.970 --> 09:52.900
+Now the NSX does support something called X forwarded and X forward it can be used with HTP to preserve
+
+09:53.170 --> 09:57.970
+that source IP address so that your logs are still accurate.
+
+10:03.420 --> 10:11.640
+Alright so in review the NSX edge provides a load balancer and with that low bounce or we're going to
+
+10:11.640 --> 10:18.510
+establish a virtual IP address that's the IP address that the outside world sees that all of our clients
+
+10:18.570 --> 10:19.300
+see.
+
+10:19.350 --> 10:25.410
+But on the backend there is a pool of virtual machines that that traffic is getting load bounced across
+
+10:27.190 --> 10:34.180
+the NSX edge will perform periodic health checks of all of the pool members to ensure that they're still
+
+10:34.180 --> 10:34.870
+operating.
+
+10:34.930 --> 10:43.970
+And if they fail they'll be removed from that pool in-line or transparent mode performs only a destination
+
+10:43.970 --> 10:50.300
+that the original source IPs are what the actual pool of virtual machines.
+
+10:50.300 --> 10:57.850
+See if I'm using one arm load balancer both a source and a destination that are perform.

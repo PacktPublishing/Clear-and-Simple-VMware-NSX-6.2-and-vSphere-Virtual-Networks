@@ -1,0 +1,157 @@
+WEBVTT
+
+00:00.310 --> 00:07.840
+In this video out splaying the IP sagt VPN feature provided by the NSX sketch We'll take a look at what
+
+00:07.840 --> 00:15.310
+an IP says VPN is what use cases we should utilize this for and what the IP addressing scheme looks
+
+00:15.310 --> 00:16.290
+like.
+
+00:16.300 --> 00:23.340
+So here's an example of an IP set VPN tunnel that's been established using two NSX hedges.
+
+00:23.650 --> 00:30.540
+We have V.M. one nvm two that are both on different IP networks known as V.M. one is on the 10.
+
+00:30.650 --> 00:37.840
+One top one address range whereas VM 2 isn't $192 168.
+
+00:37.940 --> 00:39.040
+One.
+
+00:39.260 --> 00:47.470
+And we want to be able to pass traffic between these two networks over a secure encrypted connection.
+
+00:48.830 --> 00:55.800
+Now in this case both of our locations will have an edge gateway and both of those gateways will be
+
+00:55.800 --> 01:04.730
+configured as an IP endpoint and that each location will configure the local networks and the remote
+
+01:04.730 --> 01:08.690
+networks.
+
+01:08.700 --> 01:16.720
+So for example at our first location local site we're going to configure virtual machine one's network
+
+01:17.080 --> 01:18.300
+as a local network.
+
+01:19.430 --> 01:26.340
+So here we see at the local site V.M. one is on the 10 that 1.1 11 network.
+
+01:26.540 --> 01:32.540
+That'll be our local network at this location at the remote site will configure the local network as
+
+01:32.600 --> 01:43.910
+1 9 2.1 6:08 that 1.0 and we'll also configure each NSX edge to specify what networks are reachable
+
+01:44.120 --> 01:47.730
+via this IP sakte VPN.
+
+01:47.740 --> 01:54.550
+So in the NSX outage at the local site we'll configure it so that we know if we need to reach the 1
+
+01:54.550 --> 02:01.710
+9 2 1 6 8 dot 1.0 network it's accessible over this VPN tunnel and we'll do the opposite.
+
+02:01.720 --> 02:08.760
+Here at the remote site will configure the NSX edge with remote networks specifically the 10.0 one dot
+
+02:08.770 --> 02:12.940
+1.0 network that's reachable over the VPN.
+
+02:13.000 --> 02:19.780
+So now the edge at each site will know which traffic should stay local and which traffic should get
+
+02:19.780 --> 02:21.210
+pushed over the VPN.
+
+02:22.040 --> 02:26.300
+IP Seck in the NSX sedge has a few features that are supported.
+
+02:26.300 --> 02:33.380
+This is an industry standard implementation of IP SAQ so we can establish an IP set Tamo between an
+
+02:33.380 --> 02:40.120
+NSX edge and a Cisco assaye for example or other major vendors are supported as well.
+
+02:41.600 --> 02:45.620
+We can support multiple encryption methods such as trippled Yes.
+
+02:45.800 --> 02:49.490
+Yes 128 and 256.
+
+02:49.520 --> 02:55.640
+Now if you're studying for your VCP exam you're going to want to have those encryption methods memorize
+
+02:56.560 --> 03:02.820
+broadcast traffic is not passed over the VPN and remember this is where 3pm.
+
+03:03.030 --> 03:07.190
+So it's not like Lehre to broadcasts would go over anyways.
+
+03:07.350 --> 03:15.220
+But if we have any Lerer three broadcast traffic that is explicitly not passed over the VPN we can have
+
+03:15.220 --> 03:22.200
+a maximum of 10 sites and up 64 tunnels and it supports speeds up to 2 gigabits per second.
+
+03:24.370 --> 03:34.460
+Now IP SEC VPN utilizes ISP and ICQ which is encapsulating secure payload and Internet key exchange.
+
+03:34.570 --> 03:42.730
+These are protocols that are used by IP SEC to secure communication and we're going to use Eich version
+
+03:42.730 --> 03:44.460
+one with the NSX edge.
+
+03:44.500 --> 03:52.000
+And here we can see some of the encryption algorithms that are supported by Eich version 1 and what
+
+03:52.160 --> 03:57.350
+it does is essentially it has these two phases and phase one.
+
+03:57.440 --> 04:06.200
+One of the IP secte devices will initiate communications the initiating device will send a proposed
+
+04:06.200 --> 04:13.950
+encryption method and the receiving device will either accept or reject that proposal.
+
+04:14.830 --> 04:21.700
+If it accepts it both share a Diffie Hellman key and that will help to encrypt the exchange of what
+
+04:21.700 --> 04:29.110
+we call a private shared key essentially password if everything goes well with this initial phase.
+
+04:29.110 --> 04:36.710
+Then phase two begins which is the actual tunnel was stablish and once the tunnel is established that's
+
+04:36.710 --> 04:40.950
+when Espey tunnel mode is used.
+
+04:40.950 --> 04:50.300
+So yes the tunnel mode actually encapsulates the entire packet including IP headers within and yes header
+
+04:50.880 --> 04:55.830
+this protects against replay attacks.
+
+04:55.900 --> 05:03.610
+So when you review the IP sagt VPN is layer 3 VPN that's used to connect to networks on different address
+
+05:03.610 --> 05:12.760
+ranges and NSX will be deployed at each site and they'll have a pure relationship will identify local
+
+05:12.880 --> 05:18.330
+and remote networks at each location so that the edge knows how to handle that traffic.
+
+05:20.680 --> 05:25.900
+The NSX implementation of IP stack is an industry standard implementation.
+
+05:26.170 --> 05:29.470
+It's compatible with Cisco and other major vendors.
+
+05:29.650 --> 05:34.870
+It doesn't pass layer 3 traffic over the VPN tunnel and it does not support dynamic routing.

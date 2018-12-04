@@ -1,0 +1,412 @@
+WEBVTT
+
+00:01.210 --> 00:08.520
+In this video We'll cover some IP network basics and when I say the basics I really mean just the very
+
+00:08.520 --> 00:16.800
+basics and we're not going to give a full C cna a level class on routing and protocols and all of that
+
+00:16.800 --> 00:17.690
+sort of stuff.
+
+00:18.090 --> 00:24.150
+But I just want to give you some of the most basic concepts and that way as we kind of work our way
+
+00:24.150 --> 00:31.650
+into more advanced topics and other videos like NSX and the distributed logical router you'll be able
+
+00:31.650 --> 00:37.070
+to understand those concepts because you'll have a basic understanding of IP networking.
+
+00:39.000 --> 00:41.970
+So let's take a look at our diagram here.
+
+00:41.970 --> 00:45.930
+And in the diagram we can see we have two different networks.
+
+00:46.170 --> 00:53.510
+And on the top we've got the network I'm calling it the tenth one that one does zero slash 24 network
+
+00:54.710 --> 00:58.110
+and that is our IP network.
+
+00:58.130 --> 01:03.750
+So that means on this network we have a splash 24 subnet mask.
+
+01:03.950 --> 01:13.240
+That means that the first 24 bits are part of the network address and the remaining 8 bits or my 0.
+
+01:13.600 --> 01:17.770
+That's part of the host range of IPs.
+
+01:17.790 --> 01:25.860
+So based on that we can kind of ascertain here the range of IP addresses available is 10 1 1 0 through
+
+01:25.860 --> 01:28.140
+turned out 1.1 to 55.
+
+01:29.750 --> 01:34.550
+We typically do not use this first address turned out 1.1 0.
+
+01:34.790 --> 01:41.530
+That's the address of our network and we don't use have not one not one 2:55 unless we have to do broadcasts.
+
+01:42.020 --> 01:53.520
+So our actual usable range of IP addresses will be 10 that 1.1 one through 10 out 1.1 254.
+
+01:53.770 --> 02:00.850
+And I've got these machines connected to the same switch could be a physical switch could be a virtual
+
+02:00.850 --> 02:01.420
+switch.
+
+02:01.630 --> 02:09.310
+Regardless I've got these machines on this network connected to the same switch and here's a letter
+
+02:09.310 --> 02:10.940
+to domain right.
+
+02:10.940 --> 02:17.400
+Here's a letter to network inner connecting devices that are on the same IP address range
+
+02:21.830 --> 02:22.120
+well.
+
+02:22.130 --> 02:29.870
+What happens when my machines that are on this network want to talk to devices that are on some other
+
+02:29.870 --> 02:30.530
+network.
+
+02:33.860 --> 02:38.490
+We're going to have to use something called our default gateway.
+
+02:38.660 --> 02:42.260
+And in that case that's this router that we have pictured here.
+
+02:44.870 --> 02:49.050
+So the router is going to act as our default gateway for our machines.
+
+02:49.100 --> 02:52.970
+And again this is true if you have physical machines virtual machines it doesn't matter.
+
+02:52.970 --> 02:55.620
+You'll go into the guest operating system.
+
+02:55.670 --> 02:57.010
+Let's assume it's Windows.
+
+02:57.200 --> 03:01.640
+You'll go into windows and you'll configure a default gateway for your machine.
+
+03:01.730 --> 03:10.350
+And what that default gateway means is basically anything that's on some other network.
+
+03:10.430 --> 03:19.740
+Anything that falls outside of this IP address range that traffic needs to be sent to the default gateway
+
+03:20.040 --> 03:23.580
+so that it can be routed to other network.
+
+03:23.650 --> 03:30.400
+We can't have machines from different networks on the same layer 2 domain.
+
+03:30.640 --> 03:37.210
+We can't have virtual machines or physical machines on the same switching segment if they're on different
+
+03:37.210 --> 03:38.420
+layer three networks.
+
+03:38.440 --> 03:43.100
+So that's what we're going to use that default gateway for.
+
+03:43.120 --> 03:49.540
+So when you think of that default gateway that configuration that you do when Windows basically all
+
+03:49.540 --> 03:57.840
+you're saying is for any traffic that is on some network other than this network send that traffic to
+
+03:57.840 --> 04:03.130
+my default gateway and the default gateway is a router.
+
+04:03.150 --> 04:08.720
+The router works at Layer 3 of the same model.
+
+04:08.730 --> 04:14.810
+So let's say for example we have a machine here 10 1.1 1.
+
+04:15.450 --> 04:29.580
+And it goes in it sends some traffic towards 1 9 2 1 6 8 1 2 machine on the 1 9 2 1 6 8 1 0 network.
+
+04:31.700 --> 04:40.070
+Well that traffic is going to be directed towards the default gateway and the default gateway will receive
+
+04:40.100 --> 04:40.980
+that packet.
+
+04:41.180 --> 04:43.220
+And here's what that packet looks like.
+
+04:46.220 --> 04:52.430
+When the packet arrives at the router it will have a source and destination IP address and the router
+
+04:52.430 --> 04:59.840
+will open up that packet and it will essentially analyze the contents of that packet and it will say
+
+04:59.840 --> 05:09.140
+OK the source IP is coming from 10 not one not one not two the destination IP isn't $192 168 not one
+
+05:09.140 --> 05:16.460
+not two and the router at this point will realize I've got an interface on that network.
+
+05:16.520 --> 05:22.090
+I've got an interface on the one nine 2.1 six say not one not two network.
+
+05:22.610 --> 05:29.990
+And so it'll for that packet towards that network where it can eventually reach the destination virtual
+
+05:29.990 --> 05:33.670
+machine.
+
+05:33.690 --> 05:41.970
+So what the router is essentially doing in our network here is its inter connecting multipole layer
+
+05:41.970 --> 05:43.320
+to networks.
+
+05:43.410 --> 05:51.850
+It knows how to get to each of those networks by using its routing table and is going to receive traffic
+
+05:51.850 --> 05:58.140
+from one network and forward it to the appropriate network.
+
+05:58.150 --> 06:02.650
+And so what the router will have is something called a routing table which I just mentioned.
+
+06:02.800 --> 06:10.770
+And in this scenario we've got this router and it's connected directly to these two switches.
+
+06:10.840 --> 06:18.810
+So let's assume it has a direct connection to these two ethernet switches the router is always going
+
+06:18.810 --> 06:25.860
+to be aware of those directly connected networks will configure IP addresses on those router interfaces
+
+06:26.580 --> 06:33.390
+and it will automatically be aware of those directly connected networks and it will build entries in
+
+06:33.390 --> 06:36.680
+its routing table to reflect those networks.
+
+06:38.490 --> 06:43.920
+So here's what our routing table will look like and it looks something like this will have interfaces
+
+06:44.580 --> 06:49.040
+on the router and will have networks associated with those interfaces.
+
+06:49.050 --> 06:57.630
+So for any packets that are bound for the 10.0 dot 1.0 network the router for those packets our interface
+
+06:57.630 --> 07:03.620
+one and if those packets are bound for the 1 2 1 6 8 dot one does their own network.
+
+07:03.810 --> 07:06.440
+Those packets will be forwarded out interface too.
+
+07:06.450 --> 07:11.580
+Now this is really the most basic iteration of the routing table.
+
+07:11.580 --> 07:18.720
+There is a lot of other ways that our routing table entries can be populated and updated.
+
+07:18.720 --> 07:24.750
+We can use static routes we can use dynamic routing protocols but thats not really what I want to get
+
+07:24.750 --> 07:26.130
+into here.
+
+07:26.220 --> 07:32.940
+I just want to show you the basic concept of a router what its job is and what a routing table looks
+
+07:32.940 --> 07:33.580
+like.
+
+07:34.340 --> 07:39.180
+And we're not going to get into how to build a dynamic routing table or anything like that just yet.
+
+07:42.700 --> 07:44.980
+One final item of review.
+
+07:45.190 --> 07:49.850
+Just to kind of talk about our OS II model let's bring it back to the OS model.
+
+07:50.470 --> 07:51.890
+Let's look at our Lares here.
+
+07:52.240 --> 07:58.390
+So I have a machine that is physically connected to the switch that physical cable.
+
+07:58.450 --> 08:05.530
+That's where one the physical cable between the switch and the router and this other switch and this
+
+08:05.530 --> 08:14.110
+other router interface those are all my layer one connections my physical media and the actual physical
+
+08:14.290 --> 08:16.660
+switch itself and the router itself.
+
+08:16.660 --> 08:21.370
+Those interfaces that's all of my Lehre one components
+
+08:23.960 --> 08:25.340
+at Layer 2.
+
+08:25.550 --> 08:30.980
+I have MAC addresses ethernet network.
+
+08:31.050 --> 08:41.910
+So when this machine 10.0 one want to send that packet towards its default gateway the IP addresses
+
+08:41.910 --> 08:48.490
+weren't the only IP addresses on their There was also a source and destination MAC address.
+
+08:48.670 --> 08:52.310
+That's my layer to addressing scheme.
+
+08:52.400 --> 09:01.010
+So if we take a deeper look at that packet Let's drill down into the source and destination MAC and
+
+09:01.010 --> 09:11.220
+the source and destination IP addresses to understand how ARE layer 2 and layer 3 addresses different.
+
+09:11.360 --> 09:16.780
+Here's a more detailed look at that same packet that we looked at before.
+
+09:16.790 --> 09:24.350
+So in this scenario again this virtual machine up here the 10.0 one not one not two is trying to communicate
+
+09:24.350 --> 09:29.900
+with $192 168 dot 1.2.
+
+09:30.150 --> 09:38.220
+And so because that destination is on a different note work what that source machine will do is it will
+
+09:38.220 --> 09:45.360
+send the freight to the default gateway.
+
+09:45.500 --> 09:49.710
+And so in this case the source Mac address is the mac address of this machine.
+
+09:49.730 --> 09:51.280
+Let's call it Mac A.
+
+09:51.560 --> 09:54.870
+The destination MAC is the MAC address of the router.
+
+09:54.950 --> 09:58.790
+Let's call it Mac or one.
+
+09:58.930 --> 10:04.280
+So one that either that frame gets sent out the router will receive it.
+
+10:04.420 --> 10:11.150
+It'll analyze the source and destination MAC and a little determine add a layer to level.
+
+10:11.260 --> 10:13.220
+This frame is bound for me.
+
+10:13.460 --> 10:16.230
+I'm the destination MAC address.
+
+10:16.430 --> 10:23.320
+At that point those source and destination MAC headers are gone.
+
+10:23.320 --> 10:30.020
+There are discarded we don't need the Mac counters anymore because at this point the communication all
+
+10:30.130 --> 10:33.220
+across our lair to network is complete.
+
+10:33.340 --> 10:35.250
+So let's dispose of these.
+
+10:35.560 --> 10:42.610
+And then at that point the router will analyze the layer three headers it will dig one layer deeper
+
+10:43.380 --> 10:52.840
+it will see the source IP is 10 dot one dot to and it will see that the destination IP is 192 not 168.
+
+10:52.840 --> 10:57.880
+Don't want to and the router will realize that's not me.
+
+10:58.070 --> 11:02.630
+I'm not the destination IP and this packet is not bound for me.
+
+11:02.780 --> 11:08.120
+It's bound for some other device on that 192 that 168.
+
+11:08.320 --> 11:11.590
+Not one not two network.
+
+11:11.620 --> 11:17.020
+So then it'll analyze its routing table and it will determine I've got an interface connected to that
+
+11:17.020 --> 11:19.890
+network.
+
+11:19.900 --> 11:29.680
+So what does this packet look like as it leaves the router and heads towards that destination machine.
+
+11:32.300 --> 11:39.020
+Well the first thing that we notice is the source and destination IP don't change that part is not going
+
+11:39.020 --> 11:40.310
+to change at all.
+
+11:40.310 --> 11:46.160
+We still have the same source IP which is this machine up here and we still have the same destination
+
+11:46.160 --> 11:48.470
+IP which is this machine down here.
+
+11:48.680 --> 11:51.470
+So the three addresses don't change at all.
+
+11:51.680 --> 11:58.280
+But from a layer to perspective the source of Mac as it leaves this router is now this interface on
+
+11:58.280 --> 11:59.140
+the router.
+
+11:59.330 --> 12:04.140
+And now the destination MAC is the MAC address of our receiving machine.
+
+12:06.200 --> 12:13.580
+So what I want to illustrate here is that these Lehre to MAC addresses they're unique to their layer
+
+12:13.580 --> 12:14.450
+2 segment.
+
+12:14.480 --> 12:19.240
+That's the only place that those addresses are significant.
+
+12:19.280 --> 12:26.900
+But when we saw frames flowing within this layer to domain up here those source and destination MAC
+
+12:26.900 --> 12:34.010
+addresses were relevant as soon as that frame gets routed by a router to some other layer to network
+
+12:35.660 --> 12:42.830
+those source and destination MAC addresses for Lapeer lose their significance and new source and destination
+
+12:42.830 --> 12:48.850
+MAC addresses are appendant.
+
+12:48.870 --> 12:51.890
+So what we see here is two ethernet domains.
+
+12:51.930 --> 13:01.050
+Right we have one ethernet domain appear one ethernet domain down here and they are interconnected by
+
+13:01.050 --> 13:03.390
+a layer 3 device a router.

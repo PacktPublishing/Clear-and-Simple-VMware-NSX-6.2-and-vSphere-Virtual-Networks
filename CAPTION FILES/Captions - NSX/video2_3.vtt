@@ -1,0 +1,181 @@
+WEBVTT
+
+00:00.850 --> 00:07.870
+In this video I'll explain the concept of maximum transmission unit and the effect that it has on the
+
+00:07.870 --> 00:10.260
+performance of our network.
+
+00:10.280 --> 00:18.650
+So let's just start out by taking a look at an example scenario where the ESX host we have an ESX host
+
+00:18.800 --> 00:24.230
+and a virtual machine running on that host and that virtual machine is going to generate some sort of
+
+00:24.230 --> 00:25.520
+network traffic.
+
+00:25.950 --> 00:34.150
+OK so here on the left side of the screen we have our Yes exile's and within that ESX host I have some
+
+00:34.150 --> 00:36.140
+virtual machines that are running.
+
+00:36.160 --> 00:43.090
+So let's go ahead and create a virtual machine here and my VM is going to be generating some sort of
+
+00:43.090 --> 00:48.120
+network traffic that's going to be sent out of the hose and into the physical network.
+
+00:49.130 --> 00:53.860
+So here we see the ESX hoses connected to a physical switch.
+
+00:53.930 --> 01:01.700
+And so as VM one generates that traffic we're going to have an empty new configuration on the virtual
+
+01:01.700 --> 01:04.040
+switch.
+
+01:04.050 --> 01:12.650
+Now the empty view specifies basically how many bytes is how many bytes and Ethernet frame can contain.
+
+01:12.660 --> 01:20.940
+So if we are empty you at let's say 9000 we're going to have really large frames but we're going to
+
+01:20.940 --> 01:22.070
+have less friends.
+
+01:23.760 --> 01:30.990
+And that's really the benefit of having a higher MT you is we don't actually have any less data that's
+
+01:30.990 --> 01:32.030
+getting sent.
+
+01:32.130 --> 01:38.530
+But we have fewer frames and every Ethan frame needs to get a source and destination back.
+
+01:38.580 --> 01:47.110
+And there's other overhead associated with generating those frames so the fewer frames means less overhead.
+
+01:47.160 --> 01:56.560
+And that's the big benefit of a higher MT view is that we can send fewer larger frames.
+
+01:56.590 --> 02:01.060
+However it doesn't come without its drawbacks.
+
+02:01.060 --> 02:07.570
+And one of the most important things is to make sure that we're properly configuring the MT You consistently
+
+02:07.570 --> 02:09.960
+across our network.
+
+02:09.980 --> 02:17.250
+So in this case let's assume that the physical switch has been configured with an empty 15:24 while
+
+02:17.390 --> 02:25.810
+that empty view is significantly lower than what we've configured on our ESX host or our virtual switch.
+
+02:25.840 --> 02:34.120
+So the result is we're going to have these really large frames hitting the physical switch frames that
+
+02:34.120 --> 02:37.290
+are larger than the physical switch can actually handle.
+
+02:38.330 --> 02:43.320
+So as these large frames leave the ESX I host and hit the physical switch.
+
+02:43.550 --> 02:49.850
+They're going to be these jumbo frames these really big frames and the physical switches are going to
+
+02:49.850 --> 02:57.210
+essentially say that's too big for me I can't handle a frame that's that large.
+
+02:57.320 --> 03:00.740
+I have to now chop it up into smaller pieces.
+
+03:03.210 --> 03:10.060
+Into a size that I can actually handle and this is all going to have to be done by that physical switch.
+
+03:10.060 --> 03:16.390
+So just imagine that with every frame that a physical switch receives it now has to take that frame.
+
+03:16.510 --> 03:19.230
+Break it up into smaller pieces.
+
+03:19.420 --> 03:27.150
+Append headers on each of those little smaller frames before I can switch that traffic.
+
+03:27.300 --> 03:31.570
+What do we think the effect on our physical switches going to be.
+
+03:32.640 --> 03:34.210
+Well we know it's not going to be good.
+
+03:34.230 --> 03:35.320
+Right.
+
+03:35.510 --> 03:41.550
+That's obviously not going to be good because now my physical switch is going to be utilizing a whole
+
+03:41.550 --> 03:47.430
+lot of CPQ resources to fragment and reassemble those frames.
+
+03:47.430 --> 03:55.020
+And that's what occurs when we have a mis configured or mismatched amd you is fragmentation and re-assembly
+
+03:55.230 --> 04:01.380
+the physical switch or whatever is properly configured isn't going to be able to receive that large
+
+04:01.380 --> 04:01.930
+packet.
+
+04:02.100 --> 04:09.390
+I kind of always equate this to let's say that I have four guitars and I want to ship those four guitars
+
+04:09.390 --> 04:11.450
+to a friend of mine who lives in California.
+
+04:13.110 --> 04:15.160
+So I take those four guitars.
+
+04:15.210 --> 04:18.250
+I package them up in a really big box.
+
+04:18.300 --> 04:24.450
+All four of them and I put it down in my driveway and I wait for the mailman to show up and he comes
+
+04:24.450 --> 04:29.630
+in he looks at it he says that box is too big I can't fit it in the back of the mail truck.
+
+04:29.730 --> 04:37.430
+We're going to have to open up that box put all four of those guitars into individual boxes put new
+
+04:37.430 --> 04:42.780
+addresses on each of those individual boxes to make sure they all make it to the right place.
+
+04:42.950 --> 04:44.790
+And then I can put them all in my truck.
+
+04:46.350 --> 04:51.020
+Well the process of taking all those guitars out Reebok's think I'm a readdressing.
+
+04:51.200 --> 04:53.880
+That's going to be a really lengthy process.
+
+04:54.030 --> 04:59.200
+And if the mailman has to do that at every house he's not can do a very good job.
+
+04:59.220 --> 05:02.250
+That's kind of like my physical switch in this scenario.
+
+05:02.370 --> 05:10.260
+It's a physical switch is constantly breaking frames up into smaller chunks and reassembling them and
+
+05:10.280 --> 05:16.170
+readdressing them that's going to really hamper the performance of that physical switch.
+
+05:16.530 --> 05:23.250
+So important takeaway to make sure that you keep in mind when we talk about maximum transmission unit.
+
+05:23.520 --> 05:26.220
+Is that your network is configured consistently.

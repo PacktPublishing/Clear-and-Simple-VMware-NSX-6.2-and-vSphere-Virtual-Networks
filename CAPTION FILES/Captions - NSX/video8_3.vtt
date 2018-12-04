@@ -1,0 +1,256 @@
+WEBVTT
+
+00:00.410 --> 00:10.580
+In this video we'll look at the network and guest introspection services provided by service composer.
+
+00:10.710 --> 00:18.360
+So would if we want to integrate some third party solution that does guest introspection like for example
+
+00:18.870 --> 00:27.450
+let's say that we have a third party virus scanning appliance and it can scan virtual machines and detect
+
+00:27.480 --> 00:36.740
+viruses and if it does detect a virus on a virtual machine what it can do is it can tag that VM.
+
+00:36.780 --> 00:45.290
+So here we see the virtual machine called app 3 has been tagged with this virus tag my anti-virus solution
+
+00:45.290 --> 00:55.780
+has found a virus on the VM and has tagged we can create a security group called virus group let's say.
+
+00:55.920 --> 01:01.350
+And that security group can have a dynamic inclusion criteria that says.
+
+01:01.460 --> 01:09.850
+And even ATMs that have this virus tag should be included in this security group.
+
+01:09.890 --> 01:14.860
+So the virus group security group includes all via SMS with the virus tag.
+
+01:15.050 --> 01:17.490
+That's a dynamic inclusion criteria.
+
+01:18.710 --> 01:28.660
+And we can apply a highly restrictive security policy to that security group basically saying we're
+
+01:28.660 --> 01:35.350
+going to allow virus group to communicate with the anti virus solution and we're going to allow the
+
+01:35.350 --> 01:41.440
+anti virus solution to communicate with the virus group and anything else from that virus group is going
+
+01:41.440 --> 01:43.010
+to be blocked.
+
+01:43.030 --> 01:49.120
+So now we've created this level of isolation that is really strong.
+
+01:49.410 --> 01:49.630
+Right.
+
+01:49.630 --> 01:57.520
+My virus scanning solution detected a virus tagged to that VM based on that tag that VM was dropped
+
+01:57.520 --> 02:04.780
+into a new security group where it was completely isolated from everything except for the virus scanning
+
+02:04.780 --> 02:05.630
+solution.
+
+02:06.790 --> 02:15.100
+And now that virus can be resolved and when it is the virus scanning solution will remove that tag and
+
+02:15.100 --> 02:18.390
+the virtual machine will be removed from this virus.
+
+02:18.390 --> 02:27.250
+Group Security Group that's a great example of how guest introspection can protect our environment by
+
+02:27.370 --> 02:34.240
+isolating a virtual machine with some sort of security risk.
+
+02:34.250 --> 02:35.790
+Let's look at another example.
+
+02:36.620 --> 02:41.210
+Here we've got some sort of sensitive data on a virtual machine.
+
+02:41.240 --> 02:47.370
+And we've deployed the V.M. where data security solution.
+
+02:47.500 --> 02:51.950
+So this works very similar to the anti-virus example that we just saw.
+
+02:52.150 --> 02:56.390
+Only instead of looking for viruses it's looking for sensitive data.
+
+02:56.540 --> 03:01.200
+This is very useful if you're subject to compliance regulations.
+
+03:01.210 --> 03:05.740
+So let's say for example you're subject to PCI compliance.
+
+03:05.880 --> 03:11.870
+So it's very important that there's not credit card data where there shouldn't be credit card data.
+
+03:13.530 --> 03:22.050
+And let's say that a credit card number is found on the virtual machine at 3 well VM where data security
+
+03:22.050 --> 03:26.560
+will tag that virtual machine with a security tag.
+
+03:26.560 --> 03:29.470
+In this case we're calling the security tags CC.
+
+03:30.100 --> 03:37.630
+And we can then create a security group with dynamic inclusion that says any virtual machines with the
+
+03:37.630 --> 03:46.350
+CC tag should be dropped into a security group called credit card and will allow the data loss prevention
+
+03:46.350 --> 03:50.880
+system to communicate with that credit card security group.
+
+03:51.480 --> 03:57.150
+But if that credit card security group wants to reach out and connect with anything else or if anything
+
+03:57.150 --> 03:59.050
+else is trying to connect to it.
+
+03:59.430 --> 04:02.350
+It's going to be quarantined it's going to be blocked.
+
+04:02.400 --> 04:10.070
+So now we don't have to worry about this sensitive data potentially leaving our network as soon as VM
+
+04:10.070 --> 04:17.040
+or data security detects that sensitive data that virtual machine is automatically isolated.
+
+04:17.090 --> 04:19.850
+Think about what this will do from a compliance perspective.
+
+04:19.850 --> 04:21.810
+It's really powerful stuff.
+
+04:24.000 --> 04:26.070
+And that's the purpose of V.M. we're data security.
+
+04:26.070 --> 04:32.810
+It's a powerful compliance tool that will automatically tag VAMC and includes a lot of pre-built compliance
+
+04:32.810 --> 04:33.920
+templates.
+
+04:34.080 --> 04:39.170
+About 80 different compliance templates including Hippe PCI and many others.
+
+04:39.570 --> 04:43.470
+And it doesn't require any software on the virtual machine to be installed.
+
+04:43.800 --> 04:51.650
+You'll enable it using surface composer where we can dynamically remove tags if the sensitive data is
+
+04:51.650 --> 04:52.860
+no longer present.
+
+04:52.880 --> 04:59.930
+So a virtual machine will be automatically on quarantined when that sensitive data is removed.
+
+05:01.230 --> 05:07.110
+Now we've looked at the guest introspection capabilities of service composer.
+
+05:07.110 --> 05:10.040
+Now let's take a moment to look at network introspection.
+
+05:11.860 --> 05:17.170
+So we have some service that's running out in our network and the service doesn't need access to the
+
+05:17.170 --> 05:19.300
+guest operating system.
+
+05:19.310 --> 05:26.050
+So for example let's say we're running an intrusion prevention system and we've got a virtual machine
+
+05:26.050 --> 05:36.250
+called app 1 and the app one VM is part of some security group that we have specified needs to be inspected
+
+05:36.460 --> 05:40.670
+by this network intrusion prevention service.
+
+05:40.680 --> 05:45.580
+So now a packet comes into our network that's destined for this virtual machine.
+
+05:46.800 --> 05:53.370
+And when that traffic hits the distributed firewall kernel module it will be redirected.
+
+05:54.270 --> 06:02.010
+To the intrusion prevention system and assuming no malicious traffic is found the packet is then passed
+
+06:02.010 --> 06:06.430
+along to the virtual machine.
+
+06:06.440 --> 06:14.030
+You could also configure the security group as the traffic source if you want to analyze outbound traffic
+
+06:14.570 --> 06:18.070
+coming out of our VM.
+
+06:18.160 --> 06:24.400
+So just know that any of these third party services must be registered with NSX manager in order for
+
+06:24.820 --> 06:25.690
+them to work.
+
+06:25.720 --> 06:29.020
+And that process varies a little bit with each different vendor.
+
+06:29.470 --> 06:37.340
+But the key point that I want to make sure we get across here is that unlike guest introspection this
+
+06:37.340 --> 06:40.910
+is not examining the guest operating system in any way.
+
+06:40.910 --> 06:50.940
+Our policy here is redirecting traffic to some service that we've registered using service composer.
+
+06:50.960 --> 06:57.890
+So if my virtual machine sends or receives some traffic that matches this policy that traffic is going
+
+06:57.890 --> 07:05.480
+to be relayed to the intrusion prevention system a virtual appliance so that it can scan that information
+
+07:05.810 --> 07:09.880
+prior to passing that traffic along.
+
+07:09.910 --> 07:17.200
+So in review we've seen here how service composer can automatically apply security policies and how
+
+07:17.200 --> 07:23.740
+we can include our virtual machines in a security group using either a dynamic or static.
+
+07:25.510 --> 07:31.750
+We've also seen that we can utilize third party tools and we can integrate them to provide protection
+
+07:32.350 --> 07:37.290
+either using guest introspection or network introspection.
+
+07:37.310 --> 07:42.710
+Our guest introspection tools are going to examine the guest operating system of our virtual machines
+
+07:42.710 --> 07:52.990
+for things like sensitive data or viruses or we can use service composer to redirect traffic to a network
+
+07:53.080 --> 07:56.920
+introspection tool such as an intrusion prevention system.
+
+07:59.460 --> 08:05.790
+Finally when you create a new security policy you can choose a parent policy that it will inherit rules
+
+08:05.790 --> 08:06.520
+from.
+
+08:06.930 --> 08:13.590
+So you could create multiple security policies that have parent policies and they can inherit those
+
+08:13.590 --> 08:15.560
+rules from the parent policy as well.

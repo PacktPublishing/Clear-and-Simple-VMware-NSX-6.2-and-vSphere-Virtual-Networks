@@ -1,0 +1,142 @@
+WEBVTT
+
+00:00.710 --> 00:07.110
+In this video I'll explain transport zones and how they can be used to control the scope of our logical
+
+00:07.110 --> 00:09.120
+switches.
+
+00:09.160 --> 00:11.170
+So here we see a really simple diagram.
+
+00:11.170 --> 00:16.440
+I've got two clusters of ESX high hopes and just keep it really really simple.
+
+00:16.480 --> 00:20.800
+I only put two hosts in each cluster right so I have a cluster on the left.
+
+00:20.800 --> 00:28.790
+That's called the inside cluster and on the right I have a cluster called the DMZ cluster and maybe
+
+00:28.790 --> 00:36.500
+I want to create some logical switches but I don't necessarily want those logical switches to span both
+
+00:36.500 --> 00:37.860
+of these clusters.
+
+00:37.930 --> 00:45.140
+If I create a logical switch for the DMZ cluster I don't necessarily want VM on the inside cluster to
+
+00:45.230 --> 00:48.550
+also see that switch and be able to connect to it.
+
+00:48.770 --> 00:56.590
+I might want to keep those two environments separated so that I can do is I can create a transport zone.
+
+00:56.810 --> 01:06.850
+So let's go ahead and identify one transport zone I'll call it the DMZ transport zone and my DMZ transport
+
+01:06.850 --> 01:11.730
+zone is going to include certain clusters of ESX hosts.
+
+01:11.740 --> 01:18.610
+So in this case I've only included one cluster the DMZ cluster and let's create one more transport zone
+
+01:18.610 --> 01:18.970
+here.
+
+01:19.000 --> 01:21.490
+I'm going to call it the inside transport zone.
+
+01:22.630 --> 01:29.380
+And really similar to what I did on the DMZ side the only cluster's included in this transport zone
+
+01:30.060 --> 01:32.210
+are clusters that are on the inside of my network.
+
+01:32.230 --> 01:34.050
+The inside cost.
+
+01:34.240 --> 01:42.630
+Now I can go ahead and create a logical switch and when I do so I'll specify the transport zone that
+
+01:42.670 --> 01:45.470
+logical switch is going to be associated with.
+
+01:45.940 --> 01:53.470
+So for example let's say that I create a logical switch and I specify that it's going to exist on the
+
+01:53.470 --> 01:56.790
+DMZ transport zone.
+
+01:56.790 --> 02:02.430
+That means that that particular logical switch will only be available on the hosts that are part of
+
+02:02.430 --> 02:04.130
+that DMZ cluster.
+
+02:04.230 --> 02:07.840
+And so I can't connect via SMS on the inside cluster to it.
+
+02:07.980 --> 02:16.250
+And same thing if I create a logical switch and I associate it within the inside transport zone while
+
+02:16.250 --> 02:24.440
+that logical switch will only be available to those hosts that are within that inside transport zone.
+
+02:24.470 --> 02:30.240
+So now I can use these transport zones to define the scope of my logical switches.
+
+02:31.630 --> 02:33.880
+But we have more flexibility than this event.
+
+02:34.120 --> 02:36.860
+I can create a third transport zone.
+
+02:37.030 --> 02:40.170
+I'm going to call this one the global transport zone.
+
+02:41.900 --> 02:47.750
+And this transport zone is going to be a little bit different because now I'm creating one transport
+
+02:47.750 --> 02:53.520
+zone that actually spans both of these ESX I host clusters.
+
+02:53.570 --> 03:02.150
+So now if I create a logical switch within that global transport zone its going to span all of the ESX
+
+03:02.150 --> 03:06.600
+I hosts in both Klosters.
+
+03:06.770 --> 03:13.250
+So the effect is I can now create a logical switch that will be available on all of the hosts on the
+
+03:13.250 --> 03:16.740
+inside cluster and in the DMZ cluster.
+
+03:16.900 --> 03:24.830
+I've now created a layer 2 network that is available on both of these clusters and you have to be careful
+
+03:24.830 --> 03:25.580
+of this right.
+
+03:25.580 --> 03:30.540
+If these two clusters are supposed to be isolated from each other.
+
+03:30.620 --> 03:36.320
+Well if we start connecting via SMS on both clusters of the same logical switch we don't have a whole
+
+03:36.320 --> 03:37.780
+lot of isolation there.
+
+03:37.850 --> 03:43.550
+Now we could do some stuff with our distributed firewall rules but this might not be something in real
+
+03:43.550 --> 03:45.870
+life that you actually want to do.
+
+03:46.190 --> 03:51.710
+I just wanted to illustrate it here to demonstrate the flexibility that we have with these transport
+
+03:51.710 --> 03:54.920
+zones and what role they provide.

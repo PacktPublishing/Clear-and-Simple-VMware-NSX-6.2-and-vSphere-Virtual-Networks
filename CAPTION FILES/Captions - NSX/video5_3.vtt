@@ -1,0 +1,412 @@
+WEBVTT
+
+00:00.170 --> 00:08.400
+In this video I'll explain later to bridging and how we can connect a VX Land Network to a land backed
+
+00:08.730 --> 00:12.930
+Ethernet segment and that's what led to bridging is all about.
+
+00:13.080 --> 00:13.290
+All right.
+
+00:13.300 --> 00:19.930
+So I'm going to explain what led to bridges how it can be used to connect the VX LAN segment to a villans
+
+00:19.930 --> 00:21.430
+segment.
+
+00:21.480 --> 00:28.120
+We'll also talk about some of the drawbacks of Lehre to bridging and things to watch out for and I'll
+
+00:28.130 --> 00:29.640
+break down the use cases.
+
+00:30.910 --> 00:38.470
+So first off what is there to bridge Well there to bridge allows you to connect a VX LAN segment to
+
+00:38.470 --> 00:46.970
+of the plant essentially establishing an ethernet network that encompasses both of the land and of the
+
+00:46.970 --> 00:54.910
+Exxon segment and now our VM is on a VX land back logical switch could potentially be in the same address
+
+00:54.910 --> 01:06.070
+range as virtual or physical machines that are on an Ethernet Villon of the VX LAN and back layer to
+
+01:06.100 --> 01:13.620
+network can therefore be extended out to physical services that are accessible through the VM next of
+
+01:13.650 --> 01:15.760
+of IIS for a distributed switch.
+
+01:17.940 --> 01:22.750
+We can also extend the Lerer to network to a distributed port group as well.
+
+01:22.890 --> 01:28.550
+So that virtual machines connected to a distributed switch can be on the same layer to network as VM
+
+01:28.590 --> 01:30.380
+connect to a logical switch.
+
+01:31.470 --> 01:35.940
+So let's take a look at a potential use case for this.
+
+01:35.940 --> 01:40.790
+This is a three tier application using a layer to bridge.
+
+01:41.040 --> 01:48.980
+And this particular three tier application is made up of multiple virtual machines that work together.
+
+01:49.000 --> 01:56.080
+So here we see our first virtual machine the app virtual machine and this VM is on the address 1 9 2
+
+01:56.410 --> 02:05.500
+1 6 8 1 8 10 and it's connected to a VX LAN backed logical switch.
+
+02:05.500 --> 02:13.330
+Now we're going to use a distributed logical router in Lehre to bridge mode to connect to this VX LAN
+
+02:13.330 --> 02:20.140
+segment to a violent and some things have changed in NSX 6.2.
+
+02:20.360 --> 02:27.800
+So prior to NSX six to the distributed logical router could be either in bridge mode or it could be
+
+02:27.800 --> 02:30.360
+used as a router but it couldn't be used as ball.
+
+02:30.410 --> 02:36.650
+All right so you would have separate distributed logical router instances for those functions.
+
+02:36.680 --> 02:37.940
+That's not the case.
+
+02:37.940 --> 02:47.130
+And I said that too you can configure routing and Lehre to bridging on the same DLR.
+
+02:47.160 --> 02:54.700
+So here we see again the app VM alogical switch connected to VX and five thousand one and are Lehre
+
+02:54.700 --> 03:02.790
+to bridge is bridging that VX LAN segment to a violin on the VSE for distributed switch.
+
+03:02.900 --> 03:09.080
+So we have the web VM that's part of this three tier app that's connected to a distributed port group
+
+03:09.140 --> 03:17.590
+with Vili's and 20 and it's in the exact same address range as our apt virtual machine.
+
+03:17.660 --> 03:22.310
+And notice that the Vee's for a distributed switch is equipped with a couple of V.M. next a couple of
+
+03:22.310 --> 03:23.910
+physical interfaces.
+
+03:25.080 --> 03:30.960
+And those physical interfaces are connected to a physical switch that also has veel and 20 configure
+
+03:32.740 --> 03:40.750
+and I've got a physical database server connected to that physical switch on VLAN 20.
+
+03:40.750 --> 03:45.680
+And now all three of these virtual machines are on the same Ethan segment.
+
+03:46.150 --> 03:51.710
+If one of them sends a letter to broadcast the other two are going to get it if they need to communicate.
+
+03:51.850 --> 03:55.060
+They don't have to go through a router or default gateway.
+
+03:55.060 --> 04:02.410
+They can all communicate with each other via Leor to.
+
+04:02.430 --> 04:07.650
+So what are some of the other use cases right here we see a three tier application and maybe in this
+
+04:07.650 --> 04:12.080
+case our database server just can't be virtualise for some reason.
+
+04:12.270 --> 04:14.220
+That's one use case.
+
+04:14.220 --> 04:18.230
+We could also extend virtual services to physical devices.
+
+04:18.240 --> 04:18.630
+Right.
+
+04:18.630 --> 04:25.920
+So for example let's say I had an X edge firewall running in my virtual environment and I wanted to
+
+04:25.920 --> 04:30.790
+put some physical servers on the same layer to network as if I could do that.
+
+04:30.960 --> 04:37.740
+So I can make virtual services available on physical devices or if I have physical systems like this
+
+04:37.740 --> 04:43.520
+database server or you see here that I want to make available on the same network as my VM.
+
+04:43.860 --> 04:45.250
+Now I can do that as well.
+
+04:50.590 --> 04:57.340
+So like I mentioned on the last slide we're going to use the distributed logical router to create this
+
+04:57.340 --> 05:06.190
+layer to branch and part of the distributed logical router is this virtual machine called the logical
+
+05:06.220 --> 05:10.020
+routing control via.
+
+05:10.160 --> 05:17.350
+So with the logical routing control V is as it's a virtual machine that's part of the control plane.
+
+05:17.430 --> 05:24.370
+When we use the logical routing control VM primarily to do dynamic routing updates.
+
+05:24.420 --> 05:29.730
+Now this logical routing control VM is kind of important here because it's going to be running on some
+
+05:29.730 --> 05:31.380
+ESX host.
+
+05:31.470 --> 05:31.680
+Right.
+
+05:31.680 --> 05:40.960
+And then our slide here we have two ESX hosts picture to the two green blocks represent ESX hosts.
+
+05:41.030 --> 05:46.930
+So which ever host my logical routing control VM is currently running on.
+
+05:47.360 --> 05:52.430
+That's where my layer to bridge instance is also going to reside.
+
+05:54.930 --> 05:58.840
+And the bridge instance plays an important role and layer to bridging.
+
+05:59.040 --> 06:05.470
+Essentially it forces all of the bridged traffic to flow through a single host.
+
+06:05.560 --> 06:12.520
+So all the traffic using the air to bridge will flow through in ESX host and the host is determined
+
+06:13.120 --> 06:18.620
+by which host the logical routing control VM is running at.
+
+06:18.630 --> 06:25.970
+So let's follow through the slide here and kind of watch a packet as it flows from VM 1 to VM to right
+
+06:26.040 --> 06:35.740
+and just notice that VM 1 and VM 2 are on the same network 1 9 2 1 6 8 1 0 network but VM once connected
+
+06:35.740 --> 06:43.440
+to a logical switch and VM 2 is connected to a distributed port group so we've set up a to bridge to
+
+06:43.440 --> 06:48.520
+bridge VX and 5000 one to Villalon 20.
+
+06:48.610 --> 06:54.190
+And here comes a packet VM one issues of paying VM to the destination.
+
+06:54.190 --> 07:03.320
+Now that ping is going to flow through the logical switch over my physical underlying network.
+
+07:03.630 --> 07:07.440
+Because it's destined for the bridge instance.
+
+07:07.530 --> 07:13.780
+So that frame is going to get encapsulated by my V-Tech with all of the appropriate Vieng explain how
+
+07:13.800 --> 07:20.420
+to flow over the physical underlying network and eventually reach this bridge instance.
+
+07:20.460 --> 07:32.420
+The other ESX host where it has bridged over the last 20 and from there it still needs to flow back
+
+07:32.720 --> 07:34.860
+to the other ESX host.
+
+07:35.000 --> 07:41.490
+Right now its not going to get the excellent encapsulated this time because its not flowing through
+
+07:41.490 --> 07:42.710
+a logical switch right.
+
+07:42.720 --> 07:50.090
+Right now after fluffers over that bridge instance now that traffic is being handled by vse fair distributed
+
+07:50.090 --> 07:50.710
+switch.
+
+07:50.990 --> 07:57.170
+So it must have some uplinks connected to Villon 20 and thats how the packet gets from host to back
+
+07:57.170 --> 07:59.280
+to host 1.
+
+07:59.450 --> 08:07.520
+But you can see kind of the down side of this approach is now all of my traffic that goes from the xplain
+
+08:07.520 --> 08:13.780
+5000 to one movieland 20 or vice versa has to flow through a single yes I host.
+
+08:13.910 --> 08:16.130
+Thats what the bridge instance does.
+
+08:21.280 --> 08:22.530
+Here's another example.
+
+08:22.540 --> 08:27.440
+This is almost exactly the same as what we saw in the last slide.
+
+08:27.540 --> 08:34.320
+So let's say in this case I have a physical server called PH y2 that's my physical machine and it's
+
+08:34.320 --> 08:36.180
+connected to a physical switch.
+
+08:37.080 --> 08:39.340
+On land 20.
+
+08:39.480 --> 08:42.880
+And that's what that little light blue box represents.
+
+08:42.880 --> 08:46.670
+All right we have a physical switch here on VLAN 20.
+
+08:46.900 --> 08:55.870
+And here we have a VM NEC connected to a VSE distributed switch so we have these very distributed switch
+
+08:55.870 --> 09:01.960
+connected to Vili's and 20 and we have a virtual machine and a physical server that are on the same
+
+09:02.020 --> 09:04.480
+ethernet network.
+
+09:04.500 --> 09:09.220
+So now let's walk through how the packet gets from point A to Point B.
+
+09:13.530 --> 09:22.880
+So VM one generates a ping with the physical server as the destination and because my Berridge instance
+
+09:23.030 --> 09:31.010
+is running on a different ESX I host that packet needs to get VX LAN encapsulated pass over the physical
+
+09:31.010 --> 09:40.040
+underlaid network get decapitated by the receiving the tap before it can arrive at the bridge Hinson's.
+
+09:40.100 --> 09:47.590
+Now from there the packets going to go into the VSE fear distributed switch
+
+09:50.030 --> 09:55.890
+where it's going to pass through a physical VM NEC and hit that physical server.
+
+09:56.100 --> 09:59.680
+Let's take one more look at that after I quit we're off some of our markings.
+
+10:00.580 --> 10:01.010
+OK.
+
+10:01.140 --> 10:04.940
+So here again my ping has arrived at the bridge instance.
+
+10:05.280 --> 10:13.220
+It's going to flow over the bridge on TV Land 20 where it will hit the vees fair distributed switch.
+
+10:13.400 --> 10:20.090
+And this particular Vee's for just two switches equipped with V.M. next so that the pin can get out
+
+10:20.090 --> 10:25.100
+there to the physical network on land 20 there as well and hit that physical server.
+
+10:30.390 --> 10:35.550
+So the Lehre to bridge we're going to have this bridge instance and that's going to essentially be the
+
+10:35.550 --> 10:42.570
+point that all of my traffic that needs to traverse the bridge is going to go through any traffic that
+
+10:42.570 --> 10:49.740
+needs to flow from my VX than to my Vili's or vice versa is going to flow through that bridge instance.
+
+10:49.750 --> 10:57.790
+So what happens if the ESX I host that the bridge incenses running on fails what happens if my logical
+
+10:57.790 --> 11:06.590
+routing control VM fails well essentially what happens is the bridge instance is going to follow the
+
+11:06.590 --> 11:09.800
+logical route or control VM wherever it goes.
+
+11:10.820 --> 11:15.590
+And we can set the logical route or control VM as a highly available pair.
+
+11:15.680 --> 11:19.280
+That's what we see in the slide here.
+
+11:19.320 --> 11:25.890
+So if one of those logical routing control victims were to fail they're still a standby control VM running
+
+11:25.890 --> 11:27.260
+on some other host.
+
+11:27.690 --> 11:32.750
+And my bridge instance will simply come back up on that other host.
+
+11:32.760 --> 11:38.970
+Now if an actual ESX host failure occurs then high availability is going to bring up that bridge instance
+
+11:38.970 --> 11:39.750
+again.
+
+11:41.700 --> 11:48.700
+But the bridge instance will always be with that logical router control VM wherever it is that's the
+
+11:48.700 --> 11:51.750
+host that all of my bridge traffic is going to flow through.
+
+11:52.780 --> 11:58.450
+So in review the letter to bridge is used to bridge a VX land to the land.
+
+11:58.450 --> 12:01.050
+You can't bridge the land to another land.
+
+12:01.060 --> 12:03.830
+You can't bridge the X land to another Vieques Island.
+
+12:04.090 --> 12:09.470
+It can only be used to bridge a Vieques land to the land and vice versa.
+
+12:11.620 --> 12:17.800
+Once you've created the laird to bridge you can have virtual machines or even physical machines in the
+
+12:17.800 --> 12:24.640
+same address range sharing the same ethernet segment and that are able to send and receive Lerer to
+
+12:24.640 --> 12:29.480
+traffic as well as broadcasts to and from each other.
+
+12:29.510 --> 12:37.340
+This gives us the ability to extend an Ethernet segment from a via X LAN a backed layer to network all
+
+12:37.340 --> 12:39.130
+the way out to physical service.
+
+12:41.160 --> 12:48.130
+Or to a distributed group of these for distributed switch.
+
+12:48.160 --> 12:55.690
+Now one final note I want to make before wrapping up this video the layer to bridge will pass any layer
+
+12:55.690 --> 12:57.010
+to traffic.
+
+12:57.010 --> 13:03.780
+It's not a stopping point for broadcasts or ARP requests or multicast or anything like that.
+
+13:03.790 --> 13:09.310
+So if there's traffic that gets broadcast within the VA ex-flame for example it's going to flow over
+
+13:09.310 --> 13:12.990
+that bridge into a villain and even out into the physical network.

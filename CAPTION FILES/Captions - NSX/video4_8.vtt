@@ -1,0 +1,229 @@
+WEBVTT
+
+00:00.650 --> 00:08.670
+In this video I'll explain NSX controller cluster slicing and how it's used to divide up workload across
+
+00:08.670 --> 00:13.860
+our NSX controller coster notes.
+
+00:13.880 --> 00:20.800
+So the only supported configuration with an NSX controller cluster is three notes.
+
+00:20.840 --> 00:26.160
+That's the only configuration that VM Ware supports.
+
+00:26.380 --> 00:32.590
+And there are several roles that the NSX controller or nodes will perform and for each of these roles
+
+00:32.680 --> 00:41.500
+a master node is elected never remember the NSX controller closter is in the control plane.
+
+00:41.770 --> 00:48.230
+There is no service impact if a failure occurs but it does perform these critical roles.
+
+00:48.290 --> 00:55.580
+And for each of these roles one note will become the master and it's the job of the master to divide
+
+00:55.580 --> 01:05.190
+up this workload into slices and assign those slices to all of the nodes in the closter.
+
+01:05.230 --> 01:09.270
+So the master node isn't doing all of the work for that particular role.
+
+01:09.340 --> 01:14.200
+It's simply controlling the distribution of that workload.
+
+01:14.320 --> 01:22.450
+Using this mechanism called slicing and if one of our NSX controller or cluster nodes fails the slice
+
+01:22.450 --> 01:28.240
+is being handled on that node will be redistributed to some other no.
+
+01:28.400 --> 01:35.080
+If the master node for a role fails a new master will be elected.
+
+01:35.090 --> 01:36.120
+So let's take a look.
+
+01:36.910 --> 01:40.870
+Let's take a look at how slicing works with a logical switch.
+
+01:40.870 --> 01:47.480
+All right and remember the NSX controller has these three tables that it maintains the Mac table.
+
+01:47.620 --> 01:56.390
+The ARP table and the Wii type table and these tables include information that are gathered from all
+
+01:56.390 --> 01:59.780
+of our ESX hosts throughout the NSX domain.
+
+01:59.780 --> 02:05.610
+Now this is a key function and is critical to the proper operation of NSX.
+
+02:05.870 --> 02:08.620
+And these tables are constantly changing.
+
+02:08.660 --> 02:17.840
+So when a change occurs in a host that change is in effect occurring on some slice and is handled by
+
+02:17.840 --> 02:22.900
+the appropriate and sect's controller cluster node.
+
+02:22.900 --> 02:31.530
+So for example here we see the master of the logical switching role has assigned to some slice of will
+
+02:31.530 --> 02:34.300
+work to a particular note.
+
+02:34.330 --> 02:40.950
+We have three NSX controller cluster nodes and this slice is being handled by one of those notes.
+
+02:41.350 --> 02:48.100
+And if some sort of failure occurs and that node is no longer available then the Master will simply
+
+02:48.190 --> 02:56.010
+reassign that slice to some other and sect's controller cluster no or there's a master for each role
+
+02:56.400 --> 03:02.870
+and the master is responsible for dividing up all of the workload that the NSX controller must perform.
+
+03:03.750 --> 03:08.300
+And distributing it across these three notes.
+
+03:08.330 --> 03:15.530
+So how does slicing work when our NSX controller cluster nodes are created on hosts within a high availability
+
+03:15.530 --> 03:17.030
+cluster.
+
+03:17.040 --> 03:24.920
+So here we see four ESX hosts and these hosts have been configured in a VSE very high availability cluster
+
+03:26.310 --> 03:34.890
+and we've got NSX controller nodes running in these ESX host there's one node running on host GSX 0
+
+03:34.950 --> 03:42.560
+1 and then we've got other NSX controller cluster nodes running on ESX 0 2 and ESX 03.
+
+03:42.740 --> 03:52.310
+And let's say that something happens to host ESX C02 and that host itself fails well.
+
+03:52.310 --> 04:00.560
+Now what's going to happen is the logical switching master or the master node for each role will handle
+
+04:00.560 --> 04:08.090
+re distributing those affected slices to one of the surviving NSX controllers.
+
+04:08.360 --> 04:15.640
+So whatever work that one node was doing it can no longer do because it's gone right that second node
+
+04:15.640 --> 04:16.410
+is gone.
+
+04:16.750 --> 04:22.750
+So the master for each role will redistribute all of the slices and make sure that all the work still
+
+04:22.750 --> 04:23.620
+is getting done.
+
+04:26.440 --> 04:33.190
+Now vse for high availability will kick in when that ESX host fails and any virtual machines that were
+
+04:33.190 --> 04:38.670
+running on that host are actually going to get booted up on some other host.
+
+04:38.730 --> 04:47.370
+So when that VM comes back up when that controller node comes back up the master for each roll will
+
+04:47.370 --> 04:52.230
+recognize hey we're back up to 3 and OS X controller cluster notes.
+
+04:52.230 --> 04:56.880
+Let's redistribute this work load yet again any time.
+
+04:56.880 --> 05:06.210
+And NSX controller node is either removed or added to that cluster maybe because of failure the master
+
+05:06.210 --> 05:18.450
+for each roll will redistribute slices based on nodes being either added or removed.
+
+05:18.470 --> 05:25.370
+So once we actually go through the process of deploying the NSX controller cluster where do we stand.
+
+05:25.400 --> 05:26.840
+Well before we get started.
+
+05:26.960 --> 05:33.200
+Number one we've got to make sure that our physical underlay is configured with an empty view of 6500
+
+05:33.230 --> 05:38.800
+or greater so that it can handle that VX and encapsulated traffic.
+
+05:39.050 --> 05:44.240
+We have to make sure we have a supported version of these fair install that the VSE fair distributed
+
+05:44.240 --> 05:52.820
+switch is ready to go and is equipped with VM decks so that all of our underlaid traffic can flow over
+
+05:52.820 --> 05:53.750
+the physical network
+
+05:57.330 --> 05:58.860
+after these prerequisites.
+
+05:58.950 --> 06:01.330
+We then go ahead and install an OS X manager.
+
+06:01.360 --> 06:01.620
+Right.
+
+06:01.680 --> 06:08.470
+And OS X manager always comes before the NSX controller closter.
+
+06:08.720 --> 06:15.590
+And if we have a management cluster of ESX I hosts that's the appropriate spot for NSX manager.
+
+06:15.620 --> 06:22.360
+Now if you're not familiar with what a management cluster is don't worry we'll cover later in this course.
+
+06:24.920 --> 06:30.750
+And OS X manager must also be registered with the center and once that's done we'll be able to control
+
+06:30.780 --> 06:31.310
+everything.
+
+06:31.310 --> 06:39.140
+NSX related through the Vee's for web client and this allows us to complete tasks like host preparation.
+
+06:39.360 --> 06:44.130
+And it also allows us to deploy the NSX controller cluster.
+
+06:44.130 --> 06:47.410
+This should also reside in the management cluster.
+
+06:47.490 --> 06:55.140
+If you have one after all these tasks are complete then we can start preparing for logical switches
+
+06:55.470 --> 07:02.370
+by doing things like creating VNA pools and creating transport zones.
+
+07:02.530 --> 07:09.340
+So in review the NSX controllers part of our control plane and there's 3 NSX controller nodes and an
+
+07:09.430 --> 07:11.200
+NSX controller cluster.
+
+07:11.200 --> 07:14.080
+These are three different virtual appliances
+
+07:16.880 --> 07:25.820
+one NSX controller closter will exist for each NSX manager instance and for each role that the NSX controller
+
+07:25.820 --> 07:29.240
+performs one node is elected as a master for that role.
+
+07:29.970 --> 07:37.780
+The master is in charge of distributing workload across the NSX controller Questor notes and as nodes
+
+07:37.780 --> 07:42.940
+are added or removed that workload is automatically redistributed.

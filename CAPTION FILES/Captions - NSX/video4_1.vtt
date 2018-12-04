@@ -1,0 +1,475 @@
+WEBVTT
+
+00:00.360 --> 00:09.120
+In this video I'll provide you with an introduction to NSX V.M. where new network virtualization platform
+
+00:09.840 --> 00:16.480
+will be specifically focusing on features of NSX version 6 dot to.
+
+00:16.650 --> 00:21.210
+So why NSX would do we need NSX for.
+
+00:21.210 --> 00:28.010
+Well let's think about what we have right now with a traditional physical network a traditional physical
+
+00:28.010 --> 00:35.030
+network presents some challenges like getting new physical network hardware deployed or what if we want
+
+00:35.030 --> 00:37.270
+a new violin or a new subnet.
+
+00:37.520 --> 00:44.480
+Well think about how long that takes within your organization because it often requires the cooperation
+
+00:44.480 --> 00:47.490
+of multiple departments.
+
+00:47.490 --> 00:54.030
+Now what if we can have the same level of abstraction with the network that we have with compute and
+
+00:54.030 --> 00:55.470
+storage.
+
+00:55.530 --> 01:04.970
+What if we could simply roll out new routers new firewalls new villans new virtual switches without
+
+01:05.120 --> 01:10.660
+any change being required in the physical network.
+
+01:10.690 --> 01:12.900
+That's what we're trying to do with NSX.
+
+01:12.910 --> 01:21.510
+We're trying to shift to a software defined network very similar to the way we have our virtual machines
+
+01:21.510 --> 01:25.700
+in a virtual datacenter right with a software defined datacenter.
+
+01:25.800 --> 01:30.450
+We don't care what types of servers are storage or networks we have.
+
+01:30.450 --> 01:34.920
+We just need to give our virtual machines the compute horsepower they need.
+
+01:34.920 --> 01:41.420
+We need to give them the space that they need in storage and we need to give my IP connectivity.
+
+01:41.650 --> 01:49.380
+And if we can establish and satisfy those needs for a virtual machine we're ready to go.
+
+01:49.470 --> 01:55.670
+Right so just like our physical hosts are now simply C.P. and memory capacity.
+
+01:55.970 --> 02:01.580
+And it doesn't really matter what type of physical host my VAMC are running on we're going to do the
+
+02:01.580 --> 02:02.940
+same with networking.
+
+02:03.260 --> 02:09.380
+My physical network is going to become what we call an underlying network and it's going to be simple
+
+02:09.530 --> 02:12.550
+transport capacity and that's it.
+
+02:15.150 --> 02:22.350
+So what we're going to try to accomplish with NSX is to take a lot of key network functions and virtualize
+
+02:22.350 --> 02:22.930
+them.
+
+02:23.340 --> 02:28.300
+So for example we're going to have an object called a logical switch.
+
+02:29.580 --> 02:35.100
+And the purpose of a logical switch is very similar to the other types of virtual switches that we have
+
+02:35.610 --> 02:39.590
+like a these first Daynard switch or Vee's for distributed switch.
+
+02:39.620 --> 02:48.440
+This is a new type of virtual switch and it introduces some key new capabilities that are essential
+
+02:48.770 --> 02:50.590
+to what we're trying to do with NSX.
+
+02:51.620 --> 03:00.090
+Most significant of which is it's going to provide us the land capability.
+
+03:00.120 --> 03:08.490
+Now what I mean by that is it's going to allow us to establish layer to Ethan at networks that can actually
+
+03:08.490 --> 03:16.650
+traverse a layer 3 physical network I can create anything that segment that actually spans a physical
+
+03:16.650 --> 03:17.180
+router.
+
+03:17.220 --> 03:24.420
+When I'm using a logical switch and will spend a lot of time in this course examining exactly how that
+
+03:24.420 --> 03:30.500
+works and the role that VX land transport plays in that capability.
+
+03:31.850 --> 03:36.650
+With FSX We're also going to virtualize routing.
+
+03:36.780 --> 03:42.630
+We're going to use something called the distributed logical router that provides routing between IP
+
+03:42.630 --> 03:51.190
+networks and the routing is performed to write within the hypervisor right within the ESX eyeholes So
+
+03:51.190 --> 03:57.220
+now if two virtual machines are on different networks but they're on the same host their traffic never
+
+03:57.220 --> 03:58.860
+needs to leave that host.
+
+03:59.080 --> 04:00.190
+In order to get round it
+
+04:03.410 --> 04:11.140
+and we'll refer to our distributed logical router as our east west router this is responsible for routing
+
+04:11.140 --> 04:14.360
+traffic within the NSX domain.
+
+04:17.520 --> 04:24.330
+Now one of the key characteristics of the distributed logical router is the fact that it's a kernel
+
+04:24.330 --> 04:25.090
+module.
+
+04:25.350 --> 04:27.000
+It's not a virtual machine.
+
+04:28.890 --> 04:36.030
+So what I mean by that is the DLR or distributor the logical router is a little piece of software that
+
+04:36.030 --> 04:38.880
+gets installed on each and every ESX host.
+
+04:38.880 --> 04:41.990
+It's not a VM it's not a virtual appliance.
+
+04:42.240 --> 04:50.500
+It's a kernel module that's built right into the ESX host another kernel module that's installed at
+
+04:50.510 --> 04:54.010
+the ESX host level is the distributed firewall.
+
+04:55.600 --> 05:01.960
+And the distributed firewall gives us micro segmentation which is one of the features that a lot of
+
+05:01.960 --> 05:03.790
+people are.
+
+05:04.330 --> 05:04.770
+Rephrase
+
+05:07.550 --> 05:14.450
+the distributed firewall provides micro segmentation and this is one of the key features that's driving
+
+05:14.450 --> 05:18.250
+the adoption of NSX.
+
+05:18.250 --> 05:27.010
+So with the distributed firewall we can create firewall rules that are enforced at the virtual Nic level.
+
+05:27.250 --> 05:33.370
+If traffic is leaving a VM and is bound for some other virtual machine that's connected to the same
+
+05:33.370 --> 05:37.700
+logical switch we can enforce a firewall rule on that traffic.
+
+05:38.050 --> 05:43.430
+So it allows us to basically bolt a firewall onto every virtual neck of every virtual machine.
+
+05:45.560 --> 05:50.370
+We're also going to have a number of NSX edge services.
+
+05:50.570 --> 05:55.840
+The NSX had just kind of like our Swiss Army knife of the NSX.
+
+05:55.850 --> 06:04.220
+It gives us features like firewalling load bouncing IPs second layer to an SSL VPN services and many
+
+06:04.220 --> 06:05.400
+other services.
+
+06:06.460 --> 06:12.910
+All right so the services gateway is actually a virtual appliance that can do many many things.
+
+06:15.130 --> 06:20.710
+So we'll take a look at all of the specifics of the different services as we work our way through this
+
+06:20.710 --> 06:21.380
+course.
+
+06:22.820 --> 06:31.040
+And sex also provides integration with third party solutions and it provides an API that allows us to
+
+06:31.070 --> 06:34.870
+tie into a third party cloud management platform as well.
+
+06:39.450 --> 06:43.260
+The NSX includes multiple planes right.
+
+06:43.290 --> 06:46.890
+The first plane we're going to talk about is the data plane.
+
+06:47.120 --> 06:52.970
+And we've got some components that reside within the data plane including alogical switches the distributor
+
+06:52.970 --> 06:59.630
+the logical router the distributed firewall and the NSX edge and all of these components have something
+
+06:59.630 --> 07:07.720
+in common traffic flows through them right my virtual machine traffic is switch to biological switch
+
+07:08.460 --> 07:11.700
+around it using a distributed logical router.
+
+07:11.830 --> 07:17.230
+It flows through the distributed firewall and if it is bound for some external network is going to flow
+
+07:17.230 --> 07:24.980
+through the NSX edge so this means that if one of these components were to fail it's going to have an
+
+07:24.980 --> 07:33.110
+impact on service and those are our data plane components components that are actually responsible for
+
+07:33.560 --> 07:35.200
+passing traffic.
+
+07:35.360 --> 07:38.120
+And if they fail there is an impact on service
+
+07:40.730 --> 07:43.250
+control plane components are different.
+
+07:44.750 --> 07:52.410
+Our NSX control plane includes things like the distributed logical router control via And the NSX controller
+
+07:53.920 --> 07:59.130
+and these control plane components don't have a direct impact on traffic.
+
+07:59.200 --> 08:08.760
+If they fail now that being said if the distributed logical route control VM fails it may eventually
+
+08:08.760 --> 08:15.140
+have an impact on traffic because this is what does dynamic routing updates.
+
+08:15.180 --> 08:23.050
+If the NSX controller fails our traffic isn't going to stop but our traffic might become less efficient.
+
+08:24.450 --> 08:31.140
+So the control plane isn't directly in the data plane but it's also not completely separated from the
+
+08:31.140 --> 08:32.190
+data plane.
+
+08:32.700 --> 08:39.360
+The way that the management plane is right management plane is purely management.
+
+08:39.580 --> 08:46.570
+This is things like the center NSX manager and ASX manager will always have a one to one relationship
+
+08:46.570 --> 08:48.240
+with the center.
+
+08:48.420 --> 08:50.160
+And these are management tools right.
+
+08:50.160 --> 08:54.920
+This is how we get in through the web client and actually make changes.
+
+08:54.990 --> 09:00.510
+So if these components fail they have no impact on network traffic whatsoever.
+
+09:00.510 --> 09:08.800
+They just impact our ability to manage and assess.
+
+09:08.950 --> 09:16.850
+Now as you prepare your environment and roll allow NSX one of the tasks you'll have to accomplish is
+
+09:16.850 --> 09:24.440
+a task called Host preparation and it's going to push something called kernel modules down to your ESX
+
+09:24.590 --> 09:26.370
+hosts.
+
+09:26.390 --> 09:35.910
+Now these curly fries now these kernel modules are made up of groups of VM where infrastructure bundles
+
+09:35.970 --> 09:43.680
+or VIPs there are basically little pieces of software that were going to install on the ESX hosts and
+
+09:43.680 --> 09:50.730
+they run directly within the hypervisor I think of them as little add on software that runs right in
+
+09:50.730 --> 09:54.130
+the ESX host.
+
+09:54.290 --> 10:01.830
+They're going to do things like the X LAN distributed logical router distributed firewall.
+
+10:02.160 --> 10:02.730
+Right.
+
+10:02.780 --> 10:11.140
+And they're pushed down to the individual host by NSX manager so NSX manager is responsible for essentially
+
+10:11.140 --> 10:15.940
+preparing my ESX I hosts to run an OS X features.
+
+10:16.270 --> 10:22.660
+It's going to install all of these necessary kernel modules directly on the ESX I hosts so that I can
+
+10:22.660 --> 10:30.280
+now enable things like the distributed logical router or so that I can create the Exley and backed logical
+
+10:30.280 --> 10:36.270
+switches.
+
+10:36.350 --> 10:41.930
+So let's take a look at a diagram here and start to walk through some of the network services that are
+
+10:41.940 --> 10:44.070
+virtualise.
+
+10:44.240 --> 10:51.590
+And here I see two ESX host the host on the left has a VM called VM one the host on the right has a
+
+10:51.590 --> 10:58.950
+VM called VM to and those two virtual machines are on the same network now down near the bottom of my
+
+10:58.950 --> 11:03.870
+first ESX host I see another virtual machine that's on a completely different network.
+
+11:05.230 --> 11:11.580
+When the hosts are interconnected using a physical switch a router and another physical switch.
+
+11:11.640 --> 11:17.750
+So these two ESX my hosts are on different networks they're on different Larry.
+
+11:17.780 --> 11:24.970
+Three networks and I know that because they're separated by a router.
+
+11:25.020 --> 11:29.920
+So here we see one of the most critical capabilities of the logical switch.
+
+11:30.070 --> 11:37.500
+I've now created a lair to ether net segment that both VM want and VM to can connect to.
+
+11:37.500 --> 11:44.430
+It spans multiple ESX hosts and it even spans the physical router that we see below.
+
+11:46.500 --> 11:49.300
+And I could create multiple logical switches.
+
+11:49.300 --> 11:56.100
+And so my VM that's on the 172 610 network will connect to a different logical switch.
+
+11:58.920 --> 12:03.260
+Now I may need to route traffic between these Vians right.
+
+12:03.300 --> 12:12.120
+If VM one wants to communicate with my VM that's on the 172 not 16:10 network VM one is going to send
+
+12:12.120 --> 12:15.170
+that traffic towards its default gateway.
+
+12:15.290 --> 12:15.730
+Right.
+
+12:15.780 --> 12:22.170
+Anything that's connected to logical switch 5 0 0 0 0 1 is going to be in a different network than logical
+
+12:22.170 --> 12:25.120
+switch 5000 to.
+
+12:25.160 --> 12:31.250
+So if they want to communicate across those networks that traffic is going to be sent to the default
+
+12:31.250 --> 12:32.830
+gateway.
+
+12:33.030 --> 12:37.860
+And in this case the default gateway that we're going to use is going to be the distributed alogical
+
+12:37.860 --> 12:49.230
+router which will handle routing between those logical switches right within the ESX host.
+
+12:49.420 --> 12:57.960
+We'll also use the distributed firewall to enforce firewall policies at the virtual neck level so VM
+
+12:57.960 --> 13:06.300
+one basically is essentially plugged into a distributed firewall and all of its traffic is analyzed
+
+13:06.330 --> 13:09.400
+before it even hits the logical switch.
+
+13:09.420 --> 13:18.550
+This gives us these micro segmentation capabilities to control traffic with firewall rules anywhere.
+
+13:18.640 --> 13:25.810
+And then finally we have our NSX edge which may be as providing edge firewall services or is providing
+
+13:25.810 --> 13:32.930
+a load balancer or a VPN or one of the other many solutions that the NSX can provide.
+
+13:38.470 --> 13:44.980
+There's a few important documents that you might want to check out and if you go to the V.M. where NSX
+
+13:44.980 --> 13:52.540
+resources page you can find all of these documents like the NSX network virtualization design guide.
+
+13:52.550 --> 13:59.680
+There's also a couple documents that are specific to Cisco showing you how to deploy NSX with the Nexus
+
+13:59.770 --> 14:05.850
+or Cisco U.S.'s And there was also Brownfield design and deployment guide.
+
+14:05.860 --> 14:11.170
+If you already have an existing virtual infrastructure and you want to layer and sex on top of that
+
+14:11.650 --> 14:21.160
+the brownfield design and deployment guide is a great way to get started.
+
+14:21.170 --> 14:28.820
+So in review a few key concepts from the lesson NSX includes a management control and data point traffic
+
+14:28.820 --> 14:32.760
+does not flow through the management or control plane components.
+
+14:32.780 --> 14:38.840
+It only flows through the data plane and the data plane includes objects like our logical switches are
+
+14:38.840 --> 14:47.410
+distributed logical router and our distributed firewall as well as the NSX Hach and ascites manager
+
+14:47.590 --> 14:49.860
+integrates with the center.
+
+14:49.870 --> 14:53.290
+This is going to provide us with all of our management functions.
+
+14:53.290 --> 14:59.740
+Once we register as a sex manager with the center we'll be able to manage all aspects of NSX using the
+
+14:59.740 --> 15:00.640
+Vee's for web client
+
+15:03.540 --> 15:11.380
+address ex-manager is also responsible for pushing the kernel modules down to our ESX hosts and enabling
+
+15:11.380 --> 15:18.180
+features like VX Slan the distributed firewall and the distributed logical router.
+
+15:18.400 --> 15:24.270
+And you can take NSX and Lerat on top of existing hardware and utilize the switches that you have.
+
+15:24.270 --> 15:26.530
+Right now it's non-disruptive.

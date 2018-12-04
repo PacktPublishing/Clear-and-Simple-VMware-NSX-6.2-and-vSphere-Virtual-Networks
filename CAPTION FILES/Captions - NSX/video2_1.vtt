@@ -1,0 +1,493 @@
+WEBVTT
+
+00:01.520 --> 00:04.300
+In this video we're going to learn about the last time.
+
+00:04.550 --> 00:11.410
+And if you've dealt with networking for any period of time you've probably had some exposure to the
+
+00:11.480 --> 00:12.840
+same model.
+
+00:12.860 --> 00:17.810
+Now a lot of people don't really love to deal with the whole model or think about it.
+
+00:18.110 --> 00:25.340
+But really once you kind of demystify and explain what the model means and get used to working with
+
+00:25.340 --> 00:33.300
+it you'll find it really is an essential tool to kind of talk about networking protocols.
+
+00:34.100 --> 00:43.970
+So all of the OS I model really is is kind of like a logical representation of how our devices on a
+
+00:43.970 --> 00:46.430
+network can communicate with each other.
+
+00:49.160 --> 00:55.430
+And the job of the model is to break down all of the functions that have to get performed by these components
+
+00:55.430 --> 01:02.940
+that are connected to the network and then it breaks them down into simplified Lares.
+
+01:02.990 --> 01:05.870
+So let's start out with the very basics.
+
+01:06.080 --> 01:08.220
+What is oocyte stand for.
+
+01:08.240 --> 01:09.880
+What is the OS model.
+
+01:10.130 --> 01:13.850
+Well it stands for open system interconnect model
+
+01:16.620 --> 01:19.630
+and the model includes seven laris.
+
+01:19.860 --> 01:26.460
+And what I want to actually add in here is a little bit of an additional layer that I I sort of think
+
+01:26.460 --> 01:28.750
+at the top of the OS II model.
+
+01:28.830 --> 01:35.710
+Right so here we see the application presentation session and kind of on down the line towards the physical.
+
+01:35.730 --> 01:35.930
+Right.
+
+01:35.940 --> 01:42.300
+And that's the actual physical media like copper wire or fiber optic cable.
+
+01:42.300 --> 01:49.080
+And I like to put at the top of the model one additional layer and I call this layer simply the user
+
+01:49.080 --> 01:52.180
+layer right at the top of my model here.
+
+01:52.260 --> 01:54.210
+That's where the user resides.
+
+01:54.420 --> 02:03.600
+So as the information is flowing up through the OSA model it's getting closer to my user actually seeing
+
+02:03.600 --> 02:05.780
+and utilizing that data.
+
+02:07.940 --> 02:15.080
+So now that we have our user at the top of the OS II model let's look at the layer below that the application
+
+02:15.080 --> 02:15.530
+layer.
+
+02:15.620 --> 02:17.690
+And this is a really simple lair.
+
+02:17.990 --> 02:20.360
+This is what the user is going to use.
+
+02:20.360 --> 02:22.260
+This is what the user is going to see.
+
+02:22.390 --> 02:26.050
+Right this is some application like Outlook for e-mail.
+
+02:26.110 --> 02:26.790
+Right.
+
+02:27.290 --> 02:36.050
+And so this is what the user themselves will actually interact with and utilize to receive this data.
+
+02:37.560 --> 02:46.910
+The next layer is the presentation layer the presentation and session layers are actually pretty closely
+
+02:46.910 --> 02:48.760
+linked to each other.
+
+02:48.770 --> 02:55.460
+Think of these as the things that my operating system needs to do to communicate with some other operating
+
+02:55.460 --> 02:56.690
+system.
+
+02:56.810 --> 03:03.550
+For example I could have Windows running on my machine and I may be establishing a session with another
+
+03:03.560 --> 03:04.910
+Windows machine.
+
+03:04.910 --> 03:11.450
+That's what the presentation and session are do and honestly in this video we're not super concerned
+
+03:11.570 --> 03:15.620
+with these top three layers application presentation in session.
+
+03:15.620 --> 03:21.680
+These are kind of like the things that are happening within my computer and we're not so worried about
+
+03:21.710 --> 03:23.990
+that from a networking perspective.
+
+03:23.990 --> 03:30.970
+So we don't spend a lot of time on application presentation and session last.
+
+03:30.980 --> 03:34.080
+So for these two layers let's just call the presentation layer.
+
+03:34.100 --> 03:36.700
+My operating system will call the session layer.
+
+03:36.710 --> 03:40.060
+This is how my operating system talks to other machines.
+
+03:40.070 --> 03:47.000
+And now we get into the layers that we're more concerned with when it comes to networking.
+
+03:47.000 --> 03:50.470
+The transport network datalink and physical Lares
+
+03:53.390 --> 04:04.270
+So the transport layer involves ports and protocols things like f t p s s h h TTP.
+
+04:04.460 --> 04:12.680
+Those are all different transport layer protocols and what they govern is how is my data actually move
+
+04:12.680 --> 04:14.220
+from point A to Point B.
+
+04:14.300 --> 04:16.700
+Is it going to be reliable.
+
+04:16.760 --> 04:19.870
+If so we're talking about TCAP.
+
+04:20.100 --> 04:22.170
+Is it going to be unreliable.
+
+04:22.170 --> 04:29.040
+If so we're talking about UDP and we have these different protocols that basically do things differently
+
+04:29.380 --> 04:32.040
+and different types of traffic have different needs.
+
+04:32.220 --> 04:34.960
+So for example let's talk about.
+
+04:35.060 --> 04:37.730
+And reliable type of traffic.
+
+04:37.740 --> 04:47.160
+Let's say we're streaming video through Netflix Well we don't need to guarantee the reliable delivery
+
+04:47.340 --> 04:48.670
+of that data.
+
+04:48.990 --> 04:53.830
+All right let's say that a packet is dropped or lost.
+
+04:54.090 --> 05:00.330
+Well we're not going to go back and retransmit that packet because at that point it's too late.
+
+05:00.330 --> 05:00.540
+Right.
+
+05:00.540 --> 05:08.610
+The time has already come and gone for that packet and so at this point we don't need reliable delivery
+
+05:08.610 --> 05:09.550
+of data.
+
+05:09.840 --> 05:18.630
+So we're going to go with an unreliable layer for protocol and that's suitable for certain types of
+
+05:18.630 --> 05:19.100
+data.
+
+05:22.360 --> 05:29.920
+However for other types of data that might not be suitable we may need to ensure that every last bit
+
+05:29.920 --> 05:33.370
+of data that gets transmitted is received.
+
+05:33.370 --> 05:42.910
+And that's where we're going to use TCAP the reliable delivery of data and TZP involves significantly
+
+05:42.910 --> 05:51.630
+more overhead with TZP the two nodes that are communicating with each other are going to use tools like
+
+05:51.660 --> 06:00.340
+checksums to ensure that everything that the sender has sent is actually received by the receiver.
+
+06:01.790 --> 06:09.390
+And so this involves more overhead and more verification and therefore it's a little bit less efficient.
+
+06:09.890 --> 06:18.000
+But there are certain protocols that we want to guarantee that level of delivery and we'll see this
+
+06:18.000 --> 06:29.680
+expressed in all sorts of different ports like S-sh poor 22 a.p port 23 there's a wide variety of well-defined
+
+06:29.730 --> 06:35.340
+port numbers and you can also utilize custom port numbers for your own applications.
+
+06:43.490 --> 06:50.090
+The next layer will take a look at is the network where this is layer 3 and this is the layer or things
+
+06:50.090 --> 06:54.970
+like IP addresses and routers reside.
+
+06:55.170 --> 07:00.600
+So every device on a network has a unique identifier called an IP address.
+
+07:00.600 --> 07:06.220
+And we may send packets to things like a default gateway which is commonly a router.
+
+07:06.410 --> 07:13.880
+And as we work our way through this course you'll learn a lot more about IP routing layer 3 traffic
+
+07:13.970 --> 07:18.170
+and the actual functions that a router performs.
+
+07:18.170 --> 07:22.500
+But that's what we're talking about when we talk about Layer 3 is IP addresses and routers
+
+07:25.170 --> 07:32.930
+layer 2 is our data link clear and that layer is commonly associated with ethernet.
+
+07:33.130 --> 07:38.980
+So why the data link where we're talking about things like ether net about our ethernet switches about
+
+07:38.980 --> 07:47.620
+protocols like ARP CTP and we're talking about our local area network and the ability to enter connected
+
+07:47.620 --> 07:54.600
+devices with a switch that are on the same network.
+
+07:54.600 --> 08:02.720
+Now the final layer the lowest layer on our website model is the physical for and this is the physical
+
+08:02.810 --> 08:03.880
+stuff.
+
+08:03.900 --> 08:09.820
+It's things like cables if you have like a microwave wireless transmitter.
+
+08:09.830 --> 08:15.860
+That's the physical Lehre you know if you have a fiber optic cable or if you just simply have an ethernet
+
+08:15.860 --> 08:20.560
+cord connecting your computer to a switch that's the physical layer.
+
+08:20.930 --> 08:25.910
+So if something happens at the physical there we're typically talking about like a cable that's been
+
+08:25.910 --> 08:31.940
+caught or some other kind of actual physical component failure.
+
+08:31.940 --> 08:37.880
+Those are the things that create issues at the physical layer.
+
+08:38.000 --> 08:45.050
+OK so now that we've defined the seven layers and given you a really basic understanding of what is
+
+08:45.050 --> 08:51.590
+occurring at each layer Let's talk about some of the failures and some of the terminology that is used
+
+08:52.190 --> 08:58.550
+to associate failures with the seven layers and we're going to work our way from the bottom up because
+
+08:58.550 --> 09:00.650
+if I was troubleshooting an actual network.
+
+09:00.770 --> 09:02.170
+That's what I would do.
+
+09:02.170 --> 09:08.870
+I mean if I have a network problem I'm going to start by eliminating the physical Lehre as a potential
+
+09:08.870 --> 09:09.430
+issue.
+
+09:09.650 --> 09:15.080
+And honestly more often than not that's where you're going to find the problem.
+
+09:15.090 --> 09:22.390
+So what sorts of problems can occur at the physical where well at the physical there we're talking about
+
+09:22.390 --> 09:29.470
+something physical happening like somebody has unplugged to the wrong cable or somebody has accidentally
+
+09:29.470 --> 09:32.320
+cut a cable that wasn't supposed to be cut.
+
+09:32.440 --> 09:34.500
+Or maybe we're talking about wireless.
+
+09:34.540 --> 09:38.470
+It's common to see things like interference or even with ethernet.
+
+09:38.530 --> 09:41.140
+That's why that cabling is shielded.
+
+09:41.170 --> 09:48.140
+Right because other sorts of electrical devices and things like that can interfere with our cables.
+
+09:49.200 --> 09:56.590
+So if we're having a Alair one problem that means something's wrong at a physical level.
+
+10:00.090 --> 10:02.630
+So what sort of failure can actually occur.
+
+10:02.730 --> 10:06.580
+Datalink where while we have a few listed here.
+
+10:06.580 --> 10:08.290
+And let's kind of work our way through them.
+
+10:09.220 --> 10:18.030
+Now in modern switches we will almost always have a VPN associated with a port on a switch.
+
+10:18.060 --> 10:25.130
+So you're going to plug a device into a switch and that device will be associated with a certain VPN.
+
+10:25.450 --> 10:28.350
+We're going to have a video on villans coming up shortly.
+
+10:28.630 --> 10:30.910
+But essentially here's how it works.
+
+10:31.120 --> 10:38.470
+If one virtual machine is in V land tan let's say and another virtual machine is in Vili's and 20 they
+
+10:38.470 --> 10:42.270
+won't be able to communicate with each other over layer 2.
+
+10:42.760 --> 10:51.090
+It's a way to kind of break my switch up into segments and make it almost feel like multiple switches.
+
+10:51.110 --> 10:54.790
+There are certain machines that we don't want to have them communicate over the switch.
+
+10:54.790 --> 10:58.510
+I'd like to force their traffic through a firewall or something like that.
+
+10:58.600 --> 11:00.340
+That's what we accomplish with a VPN.
+
+11:00.430 --> 11:09.300
+So if we improperly configured a VPN or if we've configured a port in the wrong the mode those are data
+
+11:09.300 --> 11:16.260
+link layer type issues we can also have broadcast traffic on Alair to network.
+
+11:16.400 --> 11:23.920
+The most common form of broadcast traffic is ARP and this is where one device is trying to discover
+
+11:23.920 --> 11:26.040
+the Mac address of another device.
+
+11:26.860 --> 11:33.820
+And if I have loops in my typology that's going to result in something called the broadcast storm where
+
+11:33.820 --> 11:41.440
+broadcast traffic just goes around and around and around infinitely from one switch to another until
+
+11:41.470 --> 11:43.800
+it brings our network to a screeching halt.
+
+11:44.680 --> 11:52.240
+We'll learn about spanning tree protocol in an upcoming video and that'll help us to ensure that these
+
+11:52.240 --> 11:56.000
+loops do not exist in our lair to network.
+
+11:56.020 --> 11:59.700
+So those are some layer to type of problems.
+
+11:59.740 --> 11:59.940
+Right.
+
+12:00.160 --> 12:05.820
+And just a quick reminder the address at Layer 2 is the MAC address.
+
+12:05.830 --> 12:14.400
+Now this MAC address or Media Access Control address is hard coded into our network interface cards.
+
+12:14.440 --> 12:19.930
+So whether we're talking about a virtual machine or a physical machine there is a unique MAC address
+
+12:20.350 --> 12:23.020
+hardcoded into that device.
+
+12:24.680 --> 12:28.350
+Now how about the network where what sorts of problems can occur there.
+
+12:28.730 --> 12:32.280
+Well the most common problem is a duplicate IP address.
+
+12:32.330 --> 12:39.500
+Maybe I've got two virtual machines or physical machines or whatever that are on the same network and
+
+12:39.500 --> 12:42.860
+have been configured with the identical IP address.
+
+12:42.890 --> 12:44.360
+That's not going to work.
+
+12:44.420 --> 12:48.220
+Every machine on a network has to have a unique identifier.
+
+12:48.230 --> 12:50.200
+The IP address has to be unique.
+
+12:50.300 --> 12:57.680
+And so if we have IP conflicts that's going to be a layer 3 problem or if we have a mis configured router
+
+12:57.980 --> 13:05.140
+maybe routing entries missing from our roundtable problems at the router level those are a layer of
+
+13:05.140 --> 13:06.690
+three issues.
+
+13:11.520 --> 13:14.700
+The next layer we'll talk about is the transport layer.
+
+13:14.700 --> 13:19.770
+And honestly you're probably not going to run into a whole lot of issues here right at the transport
+
+13:19.770 --> 13:20.150
+layer.
+
+13:20.160 --> 13:27.030
+We don't often see a whole lot of misconfiguration or problems that occur as a matter of fact I'm struggling
+
+13:27.030 --> 13:32.460
+to come up with a great example of a flair for problem that I've ever had to fix.
+
+13:32.500 --> 13:41.100
+It basically as a as a networking person you're not going to have to mess around a whole lot with layer
+
+13:41.100 --> 13:41.740
+4.
+
+13:41.970 --> 13:46.860
+And this kind of is the same for Lares 5 6 and 7 right.
+
+13:46.860 --> 13:53.510
+If you're a programmer if you're an application designer if you're in one of those roles then yeah.
+
+13:53.520 --> 13:57.050
+Lares 4 through seven are really important to you.
+
+13:57.390 --> 14:05.050
+But from our perspective as networking people we're very highly focused on layers 1 through 3.
+
+14:05.070 --> 14:09.990
+Those are the layers that are really critical from a networking perspective and they're very important
+
+14:10.980 --> 14:14.390
+to understand NSX and network virtualization as well.
+
+14:14.490 --> 14:19.680
+So that's the area that will focus from here on out moving forward in this class.

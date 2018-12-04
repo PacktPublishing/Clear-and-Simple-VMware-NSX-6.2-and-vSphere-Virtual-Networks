@@ -1,0 +1,181 @@
+WEBVTT
+
+00:00.270 --> 00:08.190
+In this video I'll explain the taps and nicknaming and how the timing method that we select can impact
+
+00:08.250 --> 00:11.570
+the number of taps that are created.
+
+00:11.580 --> 00:17.730
+So when we create a logical switchin and Isaak's and we're going to have a VSE fair distributed switch
+
+00:17.790 --> 00:26.790
+running in the background and the logical switch is really providing vivax land on top of a distributed
+
+00:26.790 --> 00:27.510
+switch.
+
+00:27.510 --> 00:33.210
+So we actually are still going to have a VSE for a distributed switch that is going to have VM next.
+
+00:33.220 --> 00:39.810
+Our physical adapters and those are going to be the physical adapters that are logical switches use.
+
+00:39.840 --> 00:47.960
+So because of this level of integration between the very distributed switch and the logical switch our
+
+00:47.960 --> 00:55.220
+configuration and the distributed switch may have an impact on the number of taps created for our logical
+
+00:55.220 --> 00:57.100
+switch.
+
+00:57.100 --> 01:05.350
+So for example in this slide we see Nick teaming by originating port ID nicknaming method and this is
+
+01:05.350 --> 01:10.570
+one of the possible nicknaming methods that's available on TVs for distributed switch.
+
+01:10.930 --> 01:18.100
+And with this Nic teaming method what essentially happens is each virtual machine is bound to a physical
+
+01:18.100 --> 01:24.610
+adapter based on the virtual port that it's connected to on our vees fair distributed switch.
+
+01:25.990 --> 01:33.070
+So in this case each VM is only going to be using a single physical adapter at any given moment in time
+
+01:33.550 --> 01:41.050
+and each VM is going to stay bound to that specific physical adapter unless it fails.
+
+01:41.050 --> 01:46.020
+Now how does this affect the Vieuxtemps of our logical switch.
+
+01:46.030 --> 01:49.830
+Well in this case we have four VM next.
+
+01:49.840 --> 01:55.390
+So for creating a logical switch that's working with this Vee's for a distributed switch there's going
+
+01:55.390 --> 02:03.850
+to be one v tap per physical adapter and each virtual machine will be bound to a tap much like they
+
+02:03.850 --> 02:06.880
+were tied to a VM Nic in the previous slide.
+
+02:07.960 --> 02:11.730
+And each tap is associated with a single physical adapter.
+
+02:12.710 --> 02:20.750
+So in this scenario if we create a logical switch on a distributed switch that has four V.M. next and
+
+02:20.750 --> 02:28.350
+is using this nicknaming method will have 4 v taps and the results are very similar with Nic teaming
+
+02:28.350 --> 02:31.060
+by source Mac hash.
+
+02:31.070 --> 02:38.060
+So here we see each virtual machine is bound to a specific VM neck based on the source MAC address and
+
+02:38.110 --> 02:45.530
+each VM has a unique MAC and based on that Mac the VM is tied to a specific physical adapter.
+
+02:47.440 --> 02:50.700
+This affects our taps in a very similar fashion.
+
+02:50.710 --> 03:00.110
+We're going to have one V-Tech per physical adapter and each VM will be tied to a specific tab and all
+
+03:00.110 --> 03:07.250
+of its traffic will flow through that particular V-Tech So in this case we have four taps yet again.
+
+03:08.010 --> 03:12.110
+We can also configure Nic teaming by IP hash.
+
+03:12.300 --> 03:15.210
+So if we're using IP hash Nic teaming.
+
+03:15.600 --> 03:22.170
+What happens is as virtual machines are communicating with different destinations different physical
+
+03:22.170 --> 03:30.570
+adapters are used in the physical adapter selected is based on the source IP of the virtual machine
+
+03:31.500 --> 03:34.550
+and the destination IP that it's communicating with.
+
+03:34.890 --> 03:43.170
+So in this case our virtual machine has an IP address of IP 1 and it's sending some traffic to a destination
+
+03:43.170 --> 03:45.240
+we'll call it destination 1.
+
+03:45.720 --> 03:52.170
+And if this virtual machine now sends some other traffic to some different destination the source IP
+
+03:52.170 --> 03:53.580
+remains the same.
+
+03:53.760 --> 03:56.340
+But we're going to have a different destination IP address.
+
+03:56.340 --> 04:00.700
+So therefore a different physical adapter will be used.
+
+04:01.010 --> 04:04.630
+Now how does this impact our taps.
+
+04:06.160 --> 04:14.550
+There will only be one type created when using IP hash load balancing and each VM will use this single
+
+04:14.590 --> 04:16.290
+V-Tech.
+
+04:16.510 --> 04:24.760
+But the traffic leaving the tap will be balanced across multiple physical adapters based on the destination
+
+04:24.760 --> 04:27.550
+IP.
+
+04:27.560 --> 04:34.760
+So for example we have a single V-Tech created here and VM one will send all of its traffic that's headed
+
+04:34.760 --> 04:40.730
+for our underlay physical network through this V-Tech.
+
+04:40.880 --> 04:48.580
+But this V-Tech may be communicating with one ESX I host or maybe setting traffic to 10 different ESX
+
+04:48.750 --> 04:51.530
+hosts or maybe more.
+
+04:51.780 --> 04:57.930
+So for each of those ESX I hosts there's going to be different taps and those types are going to have
+
+04:57.930 --> 05:00.620
+different destination IP addresses.
+
+05:01.440 --> 05:08.580
+So as this traffic flows into the tap traffic to different hosts will use different physical adapters
+
+05:09.060 --> 05:16.290
+because of the different destination IP addresses in review a few key concepts.
+
+05:16.480 --> 05:18.420
+Taps our VM kernel ports.
+
+05:18.580 --> 05:27.730
+These are going to encapsulate frames with outer headers that allow this traffic to traverse the physical
+
+05:27.730 --> 05:35.140
+network the original source and destination IP and Mac are hidden within an entire.
+
+05:36.090 --> 05:41.520
+And the number of taps is going to vary based on the NICS teaming method that we select if we're choosing
+
+05:41.580 --> 05:49.440
+originating virtual pour ID or source Mac hash we'll have one tap per VM Nic if we're choosing IP hash
+
+05:49.950 --> 05:51.900
+there will be only one V-Tech created.

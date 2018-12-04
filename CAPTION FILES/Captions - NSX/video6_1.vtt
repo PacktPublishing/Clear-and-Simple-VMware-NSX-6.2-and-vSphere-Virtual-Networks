@@ -1,0 +1,217 @@
+WEBVTT
+
+00:01.080 --> 00:07.620
+In this video I'll explain static vs. dynamic routing at a very basic level.
+
+00:07.880 --> 00:14.690
+I just want to give you enough knowledge to work with so that as we get into more complicated topics
+
+00:14.690 --> 00:22.610
+like how the NSX edge and how the distributed logical router exchange routes will have these basic concepts
+
+00:22.610 --> 00:24.380
+understood.
+
+00:24.390 --> 00:32.190
+So in this diagram here we see around are called router 1 and router one has an interface let's call
+
+00:32.190 --> 00:39.500
+it interface one that's connected to the 10 dot 1 1 0 network.
+
+00:39.660 --> 00:46.890
+And so as a result because it has an interface that's directly connected to that network it's aware
+
+00:46.890 --> 00:54.060
+of that directly connected interface and a routing table entry is automatically created say for the
+
+00:54.060 --> 01:01.950
+10.0 one dot 1.0 network route that traffic to interface one.
+
+01:01.980 --> 01:03.940
+So this is pretty straightforward.
+
+01:03.960 --> 01:12.680
+Routers will automatically create a routing table entry for any directly connected networks.
+
+01:12.810 --> 01:21.940
+But what about if we now decide to add a second router to our diagram while the second router doesn't
+
+01:21.940 --> 01:27.950
+have the benefit of that directly connected network to 10 that 1.1 does zero.
+
+01:28.210 --> 01:34.190
+As a matter of fact router 2 has no idea how to get to that network.
+
+01:34.930 --> 01:36.420
+It does have a path right.
+
+01:36.430 --> 01:44.780
+It could connect via Router one but it doesn't know what that path is until we explicitly go in there
+
+01:44.780 --> 01:46.630
+and tell it.
+
+01:46.660 --> 01:56.790
+So what we can do is create a static route on a router to and that will allow us to manually define
+
+01:57.150 --> 02:05.210
+the path to get to the 10 not 1 1 0 network and this will work just fine.
+
+02:05.270 --> 02:06.710
+Right static routes work great.
+
+02:06.720 --> 02:12.330
+Weve been doing them for 20 plus years and they work.
+
+02:12.470 --> 02:17.620
+Now that being said there might be a whole lot of other networks that aren't pictured here.
+
+02:18.780 --> 02:26.430
+And it might not make a whole lot of sense for us to have to create a manual routing table entry for
+
+02:26.460 --> 02:28.830
+every single network that exists.
+
+02:28.830 --> 02:35.670
+And as more routers are added that's going to be more manual routing table updates and it's going to
+
+02:35.670 --> 02:43.570
+be more networks as well and our routing tables are going to get bigger and bigger and bigger.
+
+02:43.580 --> 02:51.080
+So what we might want to consider is deploying some sort of dynamic routing protocol and this allows
+
+02:51.080 --> 02:58.790
+the routers to communicate amongst themselves and allows them to advertise routing table entries that
+
+02:58.790 --> 03:02.010
+they have to neighbor routers.
+
+03:02.660 --> 03:11.200
+So for example let's say in this scenario router 1 and router two are able to establish a neighbor relationship
+
+03:12.350 --> 03:21.170
+neighbor relationship means we can now exchange routing table entries so rowdier one will inform a round
+
+03:21.170 --> 03:22.480
+or two.
+
+03:22.500 --> 03:32.070
+Here is how you get to the 10.0 1.1 0 network and after rowdier 1 and forms route to about that network
+
+03:32.280 --> 03:40.060
+router 2 can dynamically automatically update its surrounding table and it now knows that the 10.0 1.
+
+03:40.100 --> 03:47.190
+1.0 network is reachable via router want now it knows how to get there and we didn't have to create
+
+03:47.670 --> 03:52.130
+any manual routing table entries to make that happen.
+
+03:52.500 --> 03:58.080
+And then router 2 will subsequently inform its neighbors and it will tell router 3.
+
+03:58.200 --> 04:00.440
+I know how to reach that $10.
+
+04:00.480 --> 04:09.790
+1. 1.0 network and so router 3 will now adjust its routing table and the routing table of router 3 will
+
+04:09.790 --> 04:17.500
+reflect the fact that we can get to this $10 one 1.0 network but router 3 is getting there through router
+
+04:17.500 --> 04:24.160
+2 and so now my routers are beginning to kind of build a complete picture of what the network looks
+
+04:24.160 --> 04:27.730
+like and how to get to all of these different destinations.
+
+04:27.940 --> 04:35.950
+And its doing it on its own by using something called routing advertisements each router is going to
+
+04:35.950 --> 04:43.660
+tell every other neighbor that it has about the entries in its routing table and if Router one has some
+
+04:43.750 --> 04:50.920
+entry that router too was not aware of router tool take that information add it to its routing table
+
+04:51.880 --> 04:55.510
+and dynamically build that connectivity.
+
+04:58.810 --> 05:03.910
+So theres still a place for static routes here and there right we still have some scenarios where they
+
+05:03.910 --> 05:09.930
+make sense but the vast majority of networks are going to use some sort of dynamic routing protocol.
+
+05:11.790 --> 05:16.740
+And these dynamic routing protocols are going to make things happen a lot more quickly with a lot less
+
+05:16.740 --> 05:18.590
+manual intervention.
+
+05:18.960 --> 05:27.850
+Now the other big benefit that a dynamic routing protocol gives us is the ability to heal from failures.
+
+05:28.130 --> 05:31.510
+So lets add one more change into this picture
+
+05:34.410 --> 05:42.450
+let's say that router 3 also has a direct connection to Router one.
+
+05:42.690 --> 05:44.190
+So lets add that in
+
+05:49.960 --> 05:54.480
+well now weve got multiple routes that can be utilized.
+
+05:54.550 --> 06:00.990
+And so for example lets say the connection between router 1 and router 2 fails.
+
+06:01.080 --> 06:04.210
+Let's say something happens and that that connection is broken.
+
+06:05.370 --> 06:11.450
+Well router toos routing table is now incorrect right.
+
+06:11.490 --> 06:19.500
+It can't get to the 10 1 1 0 network via Router one because router 1 is no longer accessible through
+
+06:19.500 --> 06:26.940
+that interface but there is another way it could send that traffic towards router 3 is an X type and
+
+06:26.940 --> 06:31.150
+router 3 couldwell relay that traffic to Router one.
+
+06:31.230 --> 06:35.380
+So there is an alternate path that's available to us here.
+
+06:35.910 --> 06:42.440
+And that's one of the other major benefits of a dynamic routing table is when that network fails.
+
+06:42.480 --> 06:45.780
+Router 2 will analyze its remaining options.
+
+06:45.810 --> 06:52.790
+It'll determine if there's another route to that destination and it will route around that failure automatically.
+
+06:54.070 --> 07:03.110
+And this process is referred to as convergence convergence is simply there some sort of change there
+
+07:03.120 --> 07:10.110
+something is now different in my network and all of the routers have adjusted their routing table accordingly
+
+07:10.800 --> 07:13.220
+and have agreed on a new typology.
+
+07:13.560 --> 07:19.980
+That's convergence when we've successfully healed from some sort of failure or it could be something
+
+07:19.980 --> 07:26.610
+else like we've inserted a new router and we've added new networks and now all the routers need to update
+
+07:26.610 --> 07:30.960
+their routing tables to reflect that when they're all up to speed when everything's up to date.
+
+07:31.780 --> 07:36.020
+Then we're said to be converged at that point and our routers are ready to go.

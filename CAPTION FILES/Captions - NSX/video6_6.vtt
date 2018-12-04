@@ -1,0 +1,181 @@
+WEBVTT
+
+00:00.330 --> 00:05.760
+In this video we'll talk about the different cluster deployment options that we have with the NSX edge
+
+00:05.850 --> 00:16.520
+and how we should design NSX along with our virtual data center to ensure maximum performance and availability.
+
+00:16.650 --> 00:22.740
+So we have really three different cluster deployment options and this is for the underlying vse for
+
+00:22.740 --> 00:26.310
+environment that NSX is running on top of.
+
+00:26.340 --> 00:30.800
+So probably the simplest configuration is using a single cluster.
+
+00:31.230 --> 00:37.020
+We place all of the NSX components on the same cluster that are virtual machines run on.
+
+00:37.260 --> 00:43.620
+And again this is good for a small deployment type scenario where we don't have a whole lot of extra
+
+00:43.620 --> 00:48.320
+hosts to work with now as our environment grows.
+
+00:48.390 --> 00:55.860
+We get a little bit more flexibility and what we could do is we can establish something called a management
+
+00:55.860 --> 01:00.430
+cluster and in larger environments these are pretty common.
+
+01:00.510 --> 01:09.000
+So we'll have a group of VSX high hosts that things like V Center Update Manager NSX manager and maybe
+
+01:09.000 --> 01:11.860
+Active Directory domain controllers run on.
+
+01:12.330 --> 01:14.340
+And that's called the management cluster.
+
+01:15.240 --> 01:21.810
+We can also put our NSX virtual appliances on that cluster of hosts.
+
+01:21.870 --> 01:28.740
+And again this is good for larger deployments that can actually dedicate hosts specifically to these
+
+01:28.740 --> 01:30.740
+management and edge functions.
+
+01:32.230 --> 01:34.020
+Now why would we bother doing this.
+
+01:34.090 --> 01:40.330
+Why separate management venoms why separate edge VMS.
+
+01:40.360 --> 01:45.660
+There's a few reasons that we might use a collapsed engine management cluster.
+
+01:45.910 --> 01:49.420
+Number one we may have a regulatory requirement.
+
+01:49.420 --> 01:57.140
+We may need to keep management virtual machines on SEPA hardware or we may just want to isolate performance
+
+01:57.140 --> 01:58.020
+issues.
+
+01:58.400 --> 02:04.670
+So for example if some management virtual machines start chewing up a lot of resources we probably don't
+
+02:04.760 --> 02:09.260
+want that to affect our compute workloads.
+
+02:09.290 --> 02:12.880
+So that's kind of the rationale to have a separate cluster.
+
+02:13.220 --> 02:21.350
+And we can again put adj virtual machines and management the OM's on that same cluster or if we have
+
+02:21.350 --> 02:29.300
+a really large vse fear deployment we might actually be able to create three clusters one for management
+
+02:29.690 --> 02:33.610
+one cluster for adj and one compute cluster.
+
+02:33.640 --> 02:41.680
+And again this is good for the largest environments where we can have a group of hosts specifically
+
+02:41.680 --> 02:43.750
+dedicated to each function.
+
+02:43.840 --> 02:49.690
+Right so maybe we have multiple compute clusters and then we'll have a single management cluster with
+
+02:49.690 --> 02:56.710
+things like V Center things like NSX manager with things like our NSX control or cluster.
+
+02:56.710 --> 03:03.870
+Those are all great candidates for a management closter and at the edge cluster we can have our edge
+
+03:03.870 --> 03:07.480
+of virtual appliances.
+
+03:07.870 --> 03:14.150
+So let's take a little bit of a look at what this looks like in a few diagrams.
+
+03:14.210 --> 03:20.110
+Here we see an NSX deployment in a single cluster and up at the top left you can see in the light green
+
+03:20.110 --> 03:23.740
+box we have an ESX host cluster.
+
+03:23.740 --> 03:31.740
+So here's a single cluster of ESX I hosts and we're going to put everything within this one single cluster.
+
+03:31.790 --> 03:37.730
+So here we have some virtual machines that are considered compute workloads and these are application
+
+03:37.760 --> 03:41.760
+type virtual machines or databases or things like that.
+
+03:42.020 --> 03:42.200
+Right.
+
+03:42.200 --> 03:47.100
+And they can run on any of the ESX hosts in this particular cluster.
+
+03:47.270 --> 03:51.040
+This is a cluster that's basically doing everything.
+
+03:51.350 --> 03:56.690
+Not only is that housing those compute workloads but it's got other virtual machines on it like V Center
+
+03:56.690 --> 04:01.910
+like NSX manager and it's got our edge virtual appliances as well.
+
+04:04.270 --> 04:11.320
+So again this deployment model is very well suited towards our smaller environments as the environment
+
+04:11.350 --> 04:12.320
+grows.
+
+04:12.490 --> 04:20.750
+We may want to consider creating a cluster that's dedicated to management and at each and now we'll
+
+04:20.750 --> 04:28.640
+put things like Wii center in our NSX edge virtual appliances and the NSX controller cluster are this
+
+04:28.670 --> 04:34.680
+dedicated cluster of ESX hosts that specifically for those purposes.
+
+04:38.010 --> 04:45.450
+Now finally in the largest of environments we may have one or more clusters that are completely dedicated
+
+04:45.450 --> 04:47.300
+to compute.
+
+04:47.900 --> 04:52.820
+And those are all of our application VMT database volume's all of those sorts of things.
+
+04:53.910 --> 04:59.160
+Then we can have a cluster that's specifically dedicated to management for things like Active Directory
+
+04:59.670 --> 05:07.830
+things like again V Center update manager and NSX manager and OS X controller closter.
+
+05:07.980 --> 05:13.470
+And then finally we've got our edge cluster which is dedicated to hosts that are really just providing
+
+05:13.770 --> 05:20.910
+ingress and egress to and from the external network that can be our NSX edge cluster.
+
+05:20.910 --> 05:27.720
+And again this option with separate clusters for each purpose is really for those larger environments
+
+05:27.780 --> 05:33.540
+where you have the kind of budget that you can buy a few hosts just for management and that you can
+
+05:33.540 --> 05:35.920
+buy a couple of hosts just as an cluster.

@@ -1,0 +1,343 @@
+WEBVTT
+
+00:00.520 --> 00:07.560
+In this video I'll explain the fundamentals of cross V Center and NSX and explain how this new feature
+
+00:07.590 --> 00:17.220
+in NSX that too can be utilized to create an NSX deployment that spans multiple The Center instances.
+
+00:17.230 --> 00:21.720
+So in this lesson we'll cover the fundamentals of cross V Center NSX.
+
+00:21.730 --> 00:29.590
+We'll look at some use cases and we'll differentiate between universal and logical objects.
+
+00:29.590 --> 00:35.620
+Let's start by talking a little bit about NSX without cross V Center and SATs.
+
+00:35.920 --> 00:44.110
+So a typical NSX deployment includes things like NSX manager every NSX deployment has to have an NSX
+
+00:44.110 --> 00:53.080
+manager instance that's registered to the center so we have to have an avid sex controller cluster will
+
+00:53.120 --> 01:02.930
+have components like the distributed alogical router and logical switches transport zones and the distributed
+
+01:02.930 --> 01:04.680
+firewall.
+
+01:04.830 --> 01:13.870
+So we're going to have all of these components that make up a typical single center NSX deployment and
+
+01:13.870 --> 01:21.310
+the scope of our logical switches and our distributed logical router will be determined by the transport
+
+01:21.310 --> 01:21.920
+zone.
+
+01:23.340 --> 01:30.750
+And the transport zones are limited to the hosts and clusters that are managed by a single center instance.
+
+01:30.780 --> 01:38.790
+So if you have another center instance there is no way to create a logical switch that spans both inventory's
+
+01:39.990 --> 01:42.340
+now an NSX 6.2.
+
+01:42.360 --> 01:44.720
+This is changed.
+
+01:44.790 --> 01:53.430
+Now we can associate multiple NSX manager instances and manage them from a single interface.
+
+01:55.160 --> 02:04.910
+We can create all their two layer 3 and firewall components that can span multiple V Center deployments
+
+02:09.360 --> 02:20.840
+so NSX 2 or later supports this cross the center NSX feature and it allows us to modify the scope of
+
+02:20.840 --> 02:22.590
+our sex objects.
+
+02:23.850 --> 02:30.450
+Right now the scope of our logical switches and distributed logical routers are defined by the transport
+
+02:30.450 --> 02:32.380
+zone.
+
+02:32.500 --> 02:40.840
+If we have the ability to create transport zones that span multiple V Center inventories now we can
+
+02:40.840 --> 02:50.120
+create objects like logical switches that can also span those V Center inventory's so with cross we
+
+02:50.120 --> 02:56.630
+center our NSX we can create logical switches distributed firewall rules and distributed logical routers
+
+02:56.900 --> 03:00.440
+that span multiple V Center instances.
+
+03:03.940 --> 03:07.480
+So here we see a transport zone of a standard NSX deployment.
+
+03:07.960 --> 03:14.230
+And in this scenario all of the clusters are managed by a single center server on the left.
+
+03:14.230 --> 03:17.740
+We have our dev cluster with our dev hosts on the right.
+
+03:17.800 --> 03:24.900
+We have our production cluster with our production hosts and we can create transport zones that include
+
+03:24.900 --> 03:28.500
+some or all of those clusters.
+
+03:28.550 --> 03:33.700
+So in this scenario transport Zone B includes the dev cluster.
+
+03:33.980 --> 03:41.130
+And so if I create a logical switch like Vienna five thousand one that's associated with transport Zone
+
+03:41.150 --> 03:49.990
+B that logical switch will only be presented to those dev hosts.
+
+03:49.990 --> 03:56.620
+Now if I create another transport zone such as transport Zone A that's associated with multiple clusters
+
+03:57.400 --> 04:04.810
+and then I create a logical switch such as V.N. five thousand two associated with transport Zone A.
+
+04:05.170 --> 04:14.320
+That logical switch will span all of those hosts and I'll essentially have a layer 2 network that VM
+
+04:14.320 --> 04:20.230
+is on any of those hosts can connect to and can communicate via Lerer too.
+
+04:20.300 --> 04:22.080
+This is a local transport zone.
+
+04:24.740 --> 04:30.300
+With cross V Center NSX we have another option called a universal transport zone.
+
+04:31.850 --> 04:40.010
+So what do we use to define the scope of our alogical switches in Cross center and Isaak's we use transport
+
+04:40.010 --> 04:44.460
+zones only they're called a universal transport zone now.
+
+04:44.910 --> 04:54.270
+And any logical switches that we create in that universal transport zone will span both resetter instances.
+
+04:55.260 --> 05:00.330
+Now we can still have traditional logical switches and transport zones as well.
+
+05:00.330 --> 05:06.810
+So in our diagram here you can see we have one transport zone that's associated with the dev cluster
+
+05:06.810 --> 05:08.110
+still right.
+
+05:08.110 --> 05:14.730
+NF I create a logical switch associated with that transport zone that logical switch is only going to
+
+05:14.730 --> 05:22.690
+be present on those DAPH hosts but up towards the top of our diagram we also have a universal transport
+
+05:22.690 --> 05:32.200
+zone spanning multipole the center server inventory's and now I can create a universal logical switch
+
+05:34.130 --> 05:38.000
+that spans those different V Center instances.
+
+05:38.000 --> 05:44.780
+I can have a layer 2 network that is present at both of these sites and we'll talk about some of the
+
+05:44.780 --> 05:48.710
+applications for that in a moment such as disaster recovery.
+
+05:49.040 --> 05:54.980
+But before we get into that let's take a look at some of the other universal objects that we can create
+
+05:55.070 --> 05:58.650
+like distributed firewall rules.
+
+05:58.750 --> 06:06.700
+So let's assume that this virtual machine shown here has some sensitive information and we have protected
+
+06:06.700 --> 06:13.510
+it with a universal firewall rule and we've created a universal transporter zone and down towards the
+
+06:13.510 --> 06:20.030
+bottom of our screen we can see there's a universal logical switch that's available across multiple
+
+06:20.030 --> 06:21.840
+V centers server inventory's
+
+06:25.170 --> 06:32.540
+so we can use Wii motion to move this virtual machine from one Wii center inventory to another.
+
+06:32.550 --> 06:35.190
+This is supported in these fair sex.
+
+06:35.190 --> 06:43.310
+We have really relaxed the long distance Wii motion requirements and we've also enable crossover center
+
+06:43.320 --> 06:45.500
+every motion in these first six.
+
+06:45.900 --> 06:52.860
+So we take this V.M. and we motion it to a host that's managed by the other receptor shover and the
+
+06:52.860 --> 07:00.250
+universal firewall rules will come along with that virtual machine to its new cluster.
+
+07:00.350 --> 07:07.110
+There's a special section of our firewall configuration for universal firewalls and we can still create
+
+07:07.200 --> 07:15.270
+normal firewall rules and those rules will only apply to a specific NSX manager instance but we can
+
+07:15.270 --> 07:19.310
+also create those universal firewall rules as well.
+
+07:20.680 --> 07:25.850
+Now the number of features supported by the universal firewall rules is pretty limited.
+
+07:26.830 --> 07:33.130
+We don't have all of those service composer capabilities the universal firewall rules are basically
+
+07:33.130 --> 07:34.930
+going to be IP sense.
+
+07:36.720 --> 07:42.180
+But if that's what we need we can create those universal firewall rules and have them span multiple
+
+07:42.360 --> 07:44.880
+Center instances.
+
+07:44.950 --> 07:47.600
+Now let's talk about a couple of use cases.
+
+07:47.750 --> 07:52.420
+Let's say that we have multiple active production centers sharers.
+
+07:52.670 --> 07:59.330
+Maybe we have an active active data center scenario where we have some VM running at one data center
+
+07:59.660 --> 08:07.550
+and some victims running at another data center and we have a wide area network connection that is less
+
+08:07.550 --> 08:13.760
+than 150 milliseconds of latency round trip.
+
+08:13.870 --> 08:24.040
+If we can meet those requirements we can create a layer to spand universal logical switch.
+
+08:24.070 --> 08:30.410
+Now in order to do this we have to ensure that that empty you requirement is met for VX.
+
+08:30.670 --> 08:35.600
+So we'll have to have a 6500 or larger MCU between those sites.
+
+08:37.130 --> 08:44.570
+But now we've got the capability to create a consistent IP address scheme across these two sites.
+
+08:44.600 --> 08:48.350
+We have a layer 2 network that's available at both sites.
+
+08:48.350 --> 08:55.130
+And I can seamlessly move a VM from one site to another without any IP address changes.
+
+08:55.130 --> 08:59.730
+This gives us a whole lot of capabilities that we may not have had otherwise.
+
+09:01.610 --> 09:08.840
+And we can create those universal firewall rules to establish policies that go with that virtual machine
+
+09:08.870 --> 09:16.130
+as it moves from site to site and we can enable local egress at each site.
+
+09:16.180 --> 09:23.080
+So notice there is an edge of each site with connections to the Internet all of the traffic bound for
+
+09:23.080 --> 09:29.470
+the Internet and each site will flow out of that local gress specific to that site.
+
+09:30.990 --> 09:33.130
+That's one of our use cases.
+
+09:33.270 --> 09:36.490
+The other use case is disaster recovery.
+
+09:36.690 --> 09:43.840
+So let's say that we're doing disaster recovery with site recovery manager well and ASX six that too
+
+09:43.840 --> 09:49.140
+is going to synchronize and sex objects across these sites.
+
+09:50.600 --> 09:56.070
+So what we'll have in that scenario is logical switches that span both sites.
+
+09:56.480 --> 10:02.360
+And this is a really important thing for disaster recovery because what SRM is going to do is it's going
+
+10:02.360 --> 10:04.480
+to get the virtual machines back up.
+
+10:04.610 --> 10:11.120
+It's going to connect them to logical switches and usually a lot of the work that you have to do with
+
+10:11.120 --> 10:19.160
+site recovery manager is saying OK if the primary site fails this VM use that connect to this logical
+
+10:19.160 --> 10:19.860
+switch.
+
+10:19.910 --> 10:24.830
+Now it's connected to some other virtual switch at the recovery site.
+
+10:24.860 --> 10:32.510
+We don't have to do that if we have a logical switch that's universal when that primary site fails.
+
+10:33.630 --> 10:39.480
+Those VMS are going to be able to boot back up at the disaster recovery site.
+
+10:41.610 --> 10:46.470
+On the same virtual switch that they were using at their original site.
+
+10:46.640 --> 10:54.500
+So this overcomes the difficult disaster recovery challenge of setting up stretched layer 2 or readdressing
+
+10:54.500 --> 10:57.130
+all of our virtual machines.
+
+10:57.170 --> 11:04.720
+So in review we'll use cross recentre NSX to create universal objects such as universal logical switches
+
+11:04.990 --> 11:08.980
+universal firewalls and universal distributed logical routers.
+
+11:09.880 --> 11:15.880
+Our universal firewall rules will follow virtual machines from site to site regardless of which VI center
+
+11:15.880 --> 11:17.960
+instance they reside on.
+
+11:19.190 --> 11:25.370
+And we can still create those local objects if we want to just because we've deployed cross recentre
+
+11:25.400 --> 11:31.590
+and OS X doesn't mean that every logical switch we create is going to span multiple Center instances.
+
+11:33.720 --> 11:38.760
+The big benefit of crossfeed center NSX is that it allows the same where to network to be present at
+
+11:38.760 --> 11:39.870
+different sites.
+
+11:39.870 --> 11:46.590
+It also allows us to create a distributed logical router that is present at multiple sites as well.
+
+11:48.550 --> 11:52.950
+And it supports active active and disaster recovery applications.

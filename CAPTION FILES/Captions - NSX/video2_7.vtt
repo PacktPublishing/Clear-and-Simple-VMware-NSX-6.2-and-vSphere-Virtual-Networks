@@ -1,0 +1,136 @@
+WEBVTT
+
+00:00.240 --> 00:06.900
+In this video I'll explain the concept of our requests and we'll look at how and our request is handled
+
+00:06.900 --> 00:09.680
+by an Ethernet switch.
+
+00:09.700 --> 00:15.100
+So here we see a pretty simple diagram of two devices connected to anything that switch.
+
+00:15.340 --> 00:21.430
+This could be virtual machines they could be physical machines but there are some sort of device that's
+
+00:21.430 --> 00:23.070
+connected to an Ethernet switch.
+
+00:23.880 --> 00:30.790
+For the sake of this example let's assume that their Windows machines and let's assume that the machine
+
+00:30.790 --> 00:40.000
+on the left with MAC address a and IP address tend not one not want to wants to communicate with the
+
+00:40.000 --> 00:41.100
+machine on the right.
+
+00:41.830 --> 00:43.360
+Let's say it wants to send a ping to it.
+
+00:45.380 --> 00:52.430
+Now with that in the source or virtual machine there's going to be an ARP table and when an ARP table
+
+00:52.430 --> 01:01.260
+is essentially a list of mappings that map IP addresses to MAC addresses because if my source VM wants
+
+01:01.260 --> 01:08.590
+to communicate with this destination VM that's going to happen over there to network this traffic is
+
+01:08.590 --> 01:10.820
+not being sent to the default gateway.
+
+01:10.840 --> 01:12.590
+It's not being sent to a router.
+
+01:13.060 --> 01:19.920
+It's going to be direct communication over that which between these virtual machines.
+
+01:19.940 --> 01:27.560
+So in order to accomplish that the source VM needs to know the MAC address of the destination virtual
+
+01:27.560 --> 01:28.110
+machine.
+
+01:30.620 --> 01:36.650
+So let's say I go into my Windows operating system on my source VM and I type in the command paying
+
+01:36.650 --> 01:47.090
+$10 Wannop 1.3 and my all table in the guest operating system of this source virtual machine does not
+
+01:47.210 --> 01:51.760
+currently have an R table entry for that IP address.
+
+01:52.850 --> 02:00.190
+That means at this point the sending VM doesn't know the MAC address of the receiving what will happen
+
+02:00.190 --> 02:07.570
+at this point is the source virtual machine will generate and ARP request and in ARP request is a layer
+
+02:07.570 --> 02:09.950
+to broadcast.
+
+02:10.010 --> 02:16.840
+So the source VM will send out this broadcast basically saying who has the IP address at hand not one
+
+02:16.840 --> 02:22.130
+not one not three it will send that broadcast to the physical or virtual switch.
+
+02:22.130 --> 02:29.480
+And at that point the switch will flooded out every single port that the switch is connected to every
+
+02:29.480 --> 02:35.630
+port on that layer 2 domain and a bunch of machines are going to see this request that don't need to
+
+02:35.630 --> 02:36.150
+see it.
+
+02:36.160 --> 02:37.540
+All right it's a broadcast.
+
+02:37.670 --> 02:39.240
+So it's going to hit everything.
+
+02:40.300 --> 02:44.230
+Until it eventually hits the appropriate machine.
+
+02:45.060 --> 02:48.690
+And this machine is going to say Yeah ten not one not one not three.
+
+02:48.690 --> 02:50.170
+That's me.
+
+02:50.220 --> 02:52.880
+Let me generate an output response.
+
+02:53.980 --> 03:01.360
+And it will then send an ARP response to the source machine to provide it with that IP.
+
+03:01.360 --> 03:04.460
+Tim Alcatraz mapping.
+
+03:04.720 --> 03:10.520
+So then in the future if the source machine generates some traffic destined for $10 one not one not
+
+03:10.520 --> 03:22.710
+three that can be unicast traffic that goes directly to that destination virtual machine.
+
+03:22.740 --> 03:30.720
+So it's in our best interests to minimize this our traffic as much as we possibly can because it's broadcast
+
+03:30.720 --> 03:33.880
+traffic and it generates a lot of overhead on our network.
+
+03:34.710 --> 03:45.030
+When we get into NSX We'll take a look at how NSX suppresses these ARP requests and kind of minimizes
+
+03:45.030 --> 03:50.790
+the number of broadcasts that are required on Alair to network.
+
+03:50.790 --> 03:59.270
+So in summary and our request is simply a request by virtue machine to discover the destination MAC.
+
+03:59.400 --> 04:04.950
+It already knows the destination IP it's trying to communicate with something that's on that same network
+
+04:04.950 --> 04:11.540
+that same layer to network so issues in ARP request to discover the destination MAC.
