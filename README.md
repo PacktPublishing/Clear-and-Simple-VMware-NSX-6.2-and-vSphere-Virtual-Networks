@@ -1,7 +1,3 @@
-## [Get this title for $10 on Packt's Spring Sale](https://www.packt.com/V13326?utm_source=github&utm_medium=packt-github-repo&utm_campaign=spring_10_dollar_2022)
------
-For a limited period, all eBooks and Videos are only $10. All the practical content you need \- by developers, for developers
-
 # Clear-and-Simple-VMware-NSX-6.2-and-vSphere-Virtual-Networks
 Code repository for Clear and Simple VMware NSX 6.2 and vSphere Virtual Networks, Published by Packt
 # Clear and Simple VMware NSX 6.2 and vSphere Virtual Networks
